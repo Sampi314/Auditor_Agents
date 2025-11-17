@@ -847,7 +847,7 @@ def create_financial_model():
     ws_workings[f'A{current_row}'] = "  + Net Income"
     for i in range(NUM_MONTHS):
         col = get_column_letter(i + 2)
-        ws_workings[f'{col}{current_row}'] = f"='Income Statement'!{col}20"  # Will link to Net Income
+        ws_workings[f'{col}{current_row}'] = f"='Income Statement'!{col}19"  # Will link to Net Income
         ws_workings[f'{col}{current_row}'].number_format = '#,##0'
     current_row += 1
 
@@ -1337,7 +1337,7 @@ def create_financial_model():
     ws_cashflow[f'A{row}'] = "Net Income"
     for i in range(NUM_MONTHS):
         col = get_column_letter(i + 2)
-        ws_cashflow[f'{col}{row}'] = f"='Income Statement'!{col}20"
+        ws_cashflow[f'{col}{row}'] = f"='Income Statement'!{col}19"
         ws_cashflow[f'{col}{row}'].number_format = '#,##0'
     row += 1
 
