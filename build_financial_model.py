@@ -1526,7 +1526,7 @@ def create_financial_model():
         ws_cashflow.column_dimensions[col].width = 12
 
     # Save workbook
-    filename = "/home/user/Claude_Testing/Financial_Model_3_Statement.xlsx"
+    filename = "Financial_Model_3_Statement.xlsx"
     wb.save(filename)
     print(f"Financial model saved to {filename}")
 
