@@ -2,331 +2,206 @@
 
 ## Overview
 
-This is a fully integrated 3-statement financial model built to professional financial modeling standards. The model includes:
-- **Income Statement** (P&L)
-- **Balance Sheet**
-- **Cash Flow Statement** (Indirect Method)
-
-All three statements are fully reconciled and linked through comprehensive control accounts.
-
-## Key Features
-
-### 1. **Control Account Architecture**
-Every Balance Sheet line item is driven by its own control account that tracks:
-- **Opening Balance**: Starting position for the period
-- **Increases**: All movements that increase the account
-- **Decreases**: All movements that reduce the account
-- **Closing Balance**: Opening + Increases - Decreases
-
-### 2. **No Hard-Codes in Calculations**
-- All inputs are centralized in the Inputs sheet
-- Calculation blocks contain only formulas
-- Clear separation of inputs, workings, and outputs
-
-### 3. **Monthly Timeline**
-- 12-month projection period
-- Month-over-month tracking
-- Easy to extend timeline if needed
-
-### 4. **Full Integration**
-- Income Statement flows to Retained Earnings
-- Balance Sheet balances to zero
-- Cash Flow reconciles opening to closing cash
-- All statements linked through control accounts
+This is a fully integrated 3-statement financial model built to professional financial modeling standards. The model spans 12 months and includes complete control accounts for every Balance Sheet line item.
 
 ## File Structure
 
-### **1. Inputs Sheet**
-Contains all assumptions and starting balances:
+**Financial_Model_3_Statement.xlsx** contains 5 worksheets:
 
-**Revenue Assumptions:**
-- Monthly Revenue (with 5% growth)
-- Revenue Growth %
+1. **Inputs** - All assumptions and parameters
+2. **Workings** - Control accounts for all balance sheet items
+3. **Income Statement** - Monthly P&L
+4. **Balance Sheet** - Monthly balance sheet
+5. **Cash Flow Statement** - Indirect method cash flow
 
-**Cost Assumptions:**
-- COGS % of Revenue (40%)
-- Operating Expenses (Fixed at $25,000/month)
+## Key Features
 
-**Working Capital Assumptions:**
-- AR Days (30 days)
-- Inventory Days (45 days)
-- AP Days (30 days)
-- Prepayment amounts and amortization periods
+### Control Account Architecture
 
-**Capex & Fixed Assets:**
-- Monthly Capex schedule
-- Depreciation Rate (20% annual)
-- Asset Disposals
+Every Balance Sheet item is driven by its own control account in the Workings sheet:
 
-**Debt & Financing:**
-- Debt Drawdowns
-- Debt Repayments
-- Interest Rate (6% annual)
+| Balance Sheet Item | Control Account Structure |
+|-------------------|---------------------------|
+| **Accounts Receivable** | Opening + Credit Sales - Cash Collections = Closing |
+| **Inventory** | Opening + Purchases - COGS Withdrawal = Closing |
+| **Prepayments** | Opening + Additions - Amortization = Closing |
+| **Fixed Assets (Gross)** | Opening + CapEx - Disposals = Closing |
+| **Accumulated Depreciation** | Opening + Depreciation Expense = Closing |
+| **Accounts Payable** | Opening + Purchases on Credit - Cash Payments = Closing |
+| **Accrued Expenses** | Opening + Expense Accruals - Cash Payments = Closing |
+| **Deferred Revenue** | Opening + Cash Received in Advance - Revenue Recognition = Closing |
+| **Debt** | Opening + Drawdowns - Principal Repayments = Closing |
+| **Retained Earnings** | Opening + Net Income - Dividends = Closing |
+| **Cash** | Opening + Operating CF + Investing CF + Financing CF = Closing |
 
-**Tax:**
-- Tax Rate (25%)
+### Financial Modeling Best Practices
 
-**Starting Balances (Month 0):**
-- Opening Cash: $50,000
-- Opening Fixed Assets (Gross): $100,000
-- Opening Accumulated Depreciation: $20,000
-- Opening Share Capital: $100,000
-- Opening Retained Earnings: $30,000
-- All other accounts start at $0
+✓ **No hardcoded values in calculation blocks** - All calculations reference Inputs sheet
+✓ **Clear separation** - Inputs / Workings / Outputs clearly separated
+✓ **Transparent formulas** - All formulas are auditable and traceable
+✓ **Color coding:**
+  - Yellow = Input cells (user can change)
+  - White = Calculations (formula-driven)
+  - Blue = Subtotals
+  - Darker blue = Totals
 
-### **2. Workings Sheet**
-Contains all control accounts that drive the Balance Sheet:
+### Statement Integration
 
-#### **Asset Control Accounts:**
+1. **Income Statement → Balance Sheet**
+   - Net Income flows to Retained Earnings control account
+   - Revenue drives Accounts Receivable
+   - COGS drives Inventory withdrawals
+   - Operating expenses drive Accrued Expenses
 
-**Accounts Receivable:**
-- Opening AR
-- \+ Credit Sales (Revenue)
-- \- Cash Collections
-- = Closing AR
+2. **Balance Sheet ← Workings**
+   - Every BS line item = Closing balance from its control account
+   - No direct calculations on Balance Sheet
+   - All movements tracked in Workings sheet
 
-**Inventory:**
-- Opening Inventory
-- \+ Purchases
-- \- COGS Withdrawal
-- = Closing Inventory
+3. **Cash Flow Statement (Indirect Method)**
+   - Starts with Net Income
+   - Adjusts for non-cash items (Depreciation)
+   - Adjusts for working capital changes (AR, Inventory, Prepayments, AP, Accrued Exp, Deferred Rev)
+   - Includes investing activities (CapEx)
+   - Includes financing activities (Debt drawdowns/repayments)
+   - Reconciles to closing cash on Balance Sheet
 
-**Prepayments:**
-- Opening Prepayments
-- \+ New Prepayments (Cash Paid)
-- \- Amortization (Expense)
-- = Closing Prepayments
+### Balance Sheet Verification
 
-**Fixed Assets (Gross):**
-- Opening Fixed Assets
-- \+ Capex Additions
-- \- Disposals
-- = Closing Fixed Assets (Gross)
+The model includes a **Balance Check** row at the bottom of the Balance Sheet:
+- Formula: Total Assets - Total Liabilities & Equity
+- **Should always equal 0**
+- Highlighted in yellow for easy monitoring
 
-**Accumulated Depreciation:**
-- Opening Accumulated Depreciation
-- \+ Depreciation Expense
-- \- Disposal Depreciation
-- = Closing Accumulated Depreciation
+## Model Inputs (Inputs Sheet)
 
-**Net Fixed Assets:**
-- = Gross Fixed Assets - Accumulated Depreciation
+### Revenue Assumptions
+- Starting monthly revenue
+- Monthly growth rate
+- % of revenue on credit (drives AR)
+- Days Sales Outstanding (DSO)
 
-#### **Liability Control Accounts:**
+### Cost Structure
+- COGS as % of revenue
+- Days Inventory Outstanding (DIO)
+- Operating expenses (Salaries, Rent, Marketing, Other)
 
-**Accounts Payable:**
-- Opening AP
-- \+ Purchases (Credit)
-- \- Cash Payments
-- = Closing AP
+### Working Capital
+- Prepayments (opening, additions, amortization)
+- Days Payable Outstanding (DPO)
+- Accrued expenses rate
+- Deferred revenue (cash received in advance, recognition rate)
 
-**Accrued Expenses:**
-- Opening Accrued Expenses
-- \+ Accruals (Expense Recognition)
-- \- Cash Payments
-- = Closing Accrued Expenses
+### Fixed Assets
+- Opening gross PP&E and accumulated depreciation
+- Monthly CapEx
+- Monthly depreciation
 
-**Deferred Revenue:**
-- Opening Deferred Revenue
-- \+ Cash Received in Advance
-- \- Revenue Recognition
-- = Closing Deferred Revenue
+### Debt & Equity
+- Opening debt balance
+- Interest rate
+- Principal repayment schedule
+- Debt drawdowns
+- Share capital
+- Opening retained earnings
 
-**Debt:**
-- Opening Debt
-- \+ Debt Drawdowns
-- \- Debt Repayments
-- = Closing Debt
-
-### **3. Income Statement**
-Standard P&L structure:
-
-- **Revenue**: Linked from Inputs
-- **COGS**: Linked from Inventory Control Account withdrawal
-- **Gross Profit**: Revenue - COGS
-- **Operating Expenses**:
-  - Salaries & Wages
-  - Other Operating Expenses
-  - Prepayment Amortization
-- **EBITDA**: Gross Profit - Operating Expenses
-- **Depreciation**: Linked from Depreciation Control Account
-- **EBIT**: EBITDA - Depreciation
-- **Interest Expense**: Calculated from Debt Control Account
-- **EBT**: EBIT - Interest
-- **Income Tax**: 25% of positive EBT
-- **Net Income**: EBT - Tax
-
-### **4. Balance Sheet**
-Standard Balance Sheet structure with all items linked to control accounts:
-
-**Assets:**
-- Cash (from Cash Flow Statement)
-- Accounts Receivable (from AR Control)
-- Inventory (from Inventory Control)
-- Prepayments (from Prepayments Control)
-- Fixed Assets (Net) (from Fixed Assets Control)
-
-**Liabilities:**
-- Accounts Payable (from AP Control)
-- Accrued Expenses (from Accrued Expenses Control)
-- Deferred Revenue (from Deferred Revenue Control)
-- Long-term Debt (from Debt Control)
-
-**Equity:**
-- Share Capital (constant)
-- Retained Earnings (opening + cumulative Net Income)
-
-**Balance Check:**
-- Assets = Liabilities + Equity
-- Red highlighted cell shows difference (should be 0)
-
-### **5. Cash Flow Statement**
-Indirect method, fully reconciled:
-
-**Operating Activities:**
-- Net Income
-- \+ Depreciation (non-cash)
-- Changes in Working Capital:
-  - (Increase)/Decrease in AR
-  - (Increase)/Decrease in Inventory
-  - (Increase)/Decrease in Prepayments
-  - Increase/(Decrease) in AP
-  - Increase/(Decrease) in Accrued Expenses
-  - Increase/(Decrease) in Deferred Revenue
-
-**Investing Activities:**
-- Capital Expenditure
-- Proceeds from Asset Disposals
-
-**Financing Activities:**
-- Debt Drawdowns
-- Debt Repayments
-- Interest Paid
-- Equity Injections
-- Dividends Paid
-
-**Cash Reconciliation:**
-- Opening Cash
-- \+ Net Change in Cash
-- = Closing Cash
-
-## How the Model Works
-
-### Integration Flow:
-
-1. **Inputs Drive Everything**: All assumptions are in the Inputs sheet
-2. **Control Accounts Calculate Movements**: Workings sheet tracks all balance sheet changes
-3. **Income Statement**: Pulls from Inputs and Control Accounts
-4. **Balance Sheet**: Every line item pulls from corresponding Control Account closing balance
-5. **Cash Flow**: Calculated using indirect method from Net Income and balance sheet movements
-6. **Closing Cash**: Feeds back to Balance Sheet to complete the circle
-
-### Key Reconciliation Points:
-
-1. **Balance Sheet Balances**: Total Assets = Total Liabilities + Equity
-2. **Cash Flow Reconciles**: Opening Cash + Net Cash Flow = Closing Cash
-3. **Retained Earnings Rolls Forward**: Opening RE + Net Income = Closing RE
-4. **All Control Accounts Balance**: Opening + Increases - Decreases = Closing
+### Cash & Tax
+- Opening cash balance
+- Tax rate
 
 ## How to Use the Model
 
-### Modifying Assumptions:
+1. **Modify assumptions** in the Inputs sheet (yellow cells only)
+2. **Review control accounts** in Workings sheet to understand balance sheet movements
+3. **Analyze results** in the three output statements
+4. **Verify integrity** by checking:
+   - Balance Sheet balance check = 0
+   - Cash flow closing cash = Balance Sheet cash
+   - Retained Earnings change = Net Income (if no dividends)
 
-1. **Open the Inputs sheet**
-2. **Change any yellow-highlighted input cells**
-3. **All calculations update automatically**
+## Control Account Examples
 
-### Common Modifications:
-
-**To change revenue:**
-- Update the "Monthly Revenue" row in Inputs sheet
-
-**To change costs:**
-- Update "COGS % of Revenue" or "Operating Expenses"
-
-**To add Capex:**
-- Enter amount in "Monthly Capex" for desired month
-
-**To add/remove debt:**
-- Enter "Debt Drawdowns" or "Debt Repayments" in desired month
-
-**To change working capital:**
-- Modify "AR Days", "Inventory Days", or "AP Days"
-
-### Extending the Timeline:
-
-To extend beyond 12 months:
-1. Modify the `months = 12` variable in `build_financial_model.py`
-2. Re-run the script: `python3 build_financial_model.py`
-3. New workbook will be generated with extended timeline
-
-## Model Standards Compliance
-
-### Financial Modeling Best Practices:
-
-✓ **Separation of Inputs/Workings/Outputs**
-✓ **No hard-coded values in calculation blocks**
-✓ **Transparent, auditable formulas**
-✓ **Consistent formatting and structure**
-✓ **Clear labeling and documentation**
-✓ **Full integration and reconciliation**
-✓ **Control account architecture**
-
-### Formula Standards:
-
-✓ **Absolute references for inputs**: `=$B$6`
-✓ **Relative references for time series**: `=B10`
-✓ **Named ranges not used** (for transparency)
-✓ **No circular references** (unless required)
-✓ **Consistent formula structure across periods**
-
-## Regenerating the Model
-
-If you need to rebuild the model:
-
-```bash
-python3 build_financial_model.py
+### Accounts Receivable Flow
+```
+Month 1:
+Opening AR (calculated from DSO assumption)
++ Credit Sales (Revenue × % on credit)
+- Cash Collections (based on collection pattern)
+= Closing AR → shown on Balance Sheet
 ```
 
-This will create a fresh `Financial_Model_3_Statement.xlsx` file with all formulas and structure.
+### Inventory Flow
+```
+Month 1:
+Opening Inventory (from inputs)
++ Purchases (calculated to maintain target inventory level)
+- COGS Withdrawal (from Income Statement)
+= Closing Inventory → shown on Balance Sheet
+```
+
+### Fixed Assets Flow
+```
+Month 1:
+Opening Gross PP&E
++ CapEx Additions (from inputs)
+- Disposals (if any)
+= Closing Gross PP&E
+
+Opening Accumulated Depreciation
++ Depreciation Expense (from inputs)
+= Closing Accumulated Depreciation
+
+Net PP&E = Gross PP&E - Accumulated Depreciation → shown on Balance Sheet
+```
+
+## Cash Flow Reconciliation
+
+The Cash Flow Statement uses the **indirect method**:
+
+**Operating Activities:**
+- Start with Net Income
+- Add back non-cash expenses (Depreciation)
+- Subtract increases in operating assets (AR, Inventory, Prepayments)
+- Add increases in operating liabilities (AP, Accrued Expenses, Deferred Revenue)
+
+**Investing Activities:**
+- Capital expenditure (cash outflow)
+
+**Financing Activities:**
+- Debt drawdowns (cash inflow)
+- Debt repayments (cash outflow)
+
+**Net Change in Cash** = Operating + Investing + Financing
+**Closing Cash** = Opening Cash + Net Change
+
+This closing cash equals the Cash balance on the Balance Sheet, ensuring full integration.
+
+## Model Integrity Checks
+
+✓ Balance Sheet balances (Assets = Liabilities + Equity)
+✓ Cash flow closing cash = Balance Sheet cash
+✓ Retained Earnings movement = Net Income (absent dividends)
+✓ All control accounts reconcile
+✓ No circular references (except where explicitly managed)
+
+## Customization
+
+To extend the model:
+1. Add new assumptions to Inputs sheet
+2. Create corresponding control accounts in Workings sheet
+3. Link to appropriate financial statements
+4. Update cash flow statement for any new working capital items
 
 ## Technical Details
 
-**Built with:**
-- Python 3.x
-- openpyxl library
+- **Timeline:** 12 months (easily extendable)
+- **Formula structure:** All formulas use proper Excel references
+- **No VBA/Macros:** Pure Excel formulas for transparency
+- **File format:** .xlsx (compatible with Excel 2007+)
 
-**File Format:**
-- Excel .xlsx format
-- Compatible with Excel 2007+, Google Sheets, LibreOffice Calc
+---
 
-**Color Coding:**
-- Blue headers: Timeline periods
-- Light blue: Section headers
-- Green: Asset-related items
-- Orange: Liability-related items
-- Yellow: Key calculated totals
-- Red: Balance check (should always be 0)
-
-## Model Validation
-
-### Check These Items:
-
-1. **Balance Sheet Balance Check** (should be 0 every month)
-2. **Cash Flow Reconciliation** (Opening + Change = Closing)
-3. **Retained Earnings** (should roll forward correctly)
-4. **All Control Accounts** (Opening + Increases - Decreases = Closing)
-
-### Common Issues:
-
-- If Balance Sheet doesn't balance: Check control account formulas
-- If Cash doesn't reconcile: Check Cash Flow Statement links
-- If results look wrong: Verify Inputs sheet assumptions
-
-## License
-
-This model is provided as-is for educational and business purposes.
-
-## Support
-
-For issues or questions, please refer to the model documentation or review the Python script that generates the model.
+**Model built with:**
+- Python 3 + openpyxl library
+- Professional financial modeling standards
+- Full audit trail through control accounts

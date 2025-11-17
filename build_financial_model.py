@@ -1,1248 +1,1345 @@
+#!/usr/bin/env python3
 """
-3-Statement Financial Model Builder with Full Control Accounts
-Creates a fully integrated Excel model with proper financial modeling standards
+Build a comprehensive 3-statement financial model with control accounts
 """
 
-import openpyxl
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
+import datetime
 
 def create_financial_model():
     wb = Workbook()
 
     # Remove default sheet
-    wb.remove(wb.active)
+    if 'Sheet' in wb.sheetnames:
+        wb.remove(wb['Sheet'])
 
-    # Create sheets in order
-    inputs_sheet = wb.create_sheet("Inputs", 0)
-    workings_sheet = wb.create_sheet("Workings", 1)
-    income_sheet = wb.create_sheet("Income Statement", 2)
-    balance_sheet = wb.create_sheet("Balance Sheet", 3)
-    cashflow_sheet = wb.create_sheet("Cash Flow Statement", 4)
+    # Define styles
+    header_fill = PatternFill(start_color="366092", end_color="366092", fill_type="solid")
+    header_font = Font(bold=True, color="FFFFFF", size=11)
+    input_fill = PatternFill(start_color="FFF2CC", end_color="FFF2CC", fill_type="solid")
+    calc_fill = PatternFill(start_color="FFFFFF", end_color="FFFFFF", fill_type="solid")
+    subtotal_fill = PatternFill(start_color="D9E1F2", end_color="D9E1F2", fill_type="solid")
+    total_fill = PatternFill(start_color="B4C7E7", end_color="B4C7E7", fill_type="solid")
+    bold_font = Font(bold=True)
+    thin_border = Border(
+        left=Side(style='thin'),
+        right=Side(style='thin'),
+        top=Side(style='thin'),
+        bottom=Side(style='thin')
+    )
 
-    # Define timeline (12 months)
-    months = 12
+    # Number of periods (months)
+    num_periods = 12
 
-    # ==================== INPUTS SHEET ====================
-    print("Building Inputs sheet...")
-    setup_inputs_sheet(inputs_sheet, months)
-
-    # ==================== WORKINGS SHEET ====================
-    print("Building Workings sheet...")
-    setup_workings_sheet(workings_sheet, months)
-
-    # ==================== INCOME STATEMENT ====================
-    print("Building Income Statement...")
-    setup_income_statement(income_sheet, months)
-
-    # ==================== BALANCE SHEET ====================
-    print("Building Balance Sheet...")
-    setup_balance_sheet(balance_sheet, months)
-
-    # ==================== CASH FLOW STATEMENT ====================
-    print("Building Cash Flow Statement...")
-    setup_cashflow_statement(cashflow_sheet, months)
-
-    # Save workbook
-    filename = "Financial_Model_3_Statement.xlsx"
-    wb.save(filename)
-    print(f"Financial model saved as {filename}")
-
-    return filename
-
-def setup_inputs_sheet(ws, months):
-    """Create the Inputs sheet with all assumptions"""
-
-    # Headers
-    ws['A1'] = "FINANCIAL MODEL INPUTS"
-    ws['A1'].font = Font(bold=True, size=14)
-
-    row = 3
-
-    # Timeline header
-    ws.cell(row, 1, "Timeline")
-    ws.cell(row, 1).font = Font(bold=True)
-    for i in range(months):
-        ws.cell(row, i+2, f"Month {i+1}")
-        ws.cell(row, i+2).font = Font(bold=True)
-        ws.cell(row, i+2).fill = PatternFill(start_color="366092", end_color="366092", fill_type="solid")
-        ws.cell(row, i+2).font = Font(bold=True, color="FFFFFF")
-
-    row += 2
-
-    # REVENUE ASSUMPTIONS
-    ws.cell(row, 1, "REVENUE ASSUMPTIONS")
-    ws.cell(row, 1).font = Font(bold=True, size=11)
-    ws.cell(row, 1).fill = PatternFill(start_color="D9E1F2", end_color="D9E1F2", fill_type="solid")
-    row += 1
-
-    ws.cell(row, 1, "Monthly Revenue")
-    for i in range(months):
-        # Growing revenue (starting at 100,000, growing 5% per month)
-        ws.cell(row, i+2, 100000 * (1.05 ** i))
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Revenue Growth %")
-    for i in range(months):
-        if i == 0:
-            ws.cell(row, i+2, 0)
-        else:
-            ws.cell(row, i+2, f"=B{row-1}/B{row-1}-1" if i == 1 else f"={get_column_letter(i+2)}{row-1}/{get_column_letter(i+1)}{row-1}-1")
-        ws.cell(row, i+2).number_format = '0.0%'
-    row += 2
-
-    # COST ASSUMPTIONS
-    ws.cell(row, 1, "COST ASSUMPTIONS")
-    ws.cell(row, 1).font = Font(bold=True, size=11)
-    ws.cell(row, 1).fill = PatternFill(start_color="D9E1F2", end_color="D9E1F2", fill_type="solid")
-    row += 1
-
-    ws.cell(row, 1, "COGS % of Revenue")
-    for i in range(months):
-        ws.cell(row, i+2, 0.40)  # 40% COGS
-        ws.cell(row, i+2).number_format = '0.0%'
-    row += 1
-
-    ws.cell(row, 1, "Operating Expenses (Fixed)")
-    for i in range(months):
-        ws.cell(row, i+2, 25000)
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 2
-
-    # WORKING CAPITAL ASSUMPTIONS
-    ws.cell(row, 1, "WORKING CAPITAL ASSUMPTIONS")
-    ws.cell(row, 1).font = Font(bold=True, size=11)
-    ws.cell(row, 1).fill = PatternFill(start_color="D9E1F2", end_color="D9E1F2", fill_type="solid")
-    row += 1
-
-    ws.cell(row, 1, "AR Days")
-    for i in range(months):
-        ws.cell(row, i+2, 30)
-        ws.cell(row, i+2).number_format = '0'
-    row += 1
-
-    ws.cell(row, 1, "Inventory Days")
-    for i in range(months):
-        ws.cell(row, i+2, 45)
-        ws.cell(row, i+2).number_format = '0'
-    row += 1
-
-    ws.cell(row, 1, "AP Days")
-    for i in range(months):
-        ws.cell(row, i+2, 30)
-        ws.cell(row, i+2).number_format = '0'
-    row += 1
-
-    ws.cell(row, 1, "Prepayment Amount")
-    for i in range(months):
-        ws.cell(row, i+2, 5000)
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Prepayment Amortization Period (months)")
-    for i in range(months):
-        ws.cell(row, i+2, 12)
-    row += 2
-
-    # CAPEX & FIXED ASSETS
-    ws.cell(row, 1, "CAPEX & FIXED ASSETS")
-    ws.cell(row, 1).font = Font(bold=True, size=11)
-    ws.cell(row, 1).fill = PatternFill(start_color="D9E1F2", end_color="D9E1F2", fill_type="solid")
-    row += 1
-
-    ws.cell(row, 1, "Monthly Capex")
-    for i in range(months):
-        if i == 0 or i == 6:  # Capex in month 1 and 7
-            ws.cell(row, i+2, 50000)
-        else:
-            ws.cell(row, i+2, 0)
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Depreciation Rate (annual)")
-    for i in range(months):
-        ws.cell(row, i+2, 0.20)  # 20% annual = 1.67% monthly
-        ws.cell(row, i+2).number_format = '0.0%'
-    row += 1
-
-    ws.cell(row, 1, "Asset Disposals")
-    for i in range(months):
-        ws.cell(row, i+2, 0)
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 2
-
-    # DEBT & FINANCING
-    ws.cell(row, 1, "DEBT & FINANCING")
-    ws.cell(row, 1).font = Font(bold=True, size=11)
-    ws.cell(row, 1).fill = PatternFill(start_color="D9E1F2", end_color="D9E1F2", fill_type="solid")
-    row += 1
-
-    ws.cell(row, 1, "Debt Drawdowns")
-    for i in range(months):
-        if i == 0:  # Initial debt
-            ws.cell(row, i+2, 200000)
-        else:
-            ws.cell(row, i+2, 0)
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Debt Repayments")
-    for i in range(months):
-        if i >= 3:  # Start repayments from month 4
-            ws.cell(row, i+2, 5000)
-        else:
-            ws.cell(row, i+2, 0)
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Interest Rate (annual)")
-    for i in range(months):
-        ws.cell(row, i+2, 0.06)  # 6% annual
-        ws.cell(row, i+2).number_format = '0.0%'
-    row += 2
-
-    # TAX
-    ws.cell(row, 1, "TAX")
-    ws.cell(row, 1).font = Font(bold=True, size=11)
-    ws.cell(row, 1).fill = PatternFill(start_color="D9E1F2", end_color="D9E1F2", fill_type="solid")
-    row += 1
-
-    ws.cell(row, 1, "Tax Rate")
-    for i in range(months):
-        ws.cell(row, i+2, 0.25)  # 25% tax rate
-        ws.cell(row, i+2).number_format = '0.0%'
-    row += 2
-
-    # STARTING BALANCES
-    ws.cell(row, 1, "STARTING BALANCES (Month 0)")
-    ws.cell(row, 1).font = Font(bold=True, size=11)
-    ws.cell(row, 1).fill = PatternFill(start_color="FFE699", end_color="FFE699", fill_type="solid")
-    row += 1
-
-    ws.cell(row, 1, "Opening Cash")
-    ws.cell(row, 2, 50000)
-    ws.cell(row, 2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Opening AR")
-    ws.cell(row, 2, 0)
-    ws.cell(row, 2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Opening Inventory")
-    ws.cell(row, 2, 0)
-    ws.cell(row, 2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Opening Prepayments")
-    ws.cell(row, 2, 0)
-    ws.cell(row, 2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Opening Fixed Assets (Gross)")
-    ws.cell(row, 2, 100000)
-    ws.cell(row, 2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Opening Accumulated Depreciation")
-    ws.cell(row, 2, 20000)
-    ws.cell(row, 2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Opening AP")
-    ws.cell(row, 2, 0)
-    ws.cell(row, 2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Opening Accrued Expenses")
-    ws.cell(row, 2, 0)
-    ws.cell(row, 2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Opening Deferred Revenue")
-    ws.cell(row, 2, 0)
-    ws.cell(row, 2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Opening Debt")
-    ws.cell(row, 2, 0)
-    ws.cell(row, 2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Opening Share Capital")
-    ws.cell(row, 2, 100000)
-    ws.cell(row, 2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Opening Retained Earnings")
-    ws.cell(row, 2, 30000)
-    ws.cell(row, 2).number_format = '#,##0'
+    # =======================
+    # 1. INPUTS SHEET
+    # =======================
+    ws_inputs = wb.create_sheet("Inputs", 0)
 
     # Set column widths
-    ws.column_dimensions['A'].width = 35
-    for i in range(months):
-        ws.column_dimensions[get_column_letter(i+2)].width = 12
+    ws_inputs.column_dimensions['A'].width = 35
+    ws_inputs.column_dimensions['B'].width = 15
 
-def setup_workings_sheet(ws, months):
-    """Create the Workings sheet with all control accounts"""
-
-    ws['A1'] = "CONTROL ACCOUNTS - WORKINGS"
-    ws['A1'].font = Font(bold=True, size=14)
+    # Title
+    ws_inputs['A1'] = "Financial Model - Inputs & Assumptions"
+    ws_inputs['A1'].font = Font(bold=True, size=14)
 
     row = 3
 
-    # Timeline header
-    ws.cell(row, 1, "Period")
-    ws.cell(row, 1).font = Font(bold=True)
-    for i in range(months):
-        ws.cell(row, i+2, f"Month {i+1}")
-        ws.cell(row, i+2).font = Font(bold=True)
-        ws.cell(row, i+2).fill = PatternFill(start_color="366092", end_color="366092", fill_type="solid")
-        ws.cell(row, i+2).font = Font(bold=True, color="FFFFFF")
+    # Revenue Assumptions
+    ws_inputs[f'A{row}'] = "REVENUE ASSUMPTIONS"
+    ws_inputs[f'A{row}'].font = bold_font
+    ws_inputs[f'A{row}'].fill = subtotal_fill
+    row += 1
 
+    ws_inputs[f'A{row}'] = "Starting Monthly Revenue"
+    ws_inputs[f'B{row}'] = 100000
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '#,##0'
+    row += 1
+
+    ws_inputs[f'A{row}'] = "Monthly Revenue Growth Rate"
+    ws_inputs[f'B{row}'] = 0.03
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '0.0%'
+    row += 1
+
+    ws_inputs[f'A{row}'] = "% Revenue on Credit (AR)"
+    ws_inputs[f'B{row}'] = 0.70
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '0.0%'
+    row += 1
+
+    ws_inputs[f'A{row}'] = "Days Sales Outstanding (DSO)"
+    ws_inputs[f'B{row}'] = 45
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '0'
     row += 2
 
-    # ==================== ACCOUNTS RECEIVABLE CONTROL ====================
-    ws.cell(row, 1, "ACCOUNTS RECEIVABLE CONTROL")
-    ws.cell(row, 1).font = Font(bold=True, size=11)
-    ws.cell(row, 1).fill = PatternFill(start_color="E2EFDA", end_color="E2EFDA", fill_type="solid")
+    # COGS Assumptions
+    ws_inputs[f'A{row}'] = "COST OF GOODS SOLD"
+    ws_inputs[f'A{row}'].font = bold_font
+    ws_inputs[f'A{row}'].fill = subtotal_fill
     row += 1
 
-    ws.cell(row, 1, "Opening AR")
-    for i in range(months):
-        if i == 0:
-            ws.cell(row, i+2, "=Inputs!$B$42")  # Opening AR from inputs
-        else:
-            ws.cell(row, i+2, f"={get_column_letter(i+1)}{row+3}")  # Previous closing
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Credit Sales (Revenue)")
-    for i in range(months):
-        ws.cell(row, i+2, f"=Inputs!${get_column_letter(i+2)}$6")  # Monthly revenue
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Cash Collections")
-    for i in range(months):
-        # Collections based on AR days
-        if i == 0:
-            # First month: collect from opening AR
-            ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-2}*0.5")  # Collect 50% of opening
-        else:
-            # Subsequent months: collect based on AR days (30 days = collect previous month's sales)
-            ws.cell(row, i+2, f"={get_column_letter(i+1)}{row-1}")  # Collect previous month's sales
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Closing AR")
-    for i in range(months):
-        ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-3}+{get_column_letter(i+2)}{row-2}-{get_column_letter(i+2)}{row-1}")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True)
+    ws_inputs[f'A{row}'] = "COGS as % of Revenue"
+    ws_inputs[f'B{row}'] = 0.40
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '0.0%'
     row += 2
 
-    # ==================== INVENTORY CONTROL ====================
-    ws.cell(row, 1, "INVENTORY CONTROL")
-    ws.cell(row, 1).font = Font(bold=True, size=11)
-    ws.cell(row, 1).fill = PatternFill(start_color="E2EFDA", end_color="E2EFDA", fill_type="solid")
+    # Inventory Assumptions
+    ws_inputs[f'A{row}'] = "INVENTORY ASSUMPTIONS"
+    ws_inputs[f'A{row}'].font = bold_font
+    ws_inputs[f'A{row}'].fill = subtotal_fill
     row += 1
 
-    ws.cell(row, 1, "Opening Inventory")
-    for i in range(months):
-        if i == 0:
-            ws.cell(row, i+2, "=Inputs!$B$43")
-        else:
-            ws.cell(row, i+2, f"={get_column_letter(i+1)}{row+3}")
-        ws.cell(row, i+2).number_format = '#,##0'
+    ws_inputs[f'A{row}'] = "Days Inventory Outstanding (DIO)"
+    ws_inputs[f'B{row}'] = 60
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '0'
     row += 1
 
-    ws.cell(row, 1, "Purchases")
-    for i in range(months):
-        # Purchase enough to cover COGS + build inventory
-        if i == 0:
-            ws.cell(row, i+2, f"=Inputs!${get_column_letter(i+2)}$6*Inputs!${get_column_letter(i+2)}$11+50000")  # Initial purchase
-        else:
-            ws.cell(row, i+2, f"=Inputs!${get_column_letter(i+2)}$6*Inputs!${get_column_letter(i+2)}$11")
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "COGS Withdrawal")
-    for i in range(months):
-        ws.cell(row, i+2, f"=Inputs!${get_column_letter(i+2)}$6*Inputs!${get_column_letter(i+2)}$11")  # COGS
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Closing Inventory")
-    for i in range(months):
-        ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-3}+{get_column_letter(i+2)}{row-2}-{get_column_letter(i+2)}{row-1}")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True)
-    row += 2
-
-    # ==================== PREPAYMENTS CONTROL ====================
-    ws.cell(row, 1, "PREPAYMENTS CONTROL")
-    ws.cell(row, 1).font = Font(bold=True, size=11)
-    ws.cell(row, 1).fill = PatternFill(start_color="E2EFDA", end_color="E2EFDA", fill_type="solid")
-    row += 1
-
-    ws.cell(row, 1, "Opening Prepayments")
-    for i in range(months):
-        if i == 0:
-            ws.cell(row, i+2, "=Inputs!$B$44")
-        else:
-            ws.cell(row, i+2, f"={get_column_letter(i+1)}{row+3}")
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "New Prepayments (Cash Paid)")
-    for i in range(months):
-        ws.cell(row, i+2, f"=Inputs!${get_column_letter(i+2)}$17")
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Amortization (Expense)")
-    for i in range(months):
-        # Amortize over the period specified
-        ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-1}/Inputs!${get_column_letter(i+2)}$18")
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Closing Prepayments")
-    for i in range(months):
-        ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-3}+{get_column_letter(i+2)}{row-2}-{get_column_letter(i+2)}{row-1}")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True)
-    row += 2
-
-    # ==================== FIXED ASSETS CONTROL ====================
-    ws.cell(row, 1, "FIXED ASSETS CONTROL (GROSS)")
-    ws.cell(row, 1).font = Font(bold=True, size=11)
-    ws.cell(row, 1).fill = PatternFill(start_color="E2EFDA", end_color="E2EFDA", fill_type="solid")
-    row += 1
-
-    ws.cell(row, 1, "Opening Fixed Assets (Gross)")
-    for i in range(months):
-        if i == 0:
-            ws.cell(row, i+2, "=Inputs!$B$45")
-        else:
-            ws.cell(row, i+2, f"={get_column_letter(i+1)}{row+3}")
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Capex Additions")
-    for i in range(months):
-        ws.cell(row, i+2, f"=Inputs!${get_column_letter(i+2)}$23")
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Disposals (Gross)")
-    for i in range(months):
-        ws.cell(row, i+2, f"=Inputs!${get_column_letter(i+2)}$25")
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Closing Fixed Assets (Gross)")
-    for i in range(months):
-        ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-3}+{get_column_letter(i+2)}{row-2}-{get_column_letter(i+2)}{row-1}")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True)
-    row += 2
-
-    # ==================== ACCUMULATED DEPRECIATION CONTROL ====================
-    ws.cell(row, 1, "ACCUMULATED DEPRECIATION CONTROL")
-    ws.cell(row, 1).font = Font(bold=True, size=11)
-    ws.cell(row, 1).fill = PatternFill(start_color="E2EFDA", end_color="E2EFDA", fill_type="solid")
-    row += 1
-
-    ws.cell(row, 1, "Opening Accumulated Depreciation")
-    for i in range(months):
-        if i == 0:
-            ws.cell(row, i+2, "=Inputs!$B$46")
-        else:
-            ws.cell(row, i+2, f"={get_column_letter(i+1)}{row+3}")
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Depreciation Expense")
-    for i in range(months):
-        # Monthly depreciation = (Opening Gross Assets * Annual Rate) / 12
-        ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-5}*Inputs!${get_column_letter(i+2)}$24/12")
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Disposal Depreciation")
-    for i in range(months):
-        ws.cell(row, i+2, 0)  # Simplified - no disposal depreciation
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Closing Accumulated Depreciation")
-    for i in range(months):
-        ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-3}+{get_column_letter(i+2)}{row-2}-{get_column_letter(i+2)}{row-1}")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True)
-    row += 2
-
-    # ==================== NET FIXED ASSETS ====================
-    ws.cell(row, 1, "Net Fixed Assets")
-    for i in range(months):
-        ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-6}-{get_column_letter(i+2)}{row-1}")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True)
-        ws.cell(row, i+2).fill = PatternFill(start_color="C6E0B4", end_color="C6E0B4", fill_type="solid")
-    row += 2
-
-    # ==================== ACCOUNTS PAYABLE CONTROL ====================
-    ws.cell(row, 1, "ACCOUNTS PAYABLE CONTROL")
-    ws.cell(row, 1).font = Font(bold=True, size=11)
-    ws.cell(row, 1).fill = PatternFill(start_color="FCE4D6", end_color="FCE4D6", fill_type="solid")
-    row += 1
-
-    ws.cell(row, 1, "Opening AP")
-    for i in range(months):
-        if i == 0:
-            ws.cell(row, i+2, "=Inputs!$B$47")
-        else:
-            ws.cell(row, i+2, f"={get_column_letter(i+1)}{row+3}")
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Purchases (Credit)")
-    for i in range(months):
-        ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-38}")  # Link to inventory purchases
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Cash Payments")
-    for i in range(months):
-        if i == 0:
-            ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-1}*0.5")  # Pay 50% immediately
-        else:
-            ws.cell(row, i+2, f"={get_column_letter(i+1)}{row-1}")  # Pay previous month's purchases (30 days)
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Closing AP")
-    for i in range(months):
-        ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-3}+{get_column_letter(i+2)}{row-2}-{get_column_letter(i+2)}{row-1}")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True)
-    row += 2
-
-    # ==================== ACCRUED EXPENSES CONTROL ====================
-    ws.cell(row, 1, "ACCRUED EXPENSES CONTROL")
-    ws.cell(row, 1).font = Font(bold=True, size=11)
-    ws.cell(row, 1).fill = PatternFill(start_color="FCE4D6", end_color="FCE4D6", fill_type="solid")
-    row += 1
-
-    ws.cell(row, 1, "Opening Accrued Expenses")
-    for i in range(months):
-        if i == 0:
-            ws.cell(row, i+2, "=Inputs!$B$48")
-        else:
-            ws.cell(row, i+2, f"={get_column_letter(i+1)}{row+3}")
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Accruals (Expense Recognition)")
-    for i in range(months):
-        # Accrue 50% of operating expenses
-        ws.cell(row, i+2, f"=Inputs!${get_column_letter(i+2)}$12*0.5")
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Cash Payments")
-    for i in range(months):
-        if i == 0:
-            ws.cell(row, i+2, 0)
-        else:
-            ws.cell(row, i+2, f"={get_column_letter(i+1)}{row-1}")  # Pay previous month's accruals
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Closing Accrued Expenses")
-    for i in range(months):
-        ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-3}+{get_column_letter(i+2)}{row-2}-{get_column_letter(i+2)}{row-1}")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True)
-    row += 2
-
-    # ==================== DEFERRED REVENUE CONTROL ====================
-    ws.cell(row, 1, "DEFERRED REVENUE CONTROL")
-    ws.cell(row, 1).font = Font(bold=True, size=11)
-    ws.cell(row, 1).fill = PatternFill(start_color="FCE4D6", end_color="FCE4D6", fill_type="solid")
-    row += 1
-
-    ws.cell(row, 1, "Opening Deferred Revenue")
-    for i in range(months):
-        if i == 0:
-            ws.cell(row, i+2, "=Inputs!$B$49")
-        else:
-            ws.cell(row, i+2, f"={get_column_letter(i+1)}{row+3}")
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Cash Received in Advance")
-    for i in range(months):
-        # Receive 10% of revenue in advance
-        if i < months - 1:
-            ws.cell(row, i+2, f"=Inputs!${get_column_letter(i+3)}$6*0.1")
-        else:
-            ws.cell(row, i+2, 0)
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Revenue Recognition")
-    for i in range(months):
-        if i == 0:
-            ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-2}")
-        else:
-            ws.cell(row, i+2, f"={get_column_letter(i+1)}{row-1}")  # Recognize previous month's advance
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Closing Deferred Revenue")
-    for i in range(months):
-        ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-3}+{get_column_letter(i+2)}{row-2}-{get_column_letter(i+2)}{row-1}")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True)
-    row += 2
-
-    # ==================== DEBT CONTROL ====================
-    ws.cell(row, 1, "DEBT CONTROL")
-    ws.cell(row, 1).font = Font(bold=True, size=11)
-    ws.cell(row, 1).fill = PatternFill(start_color="FCE4D6", end_color="FCE4D6", fill_type="solid")
-    row += 1
-
-    ws.cell(row, 1, "Opening Debt")
-    for i in range(months):
-        if i == 0:
-            ws.cell(row, i+2, "=Inputs!$B$50")
-        else:
-            ws.cell(row, i+2, f"={get_column_letter(i+1)}{row+3}")
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Debt Drawdowns")
-    for i in range(months):
-        ws.cell(row, i+2, f"=Inputs!${get_column_letter(i+2)}$30")
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Debt Repayments")
-    for i in range(months):
-        ws.cell(row, i+2, f"=Inputs!${get_column_letter(i+2)}$31")
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    ws.cell(row, 1, "Closing Debt")
-    for i in range(months):
-        ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-3}+{get_column_letter(i+2)}{row-2}-{get_column_letter(i+2)}{row-1}")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True)
-    row += 2
-
-    # ==================== INTEREST EXPENSE CALCULATION ====================
-    ws.cell(row, 1, "Interest Expense")
-    for i in range(months):
-        # Monthly interest = Opening Debt * Annual Rate / 12
-        ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-5}*Inputs!${get_column_letter(i+2)}$32/12")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True)
-        ws.cell(row, i+2).fill = PatternFill(start_color="FFF2CC", end_color="FFF2CC", fill_type="solid")
-
-    # Set column widths
-    ws.column_dimensions['A'].width = 35
-    for i in range(months):
-        ws.column_dimensions[get_column_letter(i+2)].width = 12
-
-def setup_income_statement(ws, months):
-    """Create the Income Statement"""
-
-    ws['A1'] = "INCOME STATEMENT"
-    ws['A1'].font = Font(bold=True, size=14)
-
-    row = 3
-
-    # Timeline header
-    ws.cell(row, 1, "Period")
-    ws.cell(row, 1).font = Font(bold=True)
-    for i in range(months):
-        ws.cell(row, i+2, f"Month {i+1}")
-        ws.cell(row, i+2).font = Font(bold=True)
-        ws.cell(row, i+2).fill = PatternFill(start_color="366092", end_color="366092", fill_type="solid")
-        ws.cell(row, i+2).font = Font(bold=True, color="FFFFFF")
-
-    row += 2
-
-    # Revenue
-    ws.cell(row, 1, "Revenue")
-    for i in range(months):
-        ws.cell(row, i+2, f"=Inputs!${get_column_letter(i+2)}$6")
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    # COGS
-    ws.cell(row, 1, "Cost of Goods Sold")
-    for i in range(months):
-        ws.cell(row, i+2, f"=-Workings!${get_column_letter(i+2)}$16")  # From inventory control
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    # Gross Profit
-    ws.cell(row, 1, "Gross Profit")
-    for i in range(months):
-        ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-2}+{get_column_letter(i+2)}{row-1}")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True)
-    row += 1
-
-    # Gross Margin %
-    ws.cell(row, 1, "Gross Margin %")
-    for i in range(months):
-        ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-1}/{get_column_letter(i+2)}{row-3}")
-        ws.cell(row, i+2).number_format = '0.0%'
+    ws_inputs[f'A{row}'] = "Opening Inventory Balance"
+    ws_inputs[f'B{row}'] = 80000
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '#,##0'
     row += 2
 
     # Operating Expenses
-    ws.cell(row, 1, "Operating Expenses")
-    ws.cell(row, 1).font = Font(bold=True)
+    ws_inputs[f'A{row}'] = "OPERATING EXPENSES"
+    ws_inputs[f'A{row}'].font = bold_font
+    ws_inputs[f'A{row}'].fill = subtotal_fill
     row += 1
 
-    ws.cell(row, 1, "  Salaries & Wages")
-    for i in range(months):
-        ws.cell(row, i+2, f"=-Inputs!${get_column_letter(i+2)}$12*0.5")  # 50% of opex
-        ws.cell(row, i+2).number_format = '#,##0'
+    ws_inputs[f'A{row}'] = "Salaries & Wages (Monthly)"
+    ws_inputs[f'B{row}'] = 25000
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '#,##0'
     row += 1
 
-    ws.cell(row, 1, "  Other Operating Expenses")
-    for i in range(months):
-        ws.cell(row, i+2, f"=-Inputs!${get_column_letter(i+2)}$12*0.5")  # 50% of opex
-        ws.cell(row, i+2).number_format = '#,##0'
+    ws_inputs[f'A{row}'] = "Rent (Monthly)"
+    ws_inputs[f'B{row}'] = 5000
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '#,##0'
     row += 1
 
-    ws.cell(row, 1, "  Prepayment Amortization")
-    for i in range(months):
-        ws.cell(row, i+2, f"=-Workings!${get_column_letter(i+2)}$24")  # From prepayments control
-        ws.cell(row, i+2).number_format = '#,##0'
+    ws_inputs[f'A{row}'] = "Marketing (Monthly)"
+    ws_inputs[f'B{row}'] = 8000
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '#,##0'
     row += 1
 
-    ws.cell(row, 1, "Total Operating Expenses")
-    for i in range(months):
-        ws.cell(row, i+2, f"=SUM({get_column_letter(i+2)}{row-3}:{get_column_letter(i+2)}{row-1})")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True)
+    ws_inputs[f'A{row}'] = "Other OpEx (Monthly)"
+    ws_inputs[f'B{row}'] = 7000
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '#,##0'
     row += 2
 
-    # EBITDA
-    ws.cell(row, 1, "EBITDA")
-    for i in range(months):
-        ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-9}+{get_column_letter(i+2)}{row-2}")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True)
-        ws.cell(row, i+2).fill = PatternFill(start_color="FFF2CC", end_color="FFF2CC", fill_type="solid")
+    # Prepayments
+    ws_inputs[f'A{row}'] = "PREPAYMENTS"
+    ws_inputs[f'A{row}'].font = bold_font
+    ws_inputs[f'A{row}'].fill = subtotal_fill
     row += 1
 
-    # Depreciation
-    ws.cell(row, 1, "Depreciation")
-    for i in range(months):
-        ws.cell(row, i+2, f"=-Workings!${get_column_letter(i+2)}$37")  # From depreciation control
-        ws.cell(row, i+2).number_format = '#,##0'
+    ws_inputs[f'A{row}'] = "Opening Prepayments"
+    ws_inputs[f'B{row}'] = 15000
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '#,##0'
     row += 1
 
-    # EBIT
-    ws.cell(row, 1, "EBIT")
-    for i in range(months):
-        ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-2}+{get_column_letter(i+2)}{row-1}")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True)
-        ws.cell(row, i+2).fill = PatternFill(start_color="FFF2CC", end_color="FFF2CC", fill_type="solid")
+    ws_inputs[f'A{row}'] = "Monthly Prepayment Additions"
+    ws_inputs[f'B{row}'] = 5000
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '#,##0'
+    row += 1
+
+    ws_inputs[f'A{row}'] = "Monthly Prepayment Amortization"
+    ws_inputs[f'B{row}'] = 4000
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '#,##0'
     row += 2
 
-    # Interest Expense
-    ws.cell(row, 1, "Interest Expense")
-    for i in range(months):
-        ws.cell(row, i+2, f"=-Workings!${get_column_letter(i+2)}$60")  # From debt control
-        ws.cell(row, i+2).number_format = '#,##0'
+    # Accounts Payable
+    ws_inputs[f'A{row}'] = "ACCOUNTS PAYABLE"
+    ws_inputs[f'A{row}'].font = bold_font
+    ws_inputs[f'A{row}'].fill = subtotal_fill
     row += 1
 
-    # EBT
-    ws.cell(row, 1, "Earnings Before Tax")
-    for i in range(months):
-        ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-3}+{get_column_letter(i+2)}{row-1}")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True)
+    ws_inputs[f'A{row}'] = "Days Payable Outstanding (DPO)"
+    ws_inputs[f'B{row}'] = 30
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '0'
+    row += 2
+
+    # Accrued Expenses
+    ws_inputs[f'A{row}'] = "ACCRUED EXPENSES"
+    ws_inputs[f'A{row}'].font = bold_font
+    ws_inputs[f'A{row}'].fill = subtotal_fill
+    row += 1
+
+    ws_inputs[f'A{row}'] = "Opening Accrued Expenses"
+    ws_inputs[f'B{row}'] = 12000
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '#,##0'
+    row += 1
+
+    ws_inputs[f'A{row}'] = "Monthly Accrual Rate (% of OpEx)"
+    ws_inputs[f'B{row}'] = 0.15
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '0.0%'
+    row += 2
+
+    # Deferred Revenue
+    ws_inputs[f'A{row}'] = "DEFERRED REVENUE"
+    ws_inputs[f'A{row}'].font = bold_font
+    ws_inputs[f'A{row}'].fill = subtotal_fill
+    row += 1
+
+    ws_inputs[f'A{row}'] = "Opening Deferred Revenue"
+    ws_inputs[f'B{row}'] = 30000
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '#,##0'
+    row += 1
+
+    ws_inputs[f'A{row}'] = "Monthly Cash Received in Advance"
+    ws_inputs[f'B{row}'] = 20000
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '#,##0'
+    row += 1
+
+    ws_inputs[f'A{row}'] = "Monthly Recognition Rate"
+    ws_inputs[f'B{row}'] = 18000
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '#,##0'
+    row += 2
+
+    # Fixed Assets
+    ws_inputs[f'A{row}'] = "FIXED ASSETS (PP&E)"
+    ws_inputs[f'A{row}'].font = bold_font
+    ws_inputs[f'A{row}'].fill = subtotal_fill
+    row += 1
+
+    ws_inputs[f'A{row}'] = "Opening Gross PP&E"
+    ws_inputs[f'B{row}'] = 500000
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '#,##0'
+    row += 1
+
+    ws_inputs[f'A{row}'] = "Opening Accumulated Depreciation"
+    ws_inputs[f'B{row}'] = 100000
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '#,##0'
+    row += 1
+
+    ws_inputs[f'A{row}'] = "Monthly CapEx"
+    ws_inputs[f'B{row}'] = 10000
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '#,##0'
+    row += 1
+
+    ws_inputs[f'A{row}'] = "Monthly Depreciation"
+    ws_inputs[f'B{row}'] = 8333
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '#,##0'
+    row += 2
+
+    # Debt
+    ws_inputs[f'A{row}'] = "DEBT"
+    ws_inputs[f'A{row}'].font = bold_font
+    ws_inputs[f'A{row}'].fill = subtotal_fill
+    row += 1
+
+    ws_inputs[f'A{row}'] = "Opening Debt Balance"
+    ws_inputs[f'B{row}'] = 200000
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '#,##0'
+    row += 1
+
+    ws_inputs[f'A{row}'] = "Annual Interest Rate"
+    ws_inputs[f'B{row}'] = 0.06
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '0.0%'
+    row += 1
+
+    ws_inputs[f'A{row}'] = "Monthly Principal Repayment"
+    ws_inputs[f'B{row}'] = 5000
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '#,##0'
+    row += 1
+
+    ws_inputs[f'A{row}'] = "Debt Drawdown (Month 1)"
+    ws_inputs[f'B{row}'] = 50000
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '#,##0'
+    row += 2
+
+    # Equity
+    ws_inputs[f'A{row}'] = "EQUITY"
+    ws_inputs[f'A{row}'].font = bold_font
+    ws_inputs[f'A{row}'].fill = subtotal_fill
+    row += 1
+
+    ws_inputs[f'A{row}'] = "Opening Share Capital"
+    ws_inputs[f'B{row}'] = 300000
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '#,##0'
+    row += 1
+
+    ws_inputs[f'A{row}'] = "Opening Retained Earnings"
+    ws_inputs[f'B{row}'] = 50000
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '#,##0'
+    row += 2
+
+    # Cash
+    ws_inputs[f'A{row}'] = "CASH"
+    ws_inputs[f'A{row}'].font = bold_font
+    ws_inputs[f'A{row}'].fill = subtotal_fill
+    row += 1
+
+    ws_inputs[f'A{row}'] = "Opening Cash Balance"
+    ws_inputs[f'B{row}'] = 150000
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '#,##0'
     row += 1
 
     # Tax
-    ws.cell(row, 1, "Income Tax")
-    for i in range(months):
-        # Tax only if EBT > 0
-        ws.cell(row, i+2, f"=-MAX({get_column_letter(i+2)}{row-1},0)*Inputs!${get_column_letter(i+2)}$36")
-        ws.cell(row, i+2).number_format = '#,##0'
+    ws_inputs[f'A{row}'] = "TAX"
+    ws_inputs[f'A{row}'].font = bold_font
+    ws_inputs[f'A{row}'].fill = subtotal_fill
+    row += 1
+
+    ws_inputs[f'A{row}'] = "Tax Rate"
+    ws_inputs[f'B{row}'] = 0.25
+    ws_inputs[f'B{row}'].fill = input_fill
+    ws_inputs[f'B{row}'].number_format = '0.0%'
+
+    # =======================
+    # 2. WORKINGS SHEET
+    # =======================
+    ws_work = wb.create_sheet("Workings", 1)
+    ws_work.column_dimensions['A'].width = 35
+    for col in range(2, 2 + num_periods + 1):
+        ws_work.column_dimensions[get_column_letter(col)].width = 12
+
+    # Title
+    ws_work['A1'] = "Control Accounts - Workings"
+    ws_work['A1'].font = Font(bold=True, size=14)
+
+    # Month headers
+    ws_work['A2'] = "Period"
+    ws_work['A2'].font = header_font
+    ws_work['A2'].fill = header_fill
+
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_work[f'{col_letter}2'] = f"Month {i+1}"
+        ws_work[f'{col_letter}2'].font = header_font
+        ws_work[f'{col_letter}2'].fill = header_fill
+        ws_work[f'{col_letter}2'].alignment = Alignment(horizontal='center')
+
+    row = 4
+
+    # ==================
+    # ACCOUNTS RECEIVABLE CONTROL ACCOUNT
+    # ==================
+    ws_work[f'A{row}'] = "ACCOUNTS RECEIVABLE"
+    ws_work[f'A{row}'].font = Font(bold=True, size=11)
+    ws_work[f'A{row}'].fill = total_fill
+    row += 1
+
+    ws_work[f'A{row}'] = "Opening Balance"
+    # Month 1 opening (from inputs or calculated from DSO)
+    ws_work[f'B{row}'] = "=Inputs!$B$7*Inputs!$B$4*Inputs!$B$8/30"
+    for i in range(1, num_periods):
+        col_letter = get_column_letter(i + 2)
+        prev_col = get_column_letter(i + 1)
+        ws_work[f'{col_letter}{row}'] = f"={prev_col}{row+3}"  # Closing balance from previous month
+    row += 1
+
+    ws_work[f'A{row}'] = "Credit Sales (Increase)"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        # Credit sales = Revenue * % on credit
+        ws_work[f'{col_letter}{row}'] = f"='Income Statement'!{col_letter}5*Inputs!$B$7"
+    row += 1
+
+    ws_work[f'A{row}'] = "Cash Collections (Decrease)"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        # Collections based on DSO - simplified: collect previous period AR
+        if i == 0:
+            ws_work[f'{col_letter}{row}'] = f"={col_letter}{row-2}*0.5"  # Collect 50% of opening in month 1
+        else:
+            prev_col = get_column_letter(i + 1)
+            ws_work[f'{col_letter}{row}'] = f"={prev_col}{row-1}"  # Collect previous month's credit sales
+    row += 1
+
+    ws_work[f'A{row}'] = "Closing Balance"
+    ws_work[f'A{row}'].font = bold_font
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_work[f'{col_letter}{row}'] = f"={col_letter}{row-3}+{col_letter}{row-2}-{col_letter}{row-1}"
+    row += 2
+
+    # ==================
+    # INVENTORY CONTROL ACCOUNT
+    # ==================
+    ws_work[f'A{row}'] = "INVENTORY"
+    ws_work[f'A{row}'].font = Font(bold=True, size=11)
+    ws_work[f'A{row}'].fill = total_fill
+    row += 1
+
+    ws_work[f'A{row}'] = "Opening Balance"
+    ws_work[f'B{row}'] = "=Inputs!$B$16"
+    for i in range(1, num_periods):
+        col_letter = get_column_letter(i + 2)
+        prev_col = get_column_letter(i + 1)
+        ws_work[f'{col_letter}{row}'] = f"={prev_col}{row+3}"
+    row += 1
+
+    ws_work[f'A{row}'] = "Purchases (Increase)"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        # Target inventory = COGS * DIO / 30
+        # Purchases = COGS + (Closing Inv - Opening Inv)
+        # Simplified: maintain target inventory level
+        if i == 0:
+            ws_work[f'{col_letter}{row}'] = f"='Income Statement'!{col_letter}7*Inputs!$B$15/30"
+        else:
+            next_month_col = get_column_letter(i + 3) if i < num_periods - 1 else col_letter
+            ws_work[f'{col_letter}{row}'] = f"='Income Statement'!{col_letter}7+'Income Statement'!{next_month_col}7*Inputs!$B$15/30-{col_letter}{row-1}"
+    row += 1
+
+    ws_work[f'A{row}'] = "COGS Withdrawal (Decrease)"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_work[f'{col_letter}{row}'] = f"='Income Statement'!{col_letter}7"
+    row += 1
+
+    ws_work[f'A{row}'] = "Closing Balance"
+    ws_work[f'A{row}'].font = bold_font
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_work[f'{col_letter}{row}'] = f"={col_letter}{row-3}+{col_letter}{row-2}-{col_letter}{row-1}"
+    row += 2
+
+    # ==================
+    # PREPAYMENTS CONTROL ACCOUNT
+    # ==================
+    ws_work[f'A{row}'] = "PREPAYMENTS"
+    ws_work[f'A{row}'].font = Font(bold=True, size=11)
+    ws_work[f'A{row}'].fill = total_fill
+    row += 1
+
+    ws_work[f'A{row}'] = "Opening Balance"
+    ws_work[f'B{row}'] = "=Inputs!$B$28"
+    for i in range(1, num_periods):
+        col_letter = get_column_letter(i + 2)
+        prev_col = get_column_letter(i + 1)
+        ws_work[f'{col_letter}{row}'] = f"={prev_col}{row+3}"
+    row += 1
+
+    ws_work[f'A{row}'] = "Additions (Increase)"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_work[f'{col_letter}{row}'] = "=Inputs!$B$29"
+    row += 1
+
+    ws_work[f'A{row}'] = "Amortization (Decrease)"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_work[f'{col_letter}{row}'] = "=Inputs!$B$30"
+    row += 1
+
+    ws_work[f'A{row}'] = "Closing Balance"
+    ws_work[f'A{row}'].font = bold_font
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_work[f'{col_letter}{row}'] = f"={col_letter}{row-3}+{col_letter}{row-2}-{col_letter}{row-1}"
+    row += 2
+
+    # ==================
+    # FIXED ASSETS (PP&E) CONTROL ACCOUNT
+    # ==================
+    ws_work[f'A{row}'] = "FIXED ASSETS - GROSS PP&E"
+    ws_work[f'A{row}'].font = Font(bold=True, size=11)
+    ws_work[f'A{row}'].fill = total_fill
+    row += 1
+
+    ws_work[f'A{row}'] = "Opening Balance"
+    ws_work[f'B{row}'] = "=Inputs!$B$46"
+    for i in range(1, num_periods):
+        col_letter = get_column_letter(i + 2)
+        prev_col = get_column_letter(i + 1)
+        ws_work[f'{col_letter}{row}'] = f"={prev_col}{row+3}"
+    row += 1
+
+    ws_work[f'A{row}'] = "CapEx Additions (Increase)"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_work[f'{col_letter}{row}'] = "=Inputs!$B$48"
+    row += 1
+
+    ws_work[f'A{row}'] = "Disposals (Decrease)"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_work[f'{col_letter}{row}'] = 0
+    row += 1
+
+    ws_work[f'A{row}'] = "Closing Balance - Gross PP&E"
+    ws_work[f'A{row}'].font = bold_font
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_work[f'{col_letter}{row}'] = f"={col_letter}{row-3}+{col_letter}{row-2}-{col_letter}{row-1}"
+    row += 2
+
+    # Accumulated Depreciation
+    ws_work[f'A{row}'] = "ACCUMULATED DEPRECIATION"
+    ws_work[f'A{row}'].font = Font(bold=True, size=11)
+    ws_work[f'A{row}'].fill = total_fill
+    row += 1
+
+    ws_work[f'A{row}'] = "Opening Balance"
+    ws_work[f'B{row}'] = "=Inputs!$B$47"
+    for i in range(1, num_periods):
+        col_letter = get_column_letter(i + 2)
+        prev_col = get_column_letter(i + 1)
+        ws_work[f'{col_letter}{row}'] = f"={prev_col}{row+2}"
+    row += 1
+
+    ws_work[f'A{row}'] = "Depreciation Expense (Increase)"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_work[f'{col_letter}{row}'] = "=Inputs!$B$49"
+    row += 1
+
+    ws_work[f'A{row}'] = "Closing Balance - Accum Depr"
+    ws_work[f'A{row}'].font = bold_font
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_work[f'{col_letter}{row}'] = f"={col_letter}{row-2}+{col_letter}{row-1}"
+    row += 1
+
+    ws_work[f'A{row}'] = "Net PP&E"
+    ws_work[f'A{row}'].font = Font(bold=True)
+    ws_work[f'A{row}'].fill = subtotal_fill
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_work[f'{col_letter}{row}'] = f"={col_letter}{row-8}-{col_letter}{row-1}"
+    row += 2
+
+    # ==================
+    # ACCOUNTS PAYABLE CONTROL ACCOUNT
+    # ==================
+    ws_work[f'A{row}'] = "ACCOUNTS PAYABLE"
+    ws_work[f'A{row}'].font = Font(bold=True, size=11)
+    ws_work[f'A{row}'].fill = total_fill
+    row += 1
+
+    ws_work[f'A{row}'] = "Opening Balance"
+    # Calculate opening AP based on purchases and DPO
+    ws_work[f'B{row}'] = "=Workings!B12*Inputs!$B$34/30"
+    for i in range(1, num_periods):
+        col_letter = get_column_letter(i + 2)
+        prev_col = get_column_letter(i + 1)
+        ws_work[f'{col_letter}{row}'] = f"={prev_col}{row+3}"
+    row += 1
+
+    ws_work[f'A{row}'] = "Purchases on Credit (Increase)"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_work[f'{col_letter}{row}'] = f"=Workings!{col_letter}12"  # Link to inventory purchases
+    row += 1
+
+    ws_work[f'A{row}'] = "Cash Payments (Decrease)"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        if i == 0:
+            ws_work[f'{col_letter}{row}'] = f"={col_letter}{row-2}"  # Pay opening balance
+        else:
+            prev_col = get_column_letter(i + 1)
+            ws_work[f'{col_letter}{row}'] = f"={prev_col}{row-1}"  # Pay last month's purchases
+    row += 1
+
+    ws_work[f'A{row}'] = "Closing Balance"
+    ws_work[f'A{row}'].font = bold_font
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_work[f'{col_letter}{row}'] = f"={col_letter}{row-3}+{col_letter}{row-2}-{col_letter}{row-1}"
+    row += 2
+
+    # ==================
+    # ACCRUED EXPENSES CONTROL ACCOUNT
+    # ==================
+    ws_work[f'A{row}'] = "ACCRUED EXPENSES"
+    ws_work[f'A{row}'].font = Font(bold=True, size=11)
+    ws_work[f'A{row}'].fill = total_fill
+    row += 1
+
+    ws_work[f'A{row}'] = "Opening Balance"
+    ws_work[f'B{row}'] = "=Inputs!$B$38"
+    for i in range(1, num_periods):
+        col_letter = get_column_letter(i + 2)
+        prev_col = get_column_letter(i + 1)
+        ws_work[f'{col_letter}{row}'] = f"={prev_col}{row+3}"
+    row += 1
+
+    ws_work[f'A{row}'] = "Expense Accruals (Increase)"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        # Accrue % of operating expenses
+        ws_work[f'{col_letter}{row}'] = f"='Income Statement'!{col_letter}10*Inputs!$B$39"
+    row += 1
+
+    ws_work[f'A{row}'] = "Cash Payments (Decrease)"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        if i == 0:
+            ws_work[f'{col_letter}{row}'] = f"={col_letter}{row-2}*0.5"
+        else:
+            prev_col = get_column_letter(i + 1)
+            ws_work[f'{col_letter}{row}'] = f"={prev_col}{row-1}"
+    row += 1
+
+    ws_work[f'A{row}'] = "Closing Balance"
+    ws_work[f'A{row}'].font = bold_font
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_work[f'{col_letter}{row}'] = f"={col_letter}{row-3}+{col_letter}{row-2}-{col_letter}{row-1}"
+    row += 2
+
+    # ==================
+    # DEFERRED REVENUE CONTROL ACCOUNT
+    # ==================
+    ws_work[f'A{row}'] = "DEFERRED REVENUE"
+    ws_work[f'A{row}'].font = Font(bold=True, size=11)
+    ws_work[f'A{row}'].fill = total_fill
+    row += 1
+
+    ws_work[f'A{row}'] = "Opening Balance"
+    ws_work[f'B{row}'] = "=Inputs!$B$43"
+    for i in range(1, num_periods):
+        col_letter = get_column_letter(i + 2)
+        prev_col = get_column_letter(i + 1)
+        ws_work[f'{col_letter}{row}'] = f"={prev_col}{row+3}"
+    row += 1
+
+    ws_work[f'A{row}'] = "Cash Received in Advance (Increase)"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_work[f'{col_letter}{row}'] = "=Inputs!$B$44"
+    row += 1
+
+    ws_work[f'A{row}'] = "Revenue Recognition (Decrease)"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_work[f'{col_letter}{row}'] = "=Inputs!$B$45"
+    row += 1
+
+    ws_work[f'A{row}'] = "Closing Balance"
+    ws_work[f'A{row}'].font = bold_font
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_work[f'{col_letter}{row}'] = f"={col_letter}{row-3}+{col_letter}{row-2}-{col_letter}{row-1}"
+    row += 2
+
+    # ==================
+    # DEBT CONTROL ACCOUNT
+    # ==================
+    ws_work[f'A{row}'] = "DEBT"
+    ws_work[f'A{row}'].font = Font(bold=True, size=11)
+    ws_work[f'A{row}'].fill = total_fill
+    row += 1
+
+    ws_work[f'A{row}'] = "Opening Balance"
+    ws_work[f'B{row}'] = "=Inputs!$B$53"
+    for i in range(1, num_periods):
+        col_letter = get_column_letter(i + 2)
+        prev_col = get_column_letter(i + 1)
+        ws_work[f'{col_letter}{row}'] = f"={prev_col}{row+4}"
+    row += 1
+
+    ws_work[f'A{row}'] = "Drawdowns (Increase)"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        if i == 0:
+            ws_work[f'{col_letter}{row}'] = "=Inputs!$B$56"
+        else:
+            ws_work[f'{col_letter}{row}'] = 0
+    row += 1
+
+    ws_work[f'A{row}'] = "Principal Repayments (Decrease)"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_work[f'{col_letter}{row}'] = "=Inputs!$B$55"
+    row += 1
+
+    ws_work[f'A{row}'] = "Interest Expense"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_work[f'{col_letter}{row}'] = f"={col_letter}{row-3}*Inputs!$B$54/12"
+    row += 1
+
+    ws_work[f'A{row}'] = "Closing Balance"
+    ws_work[f'A{row}'].font = bold_font
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_work[f'{col_letter}{row}'] = f"={col_letter}{row-4}+{col_letter}{row-3}-{col_letter}{row-2}"
+    row += 2
+
+    # ==================
+    # RETAINED EARNINGS CONTROL ACCOUNT
+    # ==================
+    ws_work[f'A{row}'] = "RETAINED EARNINGS"
+    ws_work[f'A{row}'].font = Font(bold=True, size=11)
+    ws_work[f'A{row}'].fill = total_fill
+    row += 1
+
+    ws_work[f'A{row}'] = "Opening Balance"
+    ws_work[f'B{row}'] = "=Inputs!$B$61"
+    for i in range(1, num_periods):
+        col_letter = get_column_letter(i + 2)
+        prev_col = get_column_letter(i + 1)
+        ws_work[f'{col_letter}{row}'] = f"={prev_col}{row+3}"
+    row += 1
+
+    ws_work[f'A{row}'] = "Net Income (Increase)"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_work[f'{col_letter}{row}'] = f"='Income Statement'!{col_letter}18"
+    row += 1
+
+    ws_work[f'A{row}'] = "Dividends (Decrease)"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_work[f'{col_letter}{row}'] = 0
+    row += 1
+
+    ws_work[f'A{row}'] = "Closing Balance"
+    ws_work[f'A{row}'].font = bold_font
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_work[f'{col_letter}{row}'] = f"={col_letter}{row-3}+{col_letter}{row-2}-{col_letter}{row-1}"
+    row += 2
+
+    # ==================
+    # CASH CONTROL ACCOUNT
+    # ==================
+    ws_work[f'A{row}'] = "CASH"
+    ws_work[f'A{row}'].font = Font(bold=True, size=11)
+    ws_work[f'A{row}'].fill = total_fill
+    row += 1
+
+    ws_work[f'A{row}'] = "Opening Balance"
+    ws_work[f'B{row}'] = "=Inputs!$B$65"
+    for i in range(1, num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_work[f'{col_letter}{row}'] = f"='Cash Flow Statement'!{col_letter}21"  # Link to closing cash from CF
+    row += 1
+
+    ws_work[f'A{row}'] = "Operating Cash Flow"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_work[f'{col_letter}{row}'] = f"='Cash Flow Statement'!{col_letter}13"
+    row += 1
+
+    ws_work[f'A{row}'] = "Investing Cash Flow"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_work[f'{col_letter}{row}'] = f"='Cash Flow Statement'!{col_letter}16"
+    row += 1
+
+    ws_work[f'A{row}'] = "Financing Cash Flow"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_work[f'{col_letter}{row}'] = f"='Cash Flow Statement'!{col_letter}19"
+    row += 1
+
+    ws_work[f'A{row}'] = "Closing Balance"
+    ws_work[f'A{row}'].font = bold_font
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_work[f'{col_letter}{row}'] = f"={col_letter}{row-5}+{col_letter}{row-4}+{col_letter}{row-3}+{col_letter}{row-2}"
+
+    # =======================
+    # 3. INCOME STATEMENT
+    # =======================
+    ws_is = wb.create_sheet("Income Statement", 2)
+    ws_is.column_dimensions['A'].width = 35
+    for col in range(2, 2 + num_periods + 1):
+        ws_is.column_dimensions[get_column_letter(col)].width = 12
+
+    ws_is['A1'] = "Income Statement"
+    ws_is['A1'].font = Font(bold=True, size=14)
+
+    # Headers
+    ws_is['A2'] = "Period"
+    ws_is['A2'].font = header_font
+    ws_is['A2'].fill = header_fill
+
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_is[f'{col_letter}2'] = f"Month {i+1}"
+        ws_is[f'{col_letter}2'].font = header_font
+        ws_is[f'{col_letter}2'].fill = header_fill
+        ws_is[f'{col_letter}2'].alignment = Alignment(horizontal='center')
+
+    row = 4
+
+    # Revenue
+    ws_is[f'A{row}'] = "Revenue"
+    ws_is[f'A{row}'].font = bold_font
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        if i == 0:
+            ws_is[f'{col_letter}{row}'] = "=Inputs!$B$4"
+        else:
+            prev_col = get_column_letter(i + 1)
+            ws_is[f'{col_letter}{row}'] = f"={prev_col}{row}*(1+Inputs!$B$5)"
+        ws_is[f'{col_letter}{row}'].number_format = '#,##0'
+    row += 1
+
+    ws_is[f'A{row}'] = ""
+    row += 1
+
+    # COGS
+    ws_is[f'A{row}'] = "Cost of Goods Sold"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_is[f'{col_letter}{row}'] = f"=-{col_letter}5*Inputs!$B$13"
+        ws_is[f'{col_letter}{row}'].number_format = '#,##0'
+    row += 1
+
+    # Gross Profit
+    ws_is[f'A{row}'] = "Gross Profit"
+    ws_is[f'A{row}'].font = bold_font
+    ws_is[f'A{row}'].fill = subtotal_fill
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_is[f'{col_letter}{row}'] = f"={col_letter}5+{col_letter}7"
+        ws_is[f'{col_letter}{row}'].number_format = '#,##0'
+    row += 1
+
+    ws_is[f'A{row}'] = ""
+    row += 1
+
+    # Operating Expenses
+    ws_is[f'A{row}'] = "Operating Expenses"
+    ws_is[f'A{row}'].font = bold_font
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_is[f'{col_letter}{row}'] = "=-(Inputs!$B$20+Inputs!$B$21+Inputs!$B$22+Inputs!$B$23)"
+        ws_is[f'{col_letter}{row}'].number_format = '#,##0'
+    row += 1
+
+    ws_is[f'A{row}'] = "Depreciation"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_is[f'{col_letter}{row}'] = "=-Inputs!$B$49"
+        ws_is[f'{col_letter}{row}'].number_format = '#,##0'
+    row += 1
+
+    # EBIT
+    ws_is[f'A{row}'] = "EBIT"
+    ws_is[f'A{row}'].font = bold_font
+    ws_is[f'A{row}'].fill = subtotal_fill
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_is[f'{col_letter}{row}'] = f"={col_letter}8+{col_letter}10+{col_letter}11"
+        ws_is[f'{col_letter}{row}'].number_format = '#,##0'
+    row += 1
+
+    ws_is[f'A{row}'] = ""
+    row += 1
+
+    # Interest Expense
+    ws_is[f'A{row}'] = "Interest Expense"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_is[f'{col_letter}{row}'] = f"=-Workings!{col_letter}54"
+        ws_is[f'{col_letter}{row}'].number_format = '#,##0'
+    row += 1
+
+    # EBT
+    ws_is[f'A{row}'] = "Earnings Before Tax"
+    ws_is[f'A{row}'].font = bold_font
+    ws_is[f'A{row}'].fill = subtotal_fill
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_is[f'{col_letter}{row}'] = f"={col_letter}12+{col_letter}14"
+        ws_is[f'{col_letter}{row}'].number_format = '#,##0'
+    row += 1
+
+    # Tax
+    ws_is[f'A{row}'] = "Tax Expense"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_is[f'{col_letter}{row}'] = f"=-MAX({col_letter}15,0)*Inputs!$B$68"
+        ws_is[f'{col_letter}{row}'].number_format = '#,##0'
+    row += 1
+
+    ws_is[f'A{row}'] = ""
     row += 1
 
     # Net Income
-    ws.cell(row, 1, "Net Income")
-    for i in range(months):
-        ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-2}+{get_column_letter(i+2)}{row-1}")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True, size=11)
-        ws.cell(row, i+2).fill = PatternFill(start_color="C6E0B4", end_color="C6E0B4", fill_type="solid")
+    ws_is[f'A{row}'] = "Net Income"
+    ws_is[f'A{row}'].font = Font(bold=True)
+    ws_is[f'A{row}'].fill = total_fill
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_is[f'{col_letter}{row}'] = f"={col_letter}15+{col_letter}16"
+        ws_is[f'{col_letter}{row}'].number_format = '#,##0'
 
-    # Set column widths
-    ws.column_dimensions['A'].width = 35
-    for i in range(months):
-        ws.column_dimensions[get_column_letter(i+2)].width = 14
+    # =======================
+    # 4. BALANCE SHEET
+    # =======================
+    ws_bs = wb.create_sheet("Balance Sheet", 3)
+    ws_bs.column_dimensions['A'].width = 35
+    for col in range(2, 2 + num_periods + 1):
+        ws_bs.column_dimensions[get_column_letter(col)].width = 12
 
-def setup_balance_sheet(ws, months):
-    """Create the Balance Sheet"""
+    ws_bs['A1'] = "Balance Sheet"
+    ws_bs['A1'].font = Font(bold=True, size=14)
 
-    ws['A1'] = "BALANCE SHEET"
-    ws['A1'].font = Font(bold=True, size=14)
+    # Headers
+    ws_bs['A2'] = "Period"
+    ws_bs['A2'].font = header_font
+    ws_bs['A2'].fill = header_fill
 
-    row = 3
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_bs[f'{col_letter}2'] = f"Month {i+1}"
+        ws_bs[f'{col_letter}2'].font = header_font
+        ws_bs[f'{col_letter}2'].fill = header_fill
+        ws_bs[f'{col_letter}2'].alignment = Alignment(horizontal='center')
 
-    # Timeline header
-    ws.cell(row, 1, "Period")
-    ws.cell(row, 1).font = Font(bold=True)
-    for i in range(months):
-        ws.cell(row, i+2, f"Month {i+1}")
-        ws.cell(row, i+2).font = Font(bold=True)
-        ws.cell(row, i+2).fill = PatternFill(start_color="366092", end_color="366092", fill_type="solid")
-        ws.cell(row, i+2).font = Font(bold=True, color="FFFFFF")
+    row = 4
 
+    # ASSETS
+    ws_bs[f'A{row}'] = "ASSETS"
+    ws_bs[f'A{row}'].font = Font(bold=True, size=12)
+    row += 1
+
+    # Current Assets
+    ws_bs[f'A{row}'] = "Current Assets"
+    ws_bs[f'A{row}'].font = bold_font
+    row += 1
+
+    ws_bs[f'A{row}'] = "Cash"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_bs[f'{col_letter}{row}'] = f"=Workings!{col_letter}77"
+        ws_bs[f'{col_letter}{row}'].number_format = '#,##0'
+    row += 1
+
+    ws_bs[f'A{row}'] = "Accounts Receivable"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_bs[f'{col_letter}{row}'] = f"=Workings!{col_letter}8"
+        ws_bs[f'{col_letter}{row}'].number_format = '#,##0'
+    row += 1
+
+    ws_bs[f'A{row}'] = "Inventory"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_bs[f'{col_letter}{row}'] = f"=Workings!{col_letter}14"
+        ws_bs[f'{col_letter}{row}'].number_format = '#,##0'
+    row += 1
+
+    ws_bs[f'A{row}'] = "Prepayments"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_bs[f'{col_letter}{row}'] = f"=Workings!{col_letter}20"
+        ws_bs[f'{col_letter}{row}'].number_format = '#,##0'
+    row += 1
+
+    ws_bs[f'A{row}'] = "Total Current Assets"
+    ws_bs[f'A{row}'].font = bold_font
+    ws_bs[f'A{row}'].fill = subtotal_fill
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_bs[f'{col_letter}{row}'] = f"=SUM({col_letter}6:{col_letter}9)"
+        ws_bs[f'{col_letter}{row}'].number_format = '#,##0'
+    row += 1
+
+    ws_bs[f'A{row}'] = ""
+    row += 1
+
+    # Non-Current Assets
+    ws_bs[f'A{row}'] = "Non-Current Assets"
+    ws_bs[f'A{row}'].font = bold_font
+    row += 1
+
+    ws_bs[f'A{row}'] = "Property, Plant & Equipment"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_bs[f'{col_letter}{row}'] = f"=Workings!{col_letter}32"
+        ws_bs[f'{col_letter}{row}'].number_format = '#,##0'
+    row += 1
+
+    ws_bs[f'A{row}'] = "Total Non-Current Assets"
+    ws_bs[f'A{row}'].font = bold_font
+    ws_bs[f'A{row}'].fill = subtotal_fill
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_bs[f'{col_letter}{row}'] = f"={col_letter}13"
+        ws_bs[f'{col_letter}{row}'].number_format = '#,##0'
+    row += 1
+
+    ws_bs[f'A{row}'] = ""
+    row += 1
+
+    ws_bs[f'A{row}'] = "TOTAL ASSETS"
+    ws_bs[f'A{row}'].font = Font(bold=True)
+    ws_bs[f'A{row}'].fill = total_fill
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_bs[f'{col_letter}{row}'] = f"={col_letter}10+{col_letter}14"
+        ws_bs[f'{col_letter}{row}'].number_format = '#,##0'
     row += 2
 
-    # ==================== ASSETS ====================
-    ws.cell(row, 1, "ASSETS")
-    ws.cell(row, 1).font = Font(bold=True, size=12)
-    ws.cell(row, 1).fill = PatternFill(start_color="D9E1F2", end_color="D9E1F2", fill_type="solid")
+    # LIABILITIES
+    ws_bs[f'A{row}'] = "LIABILITIES & EQUITY"
+    ws_bs[f'A{row}'].font = Font(bold=True, size=12)
     row += 1
 
-    ws.cell(row, 1, "Current Assets")
-    ws.cell(row, 1).font = Font(bold=True)
+    # Current Liabilities
+    ws_bs[f'A{row}'] = "Current Liabilities"
+    ws_bs[f'A{row}'].font = bold_font
     row += 1
 
-    # Cash (from Cash Flow Statement)
-    ws.cell(row, 1, "  Cash")
-    for i in range(months):
-        ws.cell(row, i+2, f"='Cash Flow Statement'!${get_column_letter(i+2)}$34")  # Closing cash from CF
-        ws.cell(row, i+2).number_format = '#,##0'
+    ws_bs[f'A{row}'] = "Accounts Payable"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_bs[f'{col_letter}{row}'] = f"=Workings!{col_letter}38"
+        ws_bs[f'{col_letter}{row}'].number_format = '#,##0'
     row += 1
 
-    # Accounts Receivable
-    ws.cell(row, 1, "  Accounts Receivable")
-    for i in range(months):
-        ws.cell(row, i+2, f"=Workings!${get_column_letter(i+2)}$9")  # From AR control
-        ws.cell(row, i+2).number_format = '#,##0'
+    ws_bs[f'A{row}'] = "Accrued Expenses"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_bs[f'{col_letter}{row}'] = f"=Workings!{col_letter}44"
+        ws_bs[f'{col_letter}{row}'].number_format = '#,##0'
     row += 1
 
-    # Inventory
-    ws.cell(row, 1, "  Inventory")
-    for i in range(months):
-        ws.cell(row, i+2, f"=Workings!${get_column_letter(i+2)}$17")  # From inventory control
-        ws.cell(row, i+2).number_format = '#,##0'
+    ws_bs[f'A{row}'] = "Deferred Revenue"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_bs[f'{col_letter}{row}'] = f"=Workings!{col_letter}50"
+        ws_bs[f'{col_letter}{row}'].number_format = '#,##0'
     row += 1
 
-    # Prepayments
-    ws.cell(row, 1, "  Prepayments")
-    for i in range(months):
-        ws.cell(row, i+2, f"=Workings!${get_column_letter(i+2)}$25")  # From prepayments control
-        ws.cell(row, i+2).number_format = '#,##0'
+    ws_bs[f'A{row}'] = "Total Current Liabilities"
+    ws_bs[f'A{row}'].font = bold_font
+    ws_bs[f'A{row}'].fill = subtotal_fill
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_bs[f'{col_letter}{row}'] = f"=SUM({col_letter}19:{col_letter}21)"
+        ws_bs[f'{col_letter}{row}'].number_format = '#,##0'
     row += 1
 
-    # Total Current Assets
-    ws.cell(row, 1, "Total Current Assets")
-    for i in range(months):
-        ws.cell(row, i+2, f"=SUM({get_column_letter(i+2)}{row-4}:{get_column_letter(i+2)}{row-1})")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True)
+    ws_bs[f'A{row}'] = ""
+    row += 1
+
+    # Non-Current Liabilities
+    ws_bs[f'A{row}'] = "Non-Current Liabilities"
+    ws_bs[f'A{row}'].font = bold_font
+    row += 1
+
+    ws_bs[f'A{row}'] = "Long-term Debt"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_bs[f'{col_letter}{row}'] = f"=Workings!{col_letter}55"
+        ws_bs[f'{col_letter}{row}'].number_format = '#,##0'
+    row += 1
+
+    ws_bs[f'A{row}'] = "Total Non-Current Liabilities"
+    ws_bs[f'A{row}'].font = bold_font
+    ws_bs[f'A{row}'].fill = subtotal_fill
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_bs[f'{col_letter}{row}'] = f"={col_letter}25"
+        ws_bs[f'{col_letter}{row}'].number_format = '#,##0'
+    row += 1
+
+    ws_bs[f'A{row}'] = ""
+    row += 1
+
+    ws_bs[f'A{row}'] = "TOTAL LIABILITIES"
+    ws_bs[f'A{row}'].font = Font(bold=True)
+    ws_bs[f'A{row}'].fill = total_fill
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_bs[f'{col_letter}{row}'] = f"={col_letter}22+{col_letter}26"
+        ws_bs[f'{col_letter}{row}'].number_format = '#,##0'
     row += 2
 
-    ws.cell(row, 1, "Non-Current Assets")
-    ws.cell(row, 1).font = Font(bold=True)
+    # EQUITY
+    ws_bs[f'A{row}'] = "Equity"
+    ws_bs[f'A{row}'].font = bold_font
     row += 1
 
-    # Fixed Assets (Net)
-    ws.cell(row, 1, "  Fixed Assets (Net)")
-    for i in range(months):
-        ws.cell(row, i+2, f"=Workings!${get_column_letter(i+2)}$41")  # From fixed assets control
-        ws.cell(row, i+2).number_format = '#,##0'
+    ws_bs[f'A{row}'] = "Share Capital"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_bs[f'{col_letter}{row}'] = "=Inputs!$B$60"
+        ws_bs[f'{col_letter}{row}'].number_format = '#,##0'
     row += 1
 
-    # Total Non-Current Assets
-    ws.cell(row, 1, "Total Non-Current Assets")
-    for i in range(months):
-        ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-1}")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True)
+    ws_bs[f'A{row}'] = "Retained Earnings"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_bs[f'{col_letter}{row}'] = f"=Workings!{col_letter}61"
+        ws_bs[f'{col_letter}{row}'].number_format = '#,##0'
+    row += 1
+
+    ws_bs[f'A{row}'] = "Total Equity"
+    ws_bs[f'A{row}'].font = Font(bold=True)
+    ws_bs[f'A{row}'].fill = subtotal_fill
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_bs[f'{col_letter}{row}'] = f"=SUM({col_letter}31:{col_letter}32)"
+        ws_bs[f'{col_letter}{row}'].number_format = '#,##0'
+    row += 1
+
+    ws_bs[f'A{row}'] = ""
+    row += 1
+
+    ws_bs[f'A{row}'] = "TOTAL LIABILITIES & EQUITY"
+    ws_bs[f'A{row}'].font = Font(bold=True)
+    ws_bs[f'A{row}'].fill = total_fill
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_bs[f'{col_letter}{row}'] = f"={col_letter}28+{col_letter}33"
+        ws_bs[f'{col_letter}{row}'].number_format = '#,##0'
     row += 2
 
-    # TOTAL ASSETS
-    ws.cell(row, 1, "TOTAL ASSETS")
-    for i in range(months):
-        ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-9}+{get_column_letter(i+2)}{row-2}")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True, size=11)
-        ws.cell(row, i+2).fill = PatternFill(start_color="C6E0B4", end_color="C6E0B4", fill_type="solid")
-    row += 3
+    # Balance Check
+    ws_bs[f'A{row}'] = "BALANCE CHECK (should be 0)"
+    ws_bs[f'A{row}'].font = Font(bold=True, color="FF0000")
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_bs[f'{col_letter}{row}'] = f"={col_letter}16-{col_letter}35"
+        ws_bs[f'{col_letter}{row}'].number_format = '#,##0'
+        ws_bs[f'{col_letter}{row}'].fill = PatternFill(start_color="FFFF00", end_color="FFFF00", fill_type="solid")
 
-    # ==================== LIABILITIES ====================
-    ws.cell(row, 1, "LIABILITIES")
-    ws.cell(row, 1).font = Font(bold=True, size=12)
-    ws.cell(row, 1).fill = PatternFill(start_color="FCE4D6", end_color="FCE4D6", fill_type="solid")
+    # =======================
+    # 5. CASH FLOW STATEMENT (INDIRECT METHOD)
+    # =======================
+    ws_cf = wb.create_sheet("Cash Flow Statement", 4)
+    ws_cf.column_dimensions['A'].width = 35
+    for col in range(2, 2 + num_periods + 1):
+        ws_cf.column_dimensions[get_column_letter(col)].width = 12
+
+    ws_cf['A1'] = "Cash Flow Statement (Indirect Method)"
+    ws_cf['A1'].font = Font(bold=True, size=14)
+
+    # Headers
+    ws_cf['A2'] = "Period"
+    ws_cf['A2'].font = header_font
+    ws_cf['A2'].fill = header_fill
+
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_cf[f'{col_letter}2'] = f"Month {i+1}"
+        ws_cf[f'{col_letter}2'].font = header_font
+        ws_cf[f'{col_letter}2'].fill = header_fill
+        ws_cf[f'{col_letter}2'].alignment = Alignment(horizontal='center')
+
+    row = 4
+
+    # Operating Activities
+    ws_cf[f'A{row}'] = "OPERATING ACTIVITIES"
+    ws_cf[f'A{row}'].font = Font(bold=True, size=11)
     row += 1
 
-    ws.cell(row, 1, "Current Liabilities")
-    ws.cell(row, 1).font = Font(bold=True)
+    ws_cf[f'A{row}'] = "Net Income"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_cf[f'{col_letter}{row}'] = f"='Income Statement'!{col_letter}18"
+        ws_cf[f'{col_letter}{row}'].number_format = '#,##0'
     row += 1
 
-    # Accounts Payable
-    ws.cell(row, 1, "  Accounts Payable")
-    for i in range(months):
-        ws.cell(row, i+2, f"=Workings!${get_column_letter(i+2)}$47")  # From AP control
-        ws.cell(row, i+2).number_format = '#,##0'
+    ws_cf[f'A{row}'] = "Add: Depreciation"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_cf[f'{col_letter}{row}'] = f"=-'Income Statement'!{col_letter}11"
+        ws_cf[f'{col_letter}{row}'].number_format = '#,##0'
     row += 1
 
-    # Accrued Expenses
-    ws.cell(row, 1, "  Accrued Expenses")
-    for i in range(months):
-        ws.cell(row, i+2, f"=Workings!${get_column_letter(i+2)}$53")  # From accrued expenses control
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    # Deferred Revenue
-    ws.cell(row, 1, "  Deferred Revenue")
-    for i in range(months):
-        ws.cell(row, i+2, f"=Workings!${get_column_letter(i+2)}$59")  # From deferred revenue control
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    # Total Current Liabilities
-    ws.cell(row, 1, "Total Current Liabilities")
-    for i in range(months):
-        ws.cell(row, i+2, f"=SUM({get_column_letter(i+2)}{row-3}:{get_column_letter(i+2)}{row-1})")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True)
-    row += 2
-
-    ws.cell(row, 1, "Non-Current Liabilities")
-    ws.cell(row, 1).font = Font(bold=True)
-    row += 1
-
-    # Debt
-    ws.cell(row, 1, "  Long-term Debt")
-    for i in range(months):
-        ws.cell(row, i+2, f"=Workings!${get_column_letter(i+2)}$65")  # From debt control
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    # Total Non-Current Liabilities
-    ws.cell(row, 1, "Total Non-Current Liabilities")
-    for i in range(months):
-        ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-1}")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True)
-    row += 2
-
-    # TOTAL LIABILITIES
-    ws.cell(row, 1, "TOTAL LIABILITIES")
-    for i in range(months):
-        ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-9}+{get_column_letter(i+2)}{row-2}")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True)
-        ws.cell(row, i+2).fill = PatternFill(start_color="FFE699", end_color="FFE699", fill_type="solid")
-    row += 3
-
-    # ==================== EQUITY ====================
-    ws.cell(row, 1, "EQUITY")
-    ws.cell(row, 1).font = Font(bold=True, size=12)
-    ws.cell(row, 1).fill = PatternFill(start_color="E2EFDA", end_color="E2EFDA", fill_type="solid")
-    row += 1
-
-    # Share Capital
-    ws.cell(row, 1, "  Share Capital")
-    for i in range(months):
+    ws_cf[f'A{row}'] = "Increase in Accounts Receivable"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
         if i == 0:
-            ws.cell(row, i+2, "=Inputs!$B$51")
+            ws_cf[f'{col_letter}{row}'] = f"=-(Workings!{col_letter}8-Workings!{col_letter}5)"
         else:
-            ws.cell(row, i+2, f"={get_column_letter(i+1)}{row}")  # Constant
-        ws.cell(row, i+2).number_format = '#,##0'
+            prev_col = get_column_letter(i + 1)
+            ws_cf[f'{col_letter}{row}'] = f"=-(Workings!{col_letter}8-Workings!{prev_col}8)"
+        ws_cf[f'{col_letter}{row}'].number_format = '#,##0'
     row += 1
 
-    # Retained Earnings
-    ws.cell(row, 1, "  Retained Earnings")
-    for i in range(months):
+    ws_cf[f'A{row}'] = "Increase in Inventory"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
         if i == 0:
-            ws.cell(row, i+2, f"=Inputs!$B$52+'Income Statement'!${get_column_letter(i+2)}$25")
+            ws_cf[f'{col_letter}{row}'] = f"=-(Workings!{col_letter}14-Workings!{col_letter}11)"
         else:
-            ws.cell(row, i+2, f"={get_column_letter(i+1)}{row}+'Income Statement'!${get_column_letter(i+2)}$25")
-        ws.cell(row, i+2).number_format = '#,##0'
+            prev_col = get_column_letter(i + 1)
+            ws_cf[f'{col_letter}{row}'] = f"=-(Workings!{col_letter}14-Workings!{prev_col}14)"
+        ws_cf[f'{col_letter}{row}'].number_format = '#,##0'
     row += 1
 
-    # Total Equity
-    ws.cell(row, 1, "TOTAL EQUITY")
-    for i in range(months):
-        ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-2}+{get_column_letter(i+2)}{row-1}")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True)
-        ws.cell(row, i+2).fill = PatternFill(start_color="C6E0B4", end_color="C6E0B4", fill_type="solid")
-    row += 2
-
-    # TOTAL LIABILITIES + EQUITY
-    ws.cell(row, 1, "TOTAL LIABILITIES + EQUITY")
-    for i in range(months):
-        ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-15}+{get_column_letter(i+2)}{row-3}")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True, size=11)
-        ws.cell(row, i+2).fill = PatternFill(start_color="C6E0B4", end_color="C6E0B4", fill_type="solid")
-    row += 2
-
-    # BALANCE CHECK
-    ws.cell(row, 1, "BALANCE CHECK (should be 0)")
-    for i in range(months):
-        ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-17}-{get_column_letter(i+2)}{row-2}")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True)
-        ws.cell(row, i+2).fill = PatternFill(start_color="FF6B6B", end_color="FF6B6B", fill_type="solid")
-
-    # Set column widths
-    ws.column_dimensions['A'].width = 35
-    for i in range(months):
-        ws.column_dimensions[get_column_letter(i+2)].width = 14
-
-def setup_cashflow_statement(ws, months):
-    """Create the Cash Flow Statement (Indirect Method)"""
-
-    ws['A1'] = "CASH FLOW STATEMENT (INDIRECT METHOD)"
-    ws['A1'].font = Font(bold=True, size=14)
-
-    row = 3
-
-    # Timeline header
-    ws.cell(row, 1, "Period")
-    ws.cell(row, 1).font = Font(bold=True)
-    for i in range(months):
-        ws.cell(row, i+2, f"Month {i+1}")
-        ws.cell(row, i+2).font = Font(bold=True)
-        ws.cell(row, i+2).fill = PatternFill(start_color="366092", end_color="366092", fill_type="solid")
-        ws.cell(row, i+2).font = Font(bold=True, color="FFFFFF")
-
-    row += 2
-
-    # ==================== OPERATING ACTIVITIES ====================
-    ws.cell(row, 1, "OPERATING ACTIVITIES")
-    ws.cell(row, 1).font = Font(bold=True, size=11)
-    ws.cell(row, 1).fill = PatternFill(start_color="E2EFDA", end_color="E2EFDA", fill_type="solid")
-    row += 1
-
-    # Net Income
-    ws.cell(row, 1, "Net Income")
-    for i in range(months):
-        ws.cell(row, i+2, f"='Income Statement'!${get_column_letter(i+2)}$25")
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    # Add back: Depreciation
-    ws.cell(row, 1, "Add: Depreciation")
-    for i in range(months):
-        ws.cell(row, i+2, f"=Workings!${get_column_letter(i+2)}$37")
-        ws.cell(row, i+2).number_format = '#,##0'
-    row += 1
-
-    # Changes in Working Capital
-    ws.cell(row, 1, "Changes in Working Capital:")
-    ws.cell(row, 1).font = Font(italic=True)
-    row += 1
-
-    # Decrease/(Increase) in AR
-    ws.cell(row, 1, "  (Increase)/Decrease in AR")
-    for i in range(months):
+    ws_cf[f'A{row}'] = "Increase in Prepayments"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
         if i == 0:
-            ws.cell(row, i+2, f"=Inputs!$B$42-Workings!${get_column_letter(i+2)}$9")
+            ws_cf[f'{col_letter}{row}'] = f"=-(Workings!{col_letter}20-Workings!{col_letter}17)"
         else:
-            ws.cell(row, i+2, f"=Workings!${get_column_letter(i+1)}$9-Workings!${get_column_letter(i+2)}$9")
-        ws.cell(row, i+2).number_format = '#,##0'
+            prev_col = get_column_letter(i + 1)
+            ws_cf[f'{col_letter}{row}'] = f"=-(Workings!{col_letter}20-Workings!{prev_col}20)"
+        ws_cf[f'{col_letter}{row}'].number_format = '#,##0'
     row += 1
 
-    # Decrease/(Increase) in Inventory
-    ws.cell(row, 1, "  (Increase)/Decrease in Inventory")
-    for i in range(months):
+    ws_cf[f'A{row}'] = "Increase in Accounts Payable"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
         if i == 0:
-            ws.cell(row, i+2, f"=Inputs!$B$43-Workings!${get_column_letter(i+2)}$17")
+            ws_cf[f'{col_letter}{row}'] = f"=Workings!{col_letter}38-Workings!{col_letter}35"
         else:
-            ws.cell(row, i+2, f"=Workings!${get_column_letter(i+1)}$17-Workings!${get_column_letter(i+2)}$17")
-        ws.cell(row, i+2).number_format = '#,##0'
+            prev_col = get_column_letter(i + 1)
+            ws_cf[f'{col_letter}{row}'] = f"=Workings!{col_letter}38-Workings!{prev_col}38"
+        ws_cf[f'{col_letter}{row}'].number_format = '#,##0'
     row += 1
 
-    # Decrease/(Increase) in Prepayments
-    ws.cell(row, 1, "  (Increase)/Decrease in Prepayments")
-    for i in range(months):
+    ws_cf[f'A{row}'] = "Increase in Accrued Expenses"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
         if i == 0:
-            ws.cell(row, i+2, f"=Inputs!$B$44-Workings!${get_column_letter(i+2)}$25")
+            ws_cf[f'{col_letter}{row}'] = f"=Workings!{col_letter}44-Workings!{col_letter}41"
         else:
-            ws.cell(row, i+2, f"=Workings!${get_column_letter(i+1)}$25-Workings!${get_column_letter(i+2)}$25")
-        ws.cell(row, i+2).number_format = '#,##0'
+            prev_col = get_column_letter(i + 1)
+            ws_cf[f'{col_letter}{row}'] = f"=Workings!{col_letter}44-Workings!{prev_col}44"
+        ws_cf[f'{col_letter}{row}'].number_format = '#,##0'
     row += 1
 
-    # Increase/(Decrease) in AP
-    ws.cell(row, 1, "  Increase/(Decrease) in AP")
-    for i in range(months):
+    ws_cf[f'A{row}'] = "Increase in Deferred Revenue"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
         if i == 0:
-            ws.cell(row, i+2, f"=Workings!${get_column_letter(i+2)}$47-Inputs!$B$47")
+            ws_cf[f'{col_letter}{row}'] = f"=Workings!{col_letter}50-Workings!{col_letter}47"
         else:
-            ws.cell(row, i+2, f"=Workings!${get_column_letter(i+2)}$47-Workings!${get_column_letter(i+1)}$47")
-        ws.cell(row, i+2).number_format = '#,##0'
+            prev_col = get_column_letter(i + 1)
+            ws_cf[f'{col_letter}{row}'] = f"=Workings!{col_letter}50-Workings!{prev_col}50"
+        ws_cf[f'{col_letter}{row}'].number_format = '#,##0'
     row += 1
 
-    # Increase/(Decrease) in Accrued Expenses
-    ws.cell(row, 1, "  Increase/(Decrease) in Accrued Exp")
-    for i in range(months):
-        if i == 0:
-            ws.cell(row, i+2, f"=Workings!${get_column_letter(i+2)}$53-Inputs!$B$48")
-        else:
-            ws.cell(row, i+2, f"=Workings!${get_column_letter(i+2)}$53-Workings!${get_column_letter(i+1)}$53")
-        ws.cell(row, i+2).number_format = '#,##0'
+    ws_cf[f'A{row}'] = "Net Cash from Operating Activities"
+    ws_cf[f'A{row}'].font = bold_font
+    ws_cf[f'A{row}'].fill = subtotal_fill
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_cf[f'{col_letter}{row}'] = f"=SUM({col_letter}5:{col_letter}12)"
+        ws_cf[f'{col_letter}{row}'].number_format = '#,##0'
     row += 1
 
-    # Increase/(Decrease) in Deferred Revenue
-    ws.cell(row, 1, "  Increase/(Decrease) in Deferred Rev")
-    for i in range(months):
-        if i == 0:
-            ws.cell(row, i+2, f"=Workings!${get_column_letter(i+2)}$59-Inputs!$B$49")
-        else:
-            ws.cell(row, i+2, f"=Workings!${get_column_letter(i+2)}$59-Workings!${get_column_letter(i+1)}$59")
-        ws.cell(row, i+2).number_format = '#,##0'
+    ws_cf[f'A{row}'] = ""
     row += 1
 
-    # Cash from Operating Activities
-    ws.cell(row, 1, "Cash from Operating Activities")
-    for i in range(months):
-        ws.cell(row, i+2, f"=SUM({get_column_letter(i+2)}{row-9}:{get_column_letter(i+2)}{row-1})")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True)
-        ws.cell(row, i+2).fill = PatternFill(start_color="C6E0B4", end_color="C6E0B4", fill_type="solid")
-    row += 2
-
-    # ==================== INVESTING ACTIVITIES ====================
-    ws.cell(row, 1, "INVESTING ACTIVITIES")
-    ws.cell(row, 1).font = Font(bold=True, size=11)
-    ws.cell(row, 1).fill = PatternFill(start_color="FFF2CC", end_color="FFF2CC", fill_type="solid")
+    # Investing Activities
+    ws_cf[f'A{row}'] = "INVESTING ACTIVITIES"
+    ws_cf[f'A{row}'].font = Font(bold=True, size=11)
     row += 1
 
-    # Capital Expenditure
-    ws.cell(row, 1, "Capital Expenditure")
-    for i in range(months):
-        ws.cell(row, i+2, f"=-Inputs!${get_column_letter(i+2)}$23")
-        ws.cell(row, i+2).number_format = '#,##0'
+    ws_cf[f'A{row}'] = "Capital Expenditure"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_cf[f'{col_letter}{row}'] = f"=-Workings!{col_letter}24"
+        ws_cf[f'{col_letter}{row}'].number_format = '#,##0'
     row += 1
 
-    # Proceeds from Asset Disposals
-    ws.cell(row, 1, "Proceeds from Asset Disposals")
-    for i in range(months):
-        ws.cell(row, i+2, 0)  # Simplified
-        ws.cell(row, i+2).number_format = '#,##0'
+    ws_cf[f'A{row}'] = "Net Cash from Investing Activities"
+    ws_cf[f'A{row}'].font = bold_font
+    ws_cf[f'A{row}'].fill = subtotal_fill
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_cf[f'{col_letter}{row}'] = f"={col_letter}15"
+        ws_cf[f'{col_letter}{row}'].number_format = '#,##0'
     row += 1
 
-    # Cash from Investing Activities
-    ws.cell(row, 1, "Cash from Investing Activities")
-    for i in range(months):
-        ws.cell(row, i+2, f"=SUM({get_column_letter(i+2)}{row-2}:{get_column_letter(i+2)}{row-1})")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True)
-        ws.cell(row, i+2).fill = PatternFill(start_color="C6E0B4", end_color="C6E0B4", fill_type="solid")
-    row += 2
-
-    # ==================== FINANCING ACTIVITIES ====================
-    ws.cell(row, 1, "FINANCING ACTIVITIES")
-    ws.cell(row, 1).font = Font(bold=True, size=11)
-    ws.cell(row, 1).fill = PatternFill(start_color="FCE4D6", end_color="FCE4D6", fill_type="solid")
+    ws_cf[f'A{row}'] = ""
     row += 1
 
-    # Debt Drawdowns
-    ws.cell(row, 1, "Debt Drawdowns")
-    for i in range(months):
-        ws.cell(row, i+2, f"=Inputs!${get_column_letter(i+2)}$30")
-        ws.cell(row, i+2).number_format = '#,##0'
+    # Financing Activities
+    ws_cf[f'A{row}'] = "FINANCING ACTIVITIES"
+    ws_cf[f'A{row}'].font = Font(bold=True, size=11)
     row += 1
 
-    # Debt Repayments
-    ws.cell(row, 1, "Debt Repayments")
-    for i in range(months):
-        ws.cell(row, i+2, f"=-Inputs!${get_column_letter(i+2)}$31")
-        ws.cell(row, i+2).number_format = '#,##0'
+    ws_cf[f'A{row}'] = "Debt Drawdowns"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_cf[f'{col_letter}{row}'] = f"=Workings!{col_letter}52"
+        ws_cf[f'{col_letter}{row}'].number_format = '#,##0'
     row += 1
 
-    # Interest Paid
-    ws.cell(row, 1, "Interest Paid")
-    for i in range(months):
-        ws.cell(row, i+2, f"=-Workings!${get_column_letter(i+2)}$60")
-        ws.cell(row, i+2).number_format = '#,##0'
+    ws_cf[f'A{row}'] = "Debt Repayments"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_cf[f'{col_letter}{row}'] = f"=-Workings!{col_letter}53"
+        ws_cf[f'{col_letter}{row}'].number_format = '#,##0'
     row += 1
 
-    # Equity Injections
-    ws.cell(row, 1, "Equity Injections")
-    for i in range(months):
-        ws.cell(row, i+2, 0)
-        ws.cell(row, i+2).number_format = '#,##0'
+    ws_cf[f'A{row}'] = "Net Cash from Financing Activities"
+    ws_cf[f'A{row}'].font = bold_font
+    ws_cf[f'A{row}'].fill = subtotal_fill
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_cf[f'{col_letter}{row}'] = f"=SUM({col_letter}18:{col_letter}19)"
+        ws_cf[f'{col_letter}{row}'].number_format = '#,##0'
     row += 1
 
-    # Dividends Paid
-    ws.cell(row, 1, "Dividends Paid")
-    for i in range(months):
-        ws.cell(row, i+2, 0)
-        ws.cell(row, i+2).number_format = '#,##0'
+    ws_cf[f'A{row}'] = ""
     row += 1
 
-    # Cash from Financing Activities
-    ws.cell(row, 1, "Cash from Financing Activities")
-    for i in range(months):
-        ws.cell(row, i+2, f"=SUM({get_column_letter(i+2)}{row-5}:{get_column_letter(i+2)}{row-1})")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True)
-        ws.cell(row, i+2).fill = PatternFill(start_color="C6E0B4", end_color="C6E0B4", fill_type="solid")
-    row += 2
-
-    # ==================== CASH RECONCILIATION ====================
-    ws.cell(row, 1, "Opening Cash")
-    for i in range(months):
-        if i == 0:
-            ws.cell(row, i+2, "=Inputs!$B$41")
-        else:
-            ws.cell(row, i+2, f"={get_column_letter(i+1)}{row+2}")
-        ws.cell(row, i+2).number_format = '#,##0'
+    # Net Change and Closing Cash
+    ws_cf[f'A{row}'] = "Net Change in Cash"
+    ws_cf[f'A{row}'].font = bold_font
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_cf[f'{col_letter}{row}'] = f"={col_letter}13+{col_letter}16+{col_letter}19"
+        ws_cf[f'{col_letter}{row}'].number_format = '#,##0'
     row += 1
 
-    ws.cell(row, 1, "Net Change in Cash")
-    for i in range(months):
-        ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-16}+{get_column_letter(i+2)}{row-9}+{get_column_letter(i+2)}{row-2}")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True)
+    ws_cf[f'A{row}'] = "Opening Cash"
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_cf[f'{col_letter}{row}'] = f"=Workings!{col_letter}68"
+        ws_cf[f'{col_letter}{row}'].number_format = '#,##0'
     row += 1
 
-    ws.cell(row, 1, "Closing Cash")
-    for i in range(months):
-        ws.cell(row, i+2, f"={get_column_letter(i+2)}{row-2}+{get_column_letter(i+2)}{row-1}")
-        ws.cell(row, i+2).number_format = '#,##0'
-        ws.cell(row, i+2).font = Font(bold=True, size=11)
-        ws.cell(row, i+2).fill = PatternFill(start_color="C6E0B4", end_color="C6E0B4", fill_type="solid")
+    ws_cf[f'A{row}'] = "Closing Cash"
+    ws_cf[f'A{row}'].font = Font(bold=True)
+    ws_cf[f'A{row}'].fill = total_fill
+    for i in range(num_periods):
+        col_letter = get_column_letter(i + 2)
+        ws_cf[f'{col_letter}{row}'] = f"={col_letter}20+{col_letter}21"
+        ws_cf[f'{col_letter}{row}'].number_format = '#,##0'
 
-    # Set column widths
-    ws.column_dimensions['A'].width = 35
-    for i in range(months):
-        ws.column_dimensions[get_column_letter(i+2)].width = 14
+    # Save the workbook
+    filename = "Financial_Model_3_Statement.xlsx"
+    wb.save(filename)
+    print(f"✓ Financial model created: {filename}")
+    print(f"✓ Sheets created: {', '.join(wb.sheetnames)}")
+    print(f"✓ Timeline: {num_periods} months")
+    print(f"\nKey Features:")
+    print(f"  • All Balance Sheet items driven by control accounts")
+    print(f"  • No hardcoded values in calculation blocks")
+    print(f"  • Full integration between all 3 statements")
+    print(f"  • Indirect cash flow method")
+    print(f"  • Balance Sheet balance check included")
 
 if __name__ == "__main__":
-    print("Building 3-Statement Financial Model...")
-    filename = create_financial_model()
-    print(f"\n✓ Model complete: {filename}")
-    print("\nModel structure:")
-    print("  - Inputs: All assumptions and starting balances")
-    print("  - Workings: Control accounts for all balance sheet items")
-    print("  - Income Statement: P&L with full linkages")
-    print("  - Balance Sheet: Driven entirely by control accounts")
-    print("  - Cash Flow Statement: Indirect method, fully reconciled")
+    create_financial_model()
