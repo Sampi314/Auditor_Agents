@@ -1426,7 +1426,7 @@ def create_financial_model():
     ws_cashflow[f'A{row}'].font = Font(bold=True)
     for i in range(NUM_MONTHS):
         col = get_column_letter(i + 2)
-        ws_cashflow[f'{col}{row}'] = f"=SUM({col}6:{col}16)"
+        ws_cashflow[f'{col}{row}'] = f"={col}6+{col}8+SUM({col}10:{col}15)"
         ws_cashflow[f'{col}{row}'].number_format = '#,##0'
         ws_cashflow[f'{col}{row}'].font = Font(bold=True)
     row += 2
@@ -1485,7 +1485,7 @@ def create_financial_model():
     ws_cashflow[f'A{row}'].font = Font(bold=True, size=11)
     for i in range(NUM_MONTHS):
         col = get_column_letter(i + 2)
-        ws_cashflow[f'{col}{row}'] = f"={col}17+{col}21+{col}26"
+        ws_cashflow[f'{col}{row}'] = f"={col}16+{col}20+{col}25"
         ws_cashflow[f'{col}{row}'].number_format = '#,##0'
         ws_cashflow[f'{col}{row}'].font = Font(bold=True)
         ws_cashflow[f'{col}{row}'].fill = PatternFill(start_color="E7E6E6", end_color="E7E6E6", fill_type="solid")
