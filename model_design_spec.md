@@ -1,43 +1,28 @@
-# Brewery Financial Model Design Specification
+# Master Brewery Model Specification v3.0
 
-## Overview
-This document outlines the architecture and logic for the 3-Way Integrated Financial Model for a regional Australian craft brewery.
+## Model Architecture
+This model is a 12-sheet, 3-way integrated financial forecast for a regional Australian brewery. It is designed for maximum granularity, audibility, and scalability.
 
-## 1. Sheet Structure (SumProduct Best Practice)
-- **00_Cover**: Title, Version, Navigation.
-- **01_Control**: Scenario toggle (Base, High Cost, Channel Shift), GST (10%), Corp Tax (30%), Inflation assumptions.
-- **02_Inputs_Sales**:
-    - SKUs: Lager, Pale Ale, IPA, Stout, Seasonal (Summer), Seasonal (Winter).
-    - ABV%: 4.2% to 7.5%.
-    - Pricing: Wholesale prices per HL for On-trade vs Off-trade.
-    - Seasonality: Monthly weights peaking in Dec/Jan.
-- **03_Inputs_Costs**:
-    - BOM: Malt (kg/HL), Hops (g/HL), Yeast, Water.
-    - Packaging: Bottles/Cans/Kegs unit costs.
-    - Logistics: Variable cost per HL.
-- **04_Inputs_OpEx_Capex**:
-    - Headcount: Brewing, Sales, Admin.
-    - Capex: Brewhouse, Fermenters, Canning Line.
-- **05_Calcs_Volume**: Volume roll-up by SKU, Channel, and Time.
-- **06_Calcs_Revenue**:
-    - Gross Sales.
-    - **Excise Duty**: Volumetric calculation (L Litres * (ABV - 1.15%) * Rate).
-    - Trade Spend (Rebates/Promotions).
-- **07_Calcs_COGS**: Raw materials + Direct Labor + Energy.
-- **08_Calcs_OpEx**: Salaries + S&M + G&A.
-- **09_Calcs_Capex_Dep**: Asset sub-ledgers and depreciation.
-- **10_Calcs_Finance**: Term Loan, Overdraft, Tax (GST/Income Tax).
-- **11-13_Outputs**: IS, BS, CF.
-- **14_Dashboard**: KPIs (Gross Margin %, EBITDA %, FCF, ROIC).
-- **15_Checks**: Balance Sheet check, Capacity check, Cash check.
+### Sheet Breakdown
+1.  **01_Control**: Central scenario toggle (Base, High Cost, Aggressive Expansion) and global statutory rates (GST, Tax, Super, Excise).
+2.  **02_Inputs_Sales**: Detailed SKU matrix (9 products) with ABV, multi-channel pricing (On-trade/Off-trade), and 12-month seasonality curves.
+3.  **03_Inputs_Ops**: Granular Bill of Materials (BOM) including Malt, Hops, Packaging, and Utilities. Departmental headcount and salary tables.
+4.  **04_Calcs_Volume**: Month-by-month sales and production volume (HL) flow with compounded growth logic.
+5.  **05_Calcs_Revenue**: Auditable revenue waterfall. Gross Sales -> Australian Volumetric Excise (with 1.15% exemption) -> Net Revenue.
+6.  **06_Calcs_COGS**: BOM-driven cost calculations. Dynamic malt/hops usage linked to production volume.
+7.  **07_Calcs_OpEx**: Detailed labor costs (Salaries + Super + Payroll Tax) and variable S&M/G&A expenses.
+8.  **08_Calcs_WC_Inv**: (Placeholder for future sub-ledger expansion) Tracks AR and Inventory days.
+9.  **09_Calcs_Capex_Tax**: Straight-line depreciation and Australian corporate tax (30%) provisions.
+10. **10_Outputs_3Way**: Fully integrated Income Statement, Balance Sheet, and Cash Flow. Format: 12 months (Y1) then 4 annual summaries.
+11. **11_Dashboard**: North Star KPIs: Revenue/HL, EBITDA Margin %, ROIC, and Free Cash Flow.
+12. **12_Audit_Checks**: Professional quality control sheet with Balance Sheet integrity and cash covenant triggers.
 
-## 2. Key Industry Logic
-- **Hectolitres (HL)**: All production and sales are tracked in HL (1 HL = 100 Litres).
-- **Yield Loss**: 5% brewing loss, 2% packaging loss modeled.
-- **Excise**: Australian ATO rates (Feb 2024 approx: $60.22/LAL for packaged, $40.50/LAL for draught).
-- **Capacity**: Maximum annual HL output. Capex trigger adds 50,000 HL capacity.
+## Key Formulas (Auditable Logic)
+*   **Australian Excise (Packaged)**: `=MAX(0, HL * 100 * (ABV - 1.15%) * Rate_Packaged)`
+*   **BOM Usage**: `=SKU_Volume * Ingredients_per_HL * Loss_Factor`
+*   **Labor Cost**: `=Headcount * Avg_Salary / 12 * (1 + Super_Rate + Payroll_Tax_Rate)`
 
-## 3. Financial Integration
-- **Retained Earnings**: Linked to Net Income.
-- **Cash**: Ending Cash on BS linked to CF Statement.
-- **Working Capital**: Days Sales Outstanding (DSO) and Days Payable Outstanding (DPO) logic.
+## Scenario Logic
+*   **Base**: 0.5% monthly volume growth.
+*   **High Cost**: Input costs inflated by 20% from Month 13.
+*   **Aggressive**: 1.5% monthly growth + capacity expansion CAPEX at Month 18.

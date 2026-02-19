@@ -1,71 +1,45 @@
-# Exhaustive Brewery Model Specification (Step 5 Style)
+# Exhaustive Sheet-by-Sheet Specification (Master Model v3)
 
-## 00_Cover
-*   **Objective**: Model navigation and metadata.
-*   **Layout**: TOC with hyperlinks to sheets.
-*   **Key Inputs**: Model Date, Version, Modeller Name.
+This document provides a cell-level design intent for the 12-sheet Master Brewery Model.
 
-## 01_Control
-*   **Objective**: Centralize scenario and global driver selection.
-*   **Layout**: Scenario Toggle (Index 1-3), Global Tax Rates (GST, Corp Tax), Inflation, Australian Excise Rates.
-*   **Named Ranges**: `Scen_Index`, `Rate_GST`, `Rate_CorpTax`, `Rate_Excise_Pack`, `Rate_Excise_Dr`.
+## Sheet 01: Control
+- **Named Ranges**: `Scenario_Select`, `Stat_GST`, `Stat_CorpTax`, `Excise_Pack`, `Excise_Draught`.
+- **Logic**: All calculations in sheets 04-09 must reference `Scenario_Select` to toggle input drivers.
 
-## 02_Inputs_Sales
-*   **Objective**: Detailed SKU and Channel assumptions.
-*   **Layout**:
-    - SKU Matrix: Name, ABV, HL/Unit, Packaging Type.
-    - Pricing: Gross Price/HL (On-trade vs Off-trade).
-    - Trade Spend: Promotional % of Gross Rev per channel.
-    - Seasonality: 12-month indices.
-*   **Formulas**: `Unit_Sales = HL_Vol / (HL_per_Unit)`.
+## Sheet 02: Inputs_Sales
+- **Data Structure**: Table of 9 SKUs.
+- **Seasonality**: 1x12 row of multipliers. Month 12 (December) peaks at 1.45x.
+- **Formulas**: `Target_Vol_m = Base_Vol * Seasonality_Index[m] * (1 + Growth_Rate)^m`.
 
-## 03_Inputs_Costs
-*   **Objective**: Granular COGS and Inventory assumptions.
-*   **Layout**:
-    - BOM: Malt (kg/HL), Hops (g/HL), Yeast, Water, Adjuncts.
-    - Packaging: Unit cost for bottles, cans, kegs, labels, cardboard.
-    - Logistics: Freight-In (per tonne of Malt/Hops), Freight-Out (per HL/Pallet).
-    - Inventory: Target Days on Hand (DOH) for RM and FG.
+## Sheet 03: Inputs_Ops
+- **BOM Matrix**: 9x4 table linking SKU IDs to Malt (kg), Hops (g), Packaging (units), and Utilities ($).
+- **Headcount Table**: Split by Production, Packaging, Quality, S&M, and Admin.
 
-## 04_Inputs_OpEx_Capex
-*   **Objective**: Fixed costs and asset assumptions.
-*   **Layout**:
-    - Labor: Dept-wise headcount, Avg Salary, Superannuation (11.5%), Payroll Tax.
-    - Capex: List of assets, useful lives (years), expansion triggers.
+## Sheet 04: Calcs_Volume
+- **Objective**: Detailed volume flow per SKU.
+- **Integrity**: Sum of individual SKUs must equal `Total_HL`.
 
-## 05_Calcs_Volume
-*   **Objective**: Calculate production and sales volume flow.
-*   **Layout**:
-    - Sales HL: Base HL * Seasonality * Growth.
-    - Yield Loss: (Sales HL) / (1 - Packaging Loss %) / (1 - Brewing Loss %).
-    - Production Plan: Month-by-month HL requirements.
+## Sheet 05: Calcs_Revenue
+- **Waterfall**:
+    1. Gross Sales (On-Trade + Off-Trade).
+    2. Excise Duty: Logic `HL * 100 * (ABV - 0.0115) * Rate`.
+    3. Net Revenue (The core top-line for IS).
 
-## 06_Calcs_Revenue
-*   **Objective**: Auditable revenue waterfall.
-*   - Gross Sales = HL * Price/HL.
-*   - Excise = LAL * Excise_Rate (LAL = HL * 100 * (ABV - 1.15%)).
-*   - Trade Spend = Gross Sales * Promo %.
-*   - Net Revenue = Gross Sales - Excise - Trade Spend.
+## Sheet 06: Calcs_COGS
+- **Malt Usage**: `SUMPRODUCT(SKU_Vols, SKU_Malt_BOM) * Malt_Price`.
+- **Hops Usage**: `SUMPRODUCT(SKU_Vols, SKU_Hops_BOM/1000) * Hops_Price`.
+- **Total COGS**: Materials + Packaging + Variable Logistics.
 
-## 07_Calcs_Inventory
-*   **Objective**: Detailed sub-ledger for working capital.
-*   - Opening Balance + Purchases - Usage = Closing Balance.
-*   - RM Value = (Usage_m + Usage_m+1) / 2 * DOH.
+## Sheet 07: Calcs_OpEx
+- **Labor Formula**: `HC * Avg_Salary / 12 * (1 + Super + PayrollTax)`.
+- **S&M**: `Net_Revenue * 12%` (Variable component).
 
-## 08_Calcs_OpEx_Capex
-*   - Monthly Salaries = HC * Salary / 12 * (1 + Benefits %).
-*   - Depreciation = (NBV_Opening + Capex) / Remaining Life.
+## Sheet 10: Outputs_3Way
+- **Layout**: Columns B-M (Year 1 Monthly), Columns N-Q (Years 2-5 Annual).
+- **Integration**: `BS_Cash = CF_Ending_Cash`. `RE_Closing = RE_Opening + NPAT`.
 
-## 09_Outputs_3Way
-*   - **IS**: Net Revenue down to NPAT.
-*   - **BS**: Cash, AR, Inventory, Assets vs. AP, Debt, Equity.
-*   - **CF**: Operating, Investing, Financing (Indirect Method).
-
-## 10_Dashboard
-*   - **KPIs**: Revenue/HL, Gross Margin %, EBITDA %, FCF, ROIC, Working Capital Days.
-*   - **Covenants**: Debt/EBITDA (< 3.0x), Interest Cover (> 4.0x).
-
-## 11_Checks
-*   - Balance Sheet Balance (Assets - Liab - Eq = 0).
-*   - Cash Check (Ending CF = BS Cash).
-*   - Capacity Check (Production < Max HL).
+## Sheet 12: Audit_Checks
+- **Checks**:
+    1. `Assets - (Liabilities + Equity) = 0`.
+    2. `Production_Volume <= Brew_Capacity`.
+    3. `Min_Cash_Reserve > $500,000`.
