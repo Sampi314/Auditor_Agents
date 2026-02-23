@@ -44,10 +44,10 @@ Read `Jules_Memory/lingo_memory.md` (create if missing).
 4. 🏷️ **LABEL:** Verify that every numerical block has an associated unit label (e.g., "$", "HL", "Units").
 5. 📝 **REPORT:** Provide findings in the following table format:
 
-| Sheet Name | Cell Reference | Description of the Location | Short Error Categories | Long Description of Error |
+| Sheet Name | Cell Reference | Description of the Location | Short Error Category | Long Description of Error |
 |---|---|---|---|---|
 
-## Short Error Categories
+## Short Error Category
 
 - **Typo:** Misspelled words or incorrect characters.
 - **Grammar:** Grammatical errors or poor sentence structure.

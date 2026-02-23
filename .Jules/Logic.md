@@ -187,7 +187,7 @@ When the Long Description of Error references a formula pattern (expected or act
 
 #### Findings Table
 
-| Sheet Name | Cell Reference | Description of the Location | Short Error Categories | Long Description of Error |
+| Sheet Name | Cell Reference | Description of the Location | Short Error Category | Long Description of Error |
 |---|---|---|---|---|
 | Calcs | M15 | Revenue — FY2028 | Formula Pattern Break | ⚠️ MEDIUM: All other cells in the Revenue row follow the same pattern but this cell breaks it (Expected R1C1: `=RC[-1]*(1+INDEX(Assum_Volume!R32C2:R41C4,2,Control!R5C4))` vs Actual R1C1: `=RC[-1]+1`) |
 | Summary | F22:J22 | Total OpEx — FY2026 to FY2030 | Formula Context Error | 🔴 HIGH: "Total" row contains a single cell reference instead of a SUM of the Operating Expense items above (R1C1: `=R[-2]C` — expected a SUM over the section) |
@@ -200,7 +200,7 @@ When the Long Description of Error references a formula pattern (expected or act
 
 ---
 
-## Error Categories
+## Error Category
 
 | Category | Description |
 |---|---|

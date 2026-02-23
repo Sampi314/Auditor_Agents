@@ -46,7 +46,7 @@ Report all findings in this table:
 | Sheet Name | Cell Reference | Description of the Location | Short Error Category | Long Description of Error |
 |---|---|---|---|---|
 
-### Short Error Categories
+### Short Error Category
 
 | Category | Applies When |
 |---|---|
