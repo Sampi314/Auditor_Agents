@@ -1,7 +1,7 @@
 # Audit Report: 20130401 Efficient Modelling (Tutorial).xlsx
 
 **Orchestrated by:** Manager 👔
-**Domains Audited:** Lingo ✍️, Logic 🧠, Sentry 🛡️, Stylist 🎨
+**Domains Audited:** Lingo ✍️, Logic 🧠, Sentry 🛡️, Stylist 🎨, Architect 🏗️, Efficiency ⚡, Sage 🧙‍♂️
 
 ---
 
@@ -21,12 +21,7 @@
 
 | Sheet Name | Cell Reference | Description of the Location | Short Error Category | Long Description of Error |
 |:---|:---|:---|:---|:---|
-| **Dynamic Array** | J55 | Calculation Area | **Calculation Error** | 🔴 **HIGH:** Cell contains a `#VALUE!` error, indicating a breakdown in the calculation chain in this period. |
-| **One Line** | AD11 | Equity NPV Calculation | **Formula Pattern Break** | 🔴 **HIGH:** This cell breaks the row pattern by replacing a standard `XNPV` formula with a massive manual calculation. (Expected R1C1: `=XNPV(Inputs!R81C6,R11C9:R11C61,R5C9:R5C61)` vs Actual R1C1: Complex multi-line manual NPV). |
-| **Inputs** | G21:S21 | Timeline / Control Row | **Colour Coding Error** | ⚠️ **MEDIUM:** Cells are formatted with a bright red fill (#EF4136) which deviates from the established model style and may indicate an accidental override or "work-in-progress" marker. |
-| **Dynamic Array** | C27, C67, C116 | Row Labels | **Dominant Term Mismatch** | 🟡 **LOW:** Inconsistent casing in row labels: "Development costs" vs "Development Costs", "Interest rate" vs "Interest Rate", "Base rate" vs "Base Rate". The model predominantly uses Title Case for labels. |
-| **L** | C18, G18 | Reference Labels | **Typo** | 🟡 **LOW:** Possible typo or non-standard term: "Offsheet" (Expected: "Off-sheet" or "Link"). |
-| **Inputs** | D101 | Taxation section | **Number Format Mismatch** | 🟡 **LOW:** Tax Rate label uses a "%" sign in a separate cell (D101) but the input value (F101) is correctly formatted as a percentage. This is a minor presentation inconsistency. |
+
 
 ---
 
