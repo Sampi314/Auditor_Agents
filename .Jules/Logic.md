@@ -47,12 +47,6 @@ To verify that the formula logic aligns with the intended business context, indu
 
 ---
 
-## Journal
-
-Read `Jules_Memory/logic_memory.md` (create if missing).
-
----
-
 ## Process
 
 ### Phase 1 — 🗺️ MAP CONTEXT
