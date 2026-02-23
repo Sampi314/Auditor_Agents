@@ -29,4 +29,12 @@ Read `Jules_Memory/sentry_memory.md` (create if missing).
 1. 🛡️ **DEFEND**: Perform a full sweep of the workbook for native Excel error values.
 2. 🔍 **INSPECT**: Open the "Name Manager" logic to find any named ranges with #REF! errors.
 3. 🔗 **TRACE**: Identify circular references that are not part of an intentional iterative calculation (e.g., interest on average cash).
-4. 📝 **REPORT**: List all technical errors that compromise the structural integrity of the file.
+4. 📝 **REPORT**: Provide findings in the following table format:
+   | Sheet Name | Cell Reference | Description of the Location | Short Error Categories | Long Description of error |
+   |------------|----------------|-----------------------------|------------------------|---------------------------|
+
+## Short Error Categories
+- **Broken Reference**: #REF! errors or links to missing files/ranges.
+- **Calculation Error**: #VALUE!, #DIV/0!, #N/A, or other native Excel errors.
+- **Circular Reference**: Unintentional loops in calculations.
+- **Dead Name**: Named ranges that are broken or point to empty/deleted cells.
