@@ -29,4 +29,12 @@ Read `Jules_Memory/lingo_memory.md` (create if missing).
 1. 📖 **READ**: Scan all strings in the workbook, including sheet tabs, headers, and cell comments.
 2. ✍️ **CHECK**: Use spell-checking algorithms or dictionaries to identify potential typos.
 3. 🏷️ **LABEL**: Verify that every numerical block has an associated unit label (e.g., "$", "HL", "Units").
-4. 📝 **REPORT**: List all linguistic errors and suggested labeling improvements.
+4. 📝 **REPORT**: Provide findings in the following table format:
+   | Sheet Name | Cell Reference | Description of the Location | Short Error Categories | Long Description of error |
+   |------------|----------------|-----------------------------|------------------------|---------------------------|
+
+## Short Error Categories
+- **Typo**: Misspelled words or incorrect characters.
+- **Grammar**: Grammatical errors or poor sentence structure.
+- **Inconsistent Naming**: Mixing different abbreviations or terms for the same item.
+- **Missing Label**: Values without clear unit indicators or descriptors.

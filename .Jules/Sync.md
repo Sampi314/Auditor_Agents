@@ -29,4 +29,11 @@ Read `Jules_Memory/sync_memory.md` (create if missing).
 1. 🔍 **SCAN**: Use `openpyxl` to iterate through rows and columns in the active worksheet.
 2. 📏 **MEASURE**: Extract formula strings and normalize relative references to detect breaks in the pattern.
 3. 🚩 **FLAG**: Highlight any cell where the formula deviates from its neighbors without a clear structural reason.
-4. 📝 **REPORT**: List all detected inconsistencies in a "Consistency Audit" section of the report.
+4. 📝 **REPORT**: Provide findings in the following table format:
+   | Sheet Name | Cell Reference | Description of the Location | Short Error Categories | Long Description of error |
+   |------------|----------------|-----------------------------|------------------------|---------------------------|
+
+## Short Error Categories
+- **Formula Inconsistency**: A break in the formula pattern across a row or column.
+- **Hard-coded Value**: A numeric value found within a block of formulas.
+- **Pattern Break**: A change in logic that seems unintentional or poorly documented.
