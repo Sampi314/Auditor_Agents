@@ -188,7 +188,7 @@ Before writing the report, **group cells that share the exact same Long Descript
 
 #### Section B: Findings Table
 
-| Sheet Name | Cell Reference | Description of the Location | Short Error Categories | Long Description of Error |
+| Sheet Name | Cell Reference | Description of the Location | Short Error Category | Long Description of Error |
 |---|---|---|---|---|
 | Inputs | D8:D12 | Tax Rate / CPI / Inflation / Discount Rate / Escalation — Assumption column | Number Format Mismatch | 🔴 HIGH: Values represent percentages (0.3, 0.025, etc.) but are formatted as General instead of Percentage format |
 | Calcs | C30:C35 | DSCR / LLCR / ICR / PLCR / Equity IRR / Project IRR — FY2024 | Colour Coding Error | 🟡 LOW: These cells contain formulas but are formatted with the model's Input style (Blue font, Yellow fill) instead of the Formula style (Black font, No fill) |
@@ -199,7 +199,7 @@ Before writing the report, **group cells that share the exact same Long Descript
 
 ---
 
-## Error Categories
+## Error Category
 
 | Category | Description |
 |---|---|
