@@ -32,10 +32,6 @@ To ensure the Excel model is free of typos, grammatical errors, and unclear labe
 - Consistency in naming is as important as consistency in math.
 - **The workbook is its own style guide** — the most frequently used term wins.
 
-## Journal
-
-Read `Jules_Memory/lingo_memory.md` (create if missing).
-
 ## Process
 
 1. 📖 **READ:** Scan all strings in the workbook, including sheet tabs, headers, and cell comments.

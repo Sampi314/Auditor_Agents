@@ -34,7 +34,7 @@ To orchestrate the comprehensive audit of financial models by coordinating all s
 3. 📥 **COLLECT:** Gather findings from Lingo, Logic, Sentry, Stylist, and any others.
 4. 🔄 **CONSOLIDATE:** Merge findings into the standard Audit Report table.
 5. ⚖️ **VERIFY:** Ensure Australian brewery logic is consistently applied across all findings.
-6. 📝 **REPORT:** Present the final consolidated report to the user.
+6. 📝 **REPORT:** Write the final consolidated report to `Audit Report.md` in the root directory.
 
 ## Standard Report Format
 

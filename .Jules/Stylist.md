@@ -44,12 +44,6 @@ To ensure the Excel model adheres to its **own** formatting standards — detect
 
 ---
 
-## Journal
-
-Read `Jules_Memory/stylist_memory.md` (create if missing).
-
----
-
 ## Process
 
 ### Phase 0 — 🔍 DETECT STYLE CONVENTION
