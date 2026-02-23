@@ -1,4 +1,4 @@
-# Audit Report: Brewery_Financial_Model_10Y 1.xlsx
+# Audit Report: 20130401 Efficient Modelling (Tutorial).xlsx
 
 **Orchestrated by:** Manager 👔
 **Domains Audited:** Lingo ✍️, Logic 🧠, Sentry 🛡️, Stylist 🎨
@@ -11,9 +11,9 @@
 
 | Cell Type | Font Colour | Fill Colour | Font Style | Source | Confidence |
 |---|---|---|---|---|---|
-| **Input** | Blue (#0000FF) | Yellow (#FFFF00) | Normal | Inferred | ✅ High |
-| **Formula** | Black (#000000) | No Fill | Normal / Bold | Inferred | ✅ High |
-| **Link** | Black (#000000) | No Fill | Normal | Inferred | ✅ High |
+| **Input** | Maroon (#800000) | Pale Yellow (#FFFF99) | Normal | Inferred | ✅ High |
+| **Formula** | Black (Default) | No Fill | Normal | Inferred | ✅ High |
+| **Link** | Green / Default | No Fill | Normal | Inferred | 🟡 Moderate |
 
 ---
 
@@ -21,19 +21,20 @@
 
 | Sheet Name | Cell Reference | Description of the Location | Short Error Category | Long Description of Error |
 |:---|:---|:---|:---|:---|
-| **Assum_Pricing** | C27:C30 | AU SkyBrew / AllDark Excise per HL | **Excise Error** | 🔴 **HIGH:** Australian Excise calculation misses the 1.15% ABV non-taxable threshold for beer. Current formula: `Rate * ABV * 100`. Expected: `Rate * (ABV - 1.15%) * 100`. |
-| **Global** | Workbook | Working Capital / Cash Flow | **Logical Flaw** | 🔴 **HIGH:** GST (10%) is completely missing from the model. Australian brewery models must account for GST collected on sales and GST paid on inputs (Net GST Payable/Receivable) in Working Capital. |
-| **IS** | B39:DU39 | Income Tax — P&L | **Logical Flaw** | 🟡 **LOW:** Tax calculation `=-MAX(0,EBT)*Rate` does not account for Tax Loss Carry Forwards. If the business incurs losses in early periods, these should offset future taxable income. |
-| **Calc_Revenue** | B12:DU12 (multiple) | Gross Revenue — Time Series | **Formula Pattern Break** | ⚠️ **MEDIUM:** Inconsistent formula pattern found every 12th column (e.g., N, Z, AL). While this represents annual escalation, the first month of each year uses a different calculation logic than the subsequent 11 months. |
-| **Checks** | B10:B20 | Various Integrity Checks | **Sentry Check** | ✅ **PASS:** All model integrity checks (Balance Sheet balance, Cash flow tie-in, etc.) currently resolve to TRUE or zero variance. |
-| **All Sheets** | N/A | Entire Workbook | **Broken Reference** | ✅ **PASS:** No `#REF!`, `#DIV/0!`, or `#VALUE!` errors detected in the active calculation ranges. |
+| **Dynamic Array** | J55 | Calculation Area | **Calculation Error** | 🔴 **HIGH:** Cell contains a `#VALUE!` error, indicating a breakdown in the calculation chain in this period. |
+| **One Line** | AD11 | Equity NPV Calculation | **Formula Pattern Break** | 🔴 **HIGH:** This cell breaks the row pattern by replacing a standard `XNPV` formula with a massive manual calculation. (Expected R1C1: `=XNPV(Inputs!R81C6,R11C9:R11C61,R5C9:R5C61)` vs Actual R1C1: Complex multi-line manual NPV). |
+| **Inputs** | G21:S21 | Timeline / Control Row | **Colour Coding Error** | ⚠️ **MEDIUM:** Cells are formatted with a bright red fill (#EF4136) which deviates from the established model style and may indicate an accidental override or "work-in-progress" marker. |
+| **Dynamic Array** | C27, C67, C116 | Row Labels | **Dominant Term Mismatch** | 🟡 **LOW:** Inconsistent casing in row labels: "Development costs" vs "Development Costs", "Interest rate" vs "Interest Rate", "Base rate" vs "Base Rate". The model predominantly uses Title Case for labels. |
+| **L** | C18, G18 | Reference Labels | **Typo** | 🟡 **LOW:** Possible typo or non-standard term: "Offsheet" (Expected: "Off-sheet" or "Link"). |
+| **Inputs** | D101 | Taxation section | **Number Format Mismatch** | 🟡 **LOW:** Tax Rate label uses a "%" sign in a separate cell (D101) but the input value (F101) is correctly formatted as a percentage. This is a minor presentation inconsistency. |
 
 ---
 
 ### 👔 Manager's Summary & Recommendations
 
-1.  **Immediate Fix Required (Excise):** The Excise Duty is being over-calculated by approx. 23% (for a 5% ABV beer) because the 1.15% ABV threshold is ignored. This significantly impacts Net Revenue and EBITDA.
-2.  **Missing Component (GST):** The model is currently "GST exclusive" in its cash flows. In a real Australian business context, the timing of GST payments/refunds can have a material impact on monthly liquidity.
-3.  **Consistency:** Technically, the model is very robust with no broken links or circular references. The formatting is consistent with financial modeling best practices.
+1.  **Immediate Fix (Dynamic Array):** The `#VALUE!` error in cell J55 should be investigated as it likely invalidates any summary results or NPVs derived from the Dynamic Array sheet.
+2.  **Logic Integrity (One Line):** The pattern break in AD11 is highly suspicious. It appears the modeler manually "unrolled" an NPV calculation for a specific column, which compromises the scalability and auditability of the sheet.
+3.  **Style Standardisation:** The bright red fill in the Inputs sheet should be reverted to the standard style unless it serves a specific, documented purpose.
+4.  **Overall Quality:** Aside from the specific errors noted, the model follows a structured approach (Corality/SMART standards) with clear separation of Inputs and Calculations. Tax logic matches the Australian 30% corporate rate.
 
 ---
