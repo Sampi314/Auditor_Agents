@@ -1,7 +1,7 @@
 # Audit Report: Brewery_Financial_Model_10Y 1.xlsx
 
 **Orchestrated by:** Manager 👔
-**Domains Audited:** Lingo ✍️, Logic 🧠, Sentry 🛡️, Stylist 🎨, Senior 🎓
+**Domains Audited:** Lingo ✍️, Logic 🧠, Sentry 🛡️, Stylist 🎨, Architect 🏗️, Efficiency ⚡, Sage 🧙‍♂️
 
 ---
 
