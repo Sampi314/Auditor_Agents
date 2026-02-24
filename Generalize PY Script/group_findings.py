@@ -1,0 +1,106 @@
+import json
+import os
+import argparse
+from collections import defaultdict
+import re
+
+def col_to_int(col):
+    num = 0
+    for char in col: num = num * 26 + (ord(char) - ord('A') + 1)
+    return num
+
+def int_to_col(n):
+    res = ""
+    while n > 0:
+        n, rem = divmod(n - 1, 26)
+        res = chr(65 + rem) + res
+    return res
+
+def split_coord(coord):
+    match = re.match(r'([A-Z]+)([0-9]+)', coord)
+    if not match: return None, None
+    return match.group(1), int(match.group(2))
+
+def group_cells_into_ranges_2d(cell_list):
+    if not cell_list: return ""
+    cells = set()
+    for c in cell_list:
+        for single_c in [x.strip() for x in c.split(",") if x.strip()]:
+            col_str, row = split_coord(single_c)
+            if col_str: cells.add((row, col_to_int(col_str)))
+    ranges = []
+    while cells:
+        r, c = min(cells)
+        w = 1
+        while (r, c + w) in cells: w += 1
+        h = 1
+        while True:
+            can_expand_h = True
+            for next_c in range(c, c + w):
+                if (r + h, next_c) not in cells:
+                    can_expand_h = False
+                    break
+            if not can_expand_h: break
+            h += 1
+        top_left = f"{int_to_col(c)}{r}"
+        if w == 1 and h == 1: ranges.append(top_left)
+        else:
+            bottom_right = f"{int_to_col(c + w - 1)}{r + h - 1}"
+            ranges.append(f"{top_left}:{bottom_right}")
+        for i in range(r, r + h):
+            for j in range(c, c + w): cells.discard((i, j))
+    return ", ".join(ranges)
+
+def group_findings(output_dir=None):
+    if output_dir:
+        input_path = os.path.join(output_dir, 'full_audit_results.json')
+        output_path = os.path.join(output_dir, 'final_audit_data.json')
+    else:
+        input_path = 'full_audit_results.json'
+        output_path = 'final_audit_data.json'
+
+    try:
+        with open(input_path) as f: results = json.load(f)
+    except FileNotFoundError:
+        print(f"File not found: {input_path}")
+        return
+
+    final_grouped = defaultdict(list)
+    # Key: (Sheet Name, Category, Long Description, Priority, Agent)
+    extra_info = {}
+    for r in results:
+        key = (r["Sheet Name"], r["Category"], r["Long Description"], r.get("Priority", "Medium"), r.get("Agent", "Unknown"))
+        final_grouped[key].append(r["Cell Reference"])
+        if key not in extra_info: extra_info[key] = r["Description"]
+
+    final_report_data = []
+    for key, cells in final_grouped.items():
+        sn, cat, desc_long, priority, agent = key
+        range_str = group_cells_into_ranges_2d(cells)
+        final_report_data.append({
+            "Sheet Name": sn,
+            "Cell Reference": range_str,
+            "Description": extra_info[key],
+            "Category": cat,
+            "Long Description": desc_long,
+            "Priority": priority,
+            "Agent": agent
+        })
+
+    def severity_rank(prio):
+        prio = prio.upper()
+        if "HIGH" in prio: return 0
+        if "MEDIUM" in prio: return 1
+        return 2
+
+    # Sort by Agent first, then Sheet, then Priority
+    final_report_data.sort(key=lambda x: (x["Agent"], x["Sheet Name"], severity_rank(x["Priority"]), x["Category"]))
+    with open(output_path, 'w') as f: json.dump(final_report_data, f)
+    print(f"Grouped findings written to {output_path}")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Group Findings Script")
+    parser.add_argument("--output-dir", required=True, help="Path to output directory containing results")
+    args = parser.parse_args()
+
+    group_findings(args.output_dir)
