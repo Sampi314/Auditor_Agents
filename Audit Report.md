@@ -1,7 +1,7 @@
 # Audit Report: 20130401 Efficient Modelling (Tutorial).xlsx
 
 **Orchestrated by:** Manager 👔
-**Domains Audited:** Lingo ✍️, Logic 🧠, Sentry 🛡️, Stylist 🎨, Architect 🏗️, Efficiency ⚡, Sage 🧙‍♂️
+**Domains Audited:** Lingo ✍️, Logic 🧠, Sentry 🛡️, Stylist 🎨
 
 ---
 
@@ -23,7 +23,7 @@
 | Sheet Name | Cell Reference | Description of the Location | Short Error Category | Long Description of Error |
 |:---|:---|:---|:---|:---|
 | **Dynamic Array** | J55 | Calculation Area | **Calculation Error** | 🔴 **HIGH:** Cell contains a `#VALUE!` error, indicating a breakdown in the calculation chain. |
-| **One Line** | AD11 | Equity NPV Calculation | **Formula Pattern Break** | 🔴 **HIGH:** This cell breaks the row pattern by replacing a standard `XNPV` formula with a complex manual calculation. |
+| **One Line** | AD11 | Equity Cashflow Calculation | **Mega-Formula (Bad Practice)** | 🔴 **HIGH:** This cell contains a massive 4,957-character formula that calculates periodic cashflow in a single step. While the result ($3.82m) appears consistent with neighboring periods, this "Mega-Formula" approach is extremely high-risk as it is virtually impossible to audit or maintain. Standard practice is to break complex logic into transparent, sequential calculation steps. |
 | **Dynamic Array** | I29 | Line Total / Summary | **Colour Coding Error** | 🔴 **HIGH:** Hard-coded value (15) found in a cell with `Line_Summary` style. Summary rows should only contain formulas to maintain model integrity. |
 | **Inputs** | G21:S21, G73 | Table Headings | **Correct Classification** | ✅ **VERIFIED:** These cells are correctly classified as **Headings** based on their formatting match with the Style Legend. They are excluded from input/formula checks. |
 | **Dynamic Array** | K11, K13, K19 | Year/Period Headers | **Colour Coding Error** | ⚠️ **MEDIUM:** Hard-coded year/period values use `Normal` or `Comma` styles instead of the model's Heading styles. |
@@ -31,14 +31,13 @@
 | **Dynamic Array** | C27, C67, C116 | Row Labels | **Dominant Term Mismatch** | 🟡 **LOW:** Inconsistent casing in row labels: "Development costs" vs "Development Costs". |
 | **L** | C18, G18 | Reference Labels | **Typo** | 🟡 **LOW:** Use of "Offsheet" instead of "Off-sheet". |
 
-
 ---
 
 ### 👔 Manager's Summary & Recommendations
 
 1.  **Robust Style Detection:** The Stylist Agent now utilizes **Content-Based Scanning** to identify the Style Legend, ensuring accurate classification even if sheets are renamed. Sheet **'L'** was positively identified via style keywords.
 2.  **Heading Verification:** High-priority verification confirms that cells previously flagged for red fill are valid **Table Headings** as defined by the model's own legend.
-3.  **Integrity Concerns:** The presence of hard-coded values in summary rows (`Dynamic Array!I29`) and active calculation errors (`Dynamic Array!J55`) are the primary risks to model reliability.
-4.  **Action Plan:** Fix the `#VALUE!` error, convert hard-coded summaries to formulas, and standardise non-conforming header styles in calculation sheets.
+3.  **Integrity & Auditability:** The 5,000-character "Mega-Formula" in `One Line!AD11` is a significant audit risk. Although it generates a plausible result, it bypasses the transparency required for professional financial modeling. Such formulas should be decomposed into a series of simple, checkable rows.
+4.  **Action Plan:** Fix the `#VALUE!` error in `Dynamic Array`, decompose Mega-Formulas into transparent steps, and convert hard-coded summaries to dynamic formulas.
 
 ---
