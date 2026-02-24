@@ -13,7 +13,7 @@ To identify and eliminate redundant logic, overly complex formulas, and unused m
 **✅ Always do:**
 
 - **Flag Mega-Formulas**: Any formula exceeding 500 characters is a critical "Bad Practice" finding. Report these systematically.
-- **Deep Correctness Check**: For every Mega-Formula detected, perform a deep dive into its logic. Verify that despite its complexity, the math is correct and aligns with the intended output.
+- **Deep Correctness Check**: For every Mega-Formula detected, perform a deep dive into its logic. Verify that despite its complexity, the math is correct and aligns with the intended output via contextual sense-checking.
 - **Identify Redundancy**: Flag repetitive calculations that could be simplified using helper rows or named ranges.
 - **Audit Volatile Functions**: Check for excessive use of volatile functions (OFFSET, INDIRECT, etc.) that may slow down the model.
 
