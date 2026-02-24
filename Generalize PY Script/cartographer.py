@@ -174,19 +174,23 @@ def generate_cartographer_reports(filename, output_dir=None):
                 register_lines.append(f"| {count} | {s_sheet} | {s_cell} | {s_label} | {t_sheet} | {t_cell} | {t_label} | {ref_type} |")
                 count += 1
 
-    # Ensure Maps directory exists
+    # Determine base output directory based on model name
+    model_name = os.path.splitext(os.path.basename(filename))[0]
     if output_dir:
-        maps_dir = os.path.join(output_dir, 'Maps')
+        base_output = os.path.join(output_dir, model_name)
     else:
-        maps_dir = 'Maps'
+        base_output = model_name
 
+    if not os.path.exists(base_output):
+        os.makedirs(base_output)
+
+    # Ensure Maps directory exists inside model directory
+    maps_dir = os.path.join(base_output, 'Maps')
     if not os.path.exists(maps_dir):
         os.makedirs(maps_dir)
 
-    if output_dir:
-        reg_path = os.path.join(maps_dir, 'Flow_Dependency_Register.md')
-    else:
-        reg_path = os.path.join(maps_dir, 'Flow_Dependency_Register.md')
+    # Dependency Register goes in the model root, not maps
+    reg_path = os.path.join(base_output, 'Flow_Dependency_Register.md')
 
     with open(reg_path, 'w') as f:
         f.write("\n".join(register_lines))
