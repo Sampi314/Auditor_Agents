@@ -33,5 +33,7 @@ To orchestrate the comprehensive audit of financial models by coordinating all s
 
 ## Standard Report Format
 
-| Sheet Name | Cell Reference | Description of the Location | Short Error Category | Long Description of Error |
-|---|---|---|---|---|
+The report is structured into sections for each specialized agent, with the following table format:
+
+| Sheet Name | Cell Reference | Description of the Location | Priority | Short Error Category | Long Description of Error |
+|---|---|---|---|---|---|

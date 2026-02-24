@@ -23,8 +23,9 @@ def group_cells_into_ranges_2d(cell_list):
     if not cell_list: return ""
     cells = set()
     for c in cell_list:
-        col_str, row = split_coord(c)
-        if col_str: cells.add((row, col_to_int(col_str)))
+        for single_c in [x.strip() for x in c.split(",") if x.strip()]:
+            col_str, row = split_coord(single_c)
+            if col_str: cells.add((row, col_to_int(col_str)))
     ranges = []
     while cells:
         r, c = min(cells)
@@ -54,32 +55,35 @@ def main():
     except FileNotFoundError: return
 
     final_grouped = defaultdict(list)
-    descriptions = {}
+    # Key: (Sheet Name, Category, Long Description, Priority, Agent)
+    extra_info = {}
     for r in results:
-        key = (r["Sheet Name"], r["Category"], r["Long Description"])
+        key = (r["Sheet Name"], r["Category"], r["Long Description"], r.get("Priority", "Medium"), r.get("Agent", "Unknown"))
         final_grouped[key].append(r["Cell Reference"])
-        if key not in descriptions: descriptions[key] = r["Description"]
+        if key not in extra_info: extra_info[key] = r["Description"]
 
     final_report_data = []
     for key, cells in final_grouped.items():
-        sn, cat, desc = key
-        flat_cells = []
-        for c in cells: flat_cells.extend([x.strip() for x in c.split(",") if x.strip()])
-        range_str = group_cells_into_ranges_2d(flat_cells)
+        sn, cat, desc_long, priority, agent = key
+        range_str = group_cells_into_ranges_2d(cells)
         final_report_data.append({
             "Sheet Name": sn,
             "Cell Reference": range_str,
-            "Description": descriptions[key],
+            "Description": extra_info[key],
             "Category": cat,
-            "Long Description": desc
+            "Long Description": desc_long,
+            "Priority": priority,
+            "Agent": agent
         })
 
-    def severity_rank(desc):
-        if "🔴 HIGH" in desc: return 0
-        if "⚠️ MEDIUM" in desc: return 1
+    def severity_rank(prio):
+        prio = prio.upper()
+        if "HIGH" in prio: return 0
+        if "MEDIUM" in prio: return 1
         return 2
 
-    final_report_data.sort(key=lambda x: (x["Sheet Name"], severity_rank(x["Long Description"]), x["Category"]))
+    # Sort by Agent first, then Sheet, then Priority
+    final_report_data.sort(key=lambda x: (x["Agent"], x["Sheet Name"], severity_rank(x["Priority"]), x["Category"]))
     with open('final_audit_data.json', 'w') as f: json.dump(final_report_data, f)
 
 if __name__ == "__main__":

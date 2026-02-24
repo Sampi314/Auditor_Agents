@@ -36,6 +36,17 @@ def a1_to_r1c1(formula, cell_row, cell_col):
     pattern = r'(\$?[A-Z]+)(\$?[0-9]+)'
     return re.sub(pattern, replace_ref, formula)
 
+def add_finding(findings, sheetname, ref, desc, cat, long_desc, priority, agent):
+    findings.append({
+        "Sheet Name": sheetname,
+        "Cell Reference": ref,
+        "Description": desc,
+        "Category": cat,
+        "Long Description": long_desc,
+        "Priority": priority,
+        "Agent": agent
+    })
+
 def full_audit(filename):
     wb = openpyxl.load_workbook(filename, data_only=False)
     wb_data = openpyxl.load_workbook(filename, data_only=True)
@@ -55,7 +66,8 @@ def full_audit(filename):
             for cell in row:
                 val = ws_data[cell.coordinate].value
                 if str(val) in error_values:
-                    findings.append({"Sheet Name": sheetname, "Cell Reference": cell.coordinate, "Description": "Calculation Error", "Category": "Calculation Error", "Long Description": f"🔴 HIGH: Cell contains error {val}"})
+                    add_finding(findings, sheetname, cell.coordinate, "Calculation Error", "Calculation Error",
+                                f"Cell contains error {val}. Check source data and formula logic to resolve the calculation error.", "High", "Sentry")
 
                 if cell.data_type == 'f':
                     formula = str(cell.value).upper()
@@ -63,41 +75,17 @@ def full_audit(filename):
                     # Efficiency: Volatile functions
                     for vf in volatile_functions:
                         if vf in formula:
-                            findings.append({
-                                "Sheet Name": sheetname, "Cell Reference": cell.coordinate,
-                                "Description": f"Volatile Function: {vf[:-1]}",
-                                "Category": "Volatile Complexity",
-                                "Long Description": f"⚠️ MEDIUM: Use of volatile function {vf[:-1]} detected. This can cause performance degradation in large models."
-                            })
+                            add_finding(findings, sheetname, cell.coordinate, f"Volatile Function: {vf[:-1]}", "Volatile Complexity",
+                                        f"Use of volatile function {vf[:-1]} detected. Volatile functions recalculate every time any cell in the workbook changes, which can slow down large models. Consider replacing with INDEX/MATCH if possible.", "Medium", "Efficiency")
 
                     # Efficiency: Mega-Formula (>4000)
                     if len(formula) > 4000:
-                        findings.append({
-                            "Sheet Name": sheetname, "Cell Reference": cell.coordinate,
-                            "Description": "Mega-Formula (Bad Practice)",
-                            "Category": "Mega-Formula",
-                            "Long Description": f"🔴 HIGH: Extremely long formula detected (>4000 chars). Flagged as CRITICAL BAD PRACTICE due to total lack of auditability."
-                        })
+                        add_finding(findings, sheetname, cell.coordinate, "Mega-Formula (Bad Practice)", "Mega-Formula",
+                                    "Extremely long formula detected (>4000 chars). This is a critical auditability risk. Formulas this complex are impossible to verify or maintain. Break the calculation into multiple modular steps using helper rows.", "High", "Efficiency")
                     # Efficiency: Long Formula (>500)
                     elif len(formula) > 500:
-                        findings.append({
-                            "Sheet Name": sheetname, "Cell Reference": cell.coordinate,
-                            "Description": "Long Formula",
-                            "Category": "Auditability Risk",
-                            "Long Description": f"⚠️ MEDIUM: Formula exceeds 500 characters. While not a 'Mega-Formula', it still poses an auditability risk and should be broken down."
-                        })
-
-                    # Architect: Master Date Spine alignment
-                    if timeline_sheet and sheetname != timeline_sheet:
-                        if '!' in formula and timeline_sheet not in formula:
-                            # If it links to other sheets but NOT the timeline sheet, it might be an architectural risk
-                            # but this is too noisy. Let's look for hardcoded dates or inconsistent period references.
-                            pass
-
-                    # Architect: Scalability (Check for hardcoded column limits in SUM/etc)
-                    if any(re.search(r'[A-Z]+\$[0-9]+:[A-Z]+\$[0-9]+', formula) for _ in [1]):
-                         # This is complex to automate perfectly, but we can flag some patterns
-                         pass
+                        add_finding(findings, sheetname, cell.coordinate, "Long Formula", "Auditability Risk",
+                                    "Formula exceeds 500 characters. While not a 'Mega-Formula', it still poses an auditability risk. Consider breaking it down into smaller, more manageable components.", "Medium", "Efficiency")
 
     # 2. Lingo
     spell = SpellChecker()
@@ -111,9 +99,11 @@ def full_audit(filename):
                     misspelled = spell.unknown(words)
                     for word in misspelled:
                         if word.lower() not in ['dscr', 'heng']:
-                            findings.append({"Sheet Name": sheetname, "Cell Reference": cell.coordinate, "Description": f"Label: {cell.value}", "Category": "Typo", "Long Description": f"🟡 LOW: Potential typo '{word}' in '{cell.value}'"})
+                            add_finding(findings, sheetname, cell.coordinate, f"Label: {cell.value}", "Typo",
+                                        f"Potential typo '{word}' detected in label. Review and correct the spelling for professional presentation.", "Low", "Lingo")
 
     # 3. Stylist
+    # Key: (sheetname, category, long_desc, priority, agent)
     stylist_findings = defaultdict(list)
     for sheetname in wb.sheetnames:
         if sheetname in ['L', '  ', 'Corality']: continue
@@ -125,12 +115,15 @@ def full_audit(filename):
                 if not cell.data_type == 'f' and isinstance(cell.value, (int, float)):
                     if cell.row > 5 and cell.column > 3:
                         if f_color != "#800000" and f_color != "None" and f_color != "Theme(0)":
-                            stylist_findings[(sheetname, "Colour Coding Error", f"🟡 LOW: Hard-coded input is formatted with font color {f_color} instead of the model's Input style (#800000)")].append(cell.coordinate)
+                            key = (sheetname, "Colour Coding Error", f"Hard-coded input is formatted with font color {f_color} instead of the model's standard Input style (#800000). Apply the standard Input style to maintain consistency.", "Low", "Stylist")
+                            stylist_findings[key].append(cell.coordinate)
                 if cell.data_type == 'f' and '!' in str(cell.value):
                     if f_color != "Indexed(16)":
-                        stylist_findings[(sheetname, "Colour Coding Error", "🟡 LOW: Off-sheet link is formatted with font color " + f_color + " instead of the model's Link style (Indexed 16)")].append(cell.coordinate)
-    for (sn, cat, desc), cells in stylist_findings.items():
-        findings.append({"Sheet Name": sn, "Cell Reference": ", ".join(cells), "Description": "Multiple locations", "Category": cat, "Long Description": desc})
+                        key = (sheetname, "Colour Coding Error", f"Off-sheet link is formatted with font color {f_color} instead of the model's standard Link style (Indexed 16). Apply the Link style to help users identify cross-sheet dependencies.", "Low", "Stylist")
+                        stylist_findings[key].append(cell.coordinate)
+    for key, cells in stylist_findings.items():
+        sn, cat, desc, priority, agent = key
+        add_finding(findings, sn, ", ".join(cells), "Multiple locations", cat, desc, priority, agent)
 
     # 4. Logic & Numerical Sense Check
     for sheetname in wb.sheetnames:
@@ -151,9 +144,11 @@ def full_audit(filename):
                 val = cell.value
                 if isinstance(val, (int, float)):
                     if "dscr" in label_lower and val < 0:
-                        findings.append({"Sheet Name": sheetname, "Cell Reference": cell.coordinate, "Description": f"Label: {label}", "Category": "Sanity Check Failure", "Long Description": f"🔴 HIGH: Negative DSCR detected. Ratios should typically be positive."})
+                        add_finding(findings, sheetname, cell.coordinate, f"Label: {label}", "Sanity Check Failure",
+                                    "Negative DSCR detected. DSCR (Debt Service Coverage Ratio) should typically be positive. Review the calculation for potential logic errors.", "High", "Logic")
                     if "revenue" in label_lower and val < 0:
-                        findings.append({"Sheet Name": sheetname, "Cell Reference": cell.coordinate, "Description": f"Label: {label}", "Category": "Sanity Check Failure", "Long Description": f"🔴 HIGH: Negative Revenue detected. Revenue should typically be positive."})
+                        add_finding(findings, sheetname, cell.coordinate, f"Label: {label}", "Sanity Check Failure",
+                                    "Negative Revenue detected. Revenue values should typically be positive. Verify the source data and revenue logic.", "High", "Logic")
 
                 orig_cell = ws[cell.coordinate]
                 if orig_cell.data_type == 'f':
@@ -161,13 +156,8 @@ def full_audit(filename):
                         r1c1 = a1_to_r1c1(orig_cell.value, orig_cell.row, orig_cell.column)
                         if len(str(orig_cell.value)) > 4000:
                             if val not in error_values:
-                                findings.append({
-                                    "Sheet Name": sheetname,
-                                    "Cell Reference": cell.coordinate,
-                                    "Description": "Deep Logic Check",
-                                    "Category": "Auditability Risk",
-                                    "Long Description": f"⚠️ MEDIUM: Mega-formula is technically functioning (no calculation error detected), but its complexity makes it an extreme auditability risk."
-                                })
+                                add_finding(findings, sheetname, cell.coordinate, "Deep Logic Check", "Auditability Risk",
+                                            "Mega-formula is technically functioning (no calculation error detected), but its complexity makes it an extreme auditability risk. It should be broken out for transparency.", "Medium", "Efficiency")
                     except: pass
 
         for row in ws.iter_rows():
@@ -184,7 +174,8 @@ def full_audit(filename):
                     dominant_r1c1, _ = counts.most_common(1)[0]
                     for coord, r1c1 in row_formulas.items():
                         if r1c1 != dominant_r1c1 and ws[coord].column >= 9:
-                            findings.append({"Sheet Name": sheetname, "Cell Reference": coord, "Description": "Formula row", "Category": "Formula Pattern Break", "Long Description": f"⚠️ MEDIUM: Formula differs from dominant pattern in row. Expected R1C1: {dominant_r1c1} vs Actual R1C1: {r1c1}"})
+                            add_finding(findings, sheetname, coord, "Formula row", "Formula Pattern Break",
+                                        f"Formula differs from the dominant pattern in this row. Inconsistent formulas within a row can lead to calculation errors and make the model harder to audit. Standardize the formula across the row.", "Medium", "Logic")
 
             for cell in row:
                 if cell.data_type == 'f':
@@ -192,7 +183,9 @@ def full_audit(filename):
                     literals = re.findall(r'(?<![A-Z$])\b([0-9]+\.[0-9]+|[2-9][0-9]+|[0-9]{2,})\b', formula)
                     literals = [l for l in literals if l not in ['100', '12', '365', '52', '1', '0', '2', '4', '8000', '4000']]
                     if literals:
-                        findings.append({"Sheet Name": sheetname, "Cell Reference": cell.coordinate, "Description": "Hard-coded literal", "Category": "Hard-Code in Formula", "Long Description": f"⚠️ MEDIUM: Formula contains hard-coded literal(s) {literals} which should likely be cell references."})
+                        # Avoid mentioning specific numbers to allow grouping
+                        add_finding(findings, sheetname, cell.coordinate, "Hard-coded literal", "Hard-Code in Formula",
+                                    "Formula contains one or more hard-coded literals. Literals should be moved to an assumptions sheet and referenced by cell to ensure model flexibility and transparency.", "Medium", "Logic")
 
     return findings
 
