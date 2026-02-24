@@ -1,0 +1,22 @@
+flowchart TD
+
+    subgraph sg_Assum_WC["Assum_WC"]
+        sect_Assum_WC_0["WORKING CAPITAL ASSUMPTIONS"]
+        sect_Assum_WC_1["INVENTORY DAYS"]
+        sect_Assum_WC_2["RECEIVABLE DAYS"]
+        sect_Assum_WC_3["PAYABLE DAYS"]
+        sect_Assum_WC_4["OTHER WORKING CAPITAL"]
+        sect_Assum_WC_5["OPENING WORKING CAPITAL"]
+    end
+    ext_in_Assum_Volume(["Assum_Volume"])
+    ext_in_Assum_Volume -- "Off-Trade %, On-Trade %" --> sect_Assum_WC_2
+    ext_out_Calc_WC(["Calc_WC"])
+    sect_Assum_WC_1 -- "Finished Goods (days of COGS), Raw Materials (days of COGS)..." --> ext_out_Calc_WC
+    sect_Assum_WC_2 -- "Blended Average" --> ext_out_Calc_WC
+    sect_Assum_WC_3 -- "Trade Payables (days of COGS + Opex)" --> ext_out_Calc_WC
+    sect_Assum_WC_4 -- "Accruals (days of Opex), Prepayments (days of Opex)" --> ext_out_Calc_WC
+    sect_Assum_WC_5 -- "Opening Net Working Capital" --> ext_out_Calc_WC
+    ext_out_KPIs(["KPIs"])
+    sect_Assum_WC_1 -- "Total Inventory Days" --> ext_out_KPIs
+    sect_Assum_WC_2 -- "Blended Average" --> ext_out_KPIs
+    sect_Assum_WC_3 -- "Trade Payables (days of COGS + Opex)" --> ext_out_KPIs

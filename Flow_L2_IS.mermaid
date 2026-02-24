@@ -1,0 +1,42 @@
+flowchart TD
+
+    subgraph sg_IS["IS"]
+        sect_IS_0["INCOME STATEMENT"]
+        sect_IS_1["REVENUE ($000s)"]
+        sect_IS_2["COST OF GOODS SOLD ($000s)"]
+        sect_IS_3["GROSS PROFIT"]
+        sect_IS_4["OPERATING EXPENSES ($000s)"]
+        sect_IS_5["EBITDA"]
+    end
+    ext_in_Calc_COGS(["Calc_COGS"])
+    ext_in_Calc_COGS -- "Total COGS, Total Direct Manufacturing..." --> sect_IS_2
+    ext_in_Calc_Capex(["Calc_Capex"])
+    ext_in_Calc_Capex -- "Depreciation" --> sect_IS_5
+    ext_in_Calc_Debt(["Calc_Debt"])
+    ext_in_Calc_Debt -- "Total Interest Expense" --> sect_IS_5
+    ext_in_Calc_Opex(["Calc_Opex"])
+    ext_in_Calc_Opex -- "General & Admin, Marketing..." --> sect_IS_4
+    ext_in_Calc_Revenue(["Calc_Revenue"])
+    ext_in_Calc_Revenue -- "Net Revenue, Total Discounts..." --> sect_IS_1
+    ext_in_Calc_Volume(["Calc_Volume"])
+    ext_in_Calc_Volume -- "Date, Period" --> sect_IS_0
+    ext_in_Control(["Control"])
+    ext_in_Control -- "Corporate Tax Rate" --> sect_IS_5
+    sect_IS_1 -- "Net Revenue" --> sect_IS_3
+    sect_IS_1 -- "Net Revenue" --> sect_IS_5
+    sect_IS_2 -- "Total COGS" --> sect_IS_3
+    sect_IS_3 -- "Gross Profit" --> sect_IS_5
+    sect_IS_4 -- "Total Opex" --> sect_IS_5
+    ext_out_Annual_Summary(["Annual_Summary"])
+    sect_IS_3 -- "Gross Profit" --> ext_out_Annual_Summary
+    sect_IS_5 -- "EBIT, EBITDA..." --> ext_out_Annual_Summary
+    ext_out_BS(["BS"])
+    sect_IS_5 -- "NET INCOME" --> ext_out_BS
+    ext_out_CF(["CF"])
+    sect_IS_5 -- "NET INCOME" --> ext_out_CF
+    ext_out_Checks(["Checks"])
+    sect_IS_3 -- "Gross Margin %" --> ext_out_Checks
+    sect_IS_5 -- "NET INCOME" --> ext_out_Checks
+    ext_out_KPIs(["KPIs"])
+    sect_IS_3 -- "Gross Margin %" --> ext_out_KPIs
+    sect_IS_5 -- "EBIT, EBIT Margin %..." --> ext_out_KPIs

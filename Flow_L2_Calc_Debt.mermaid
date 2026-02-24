@@ -1,0 +1,29 @@
+flowchart TD
+
+    subgraph sg_Calc_Debt["Calc_Debt"]
+        sect_Calc_Debt_0["DEBT SCHEDULE"]
+        sect_Calc_Debt_1["TERM LOAN ($000s)"]
+        sect_Calc_Debt_2["REVOLVER ($000s)"]
+        sect_Calc_Debt_3["TOTAL DEBT ($000s)"]
+    end
+    ext_in_Assum_Finance(["Assum_Finance"])
+    ext_in_Assum_Finance -- "Term Loan - Annual Principal Payment, Term Loan - Interest Rate..." --> sect_Calc_Debt_1
+    ext_in_Assum_Finance -- "Commitment Fee (on undrawn), Current Drawn Amount..." --> sect_Calc_Debt_2
+    ext_in_Calc_Volume(["Calc_Volume"])
+    ext_in_Calc_Volume -- "Date, Period" --> sect_Calc_Debt_0
+    sect_Calc_Debt_1 -- "Closing Balance, Interest Expense" --> sect_Calc_Debt_3
+    sect_Calc_Debt_2 -- "Interest Expense, Closing Balance..." --> sect_Calc_Debt_3
+    ext_out_Annual_Summary(["Annual_Summary"])
+    sect_Calc_Debt_3 -- "Total Debt" --> ext_out_Annual_Summary
+    ext_out_BS(["BS"])
+    sect_Calc_Debt_1 -- "Closing Balance" --> ext_out_BS
+    sect_Calc_Debt_3 -- "Total Debt" --> ext_out_BS
+    ext_out_CF(["CF"])
+    sect_Calc_Debt_1 -- "Principal Payment" --> ext_out_CF
+    sect_Calc_Debt_2 -- "Draw / (Repay)" --> ext_out_CF
+    ext_out_Checks(["Checks"])
+    sect_Calc_Debt_3 -- "Total Debt" --> ext_out_Checks
+    ext_out_IS(["IS"])
+    sect_Calc_Debt_3 -- "Total Interest Expense" --> ext_out_IS
+    ext_out_KPIs(["KPIs"])
+    sect_Calc_Debt_3 -- "Total Debt, Total Interest Expense" --> ext_out_KPIs

@@ -1,0 +1,30 @@
+flowchart TD
+
+    subgraph sg_Calc_Capex["Calc_Capex"]
+        sect_Calc_Capex_0["CAPEX & DEPRECIATION"]
+        sect_Calc_Capex_1["OPENING PP&E ($000s)"]
+        sect_Calc_Capex_2["MOVEMENTS ($000s)"]
+        sect_Calc_Capex_3["CLOSING PP&E ($000s)"]
+        sect_Calc_Capex_4["CAPACITY UTILIZATION"]
+    end
+    ext_in_Assum_Capex(["Assum_Capex"])
+    ext_in_Assum_Capex -- "TOTAL" --> sect_Calc_Capex_1
+    ext_in_Assum_Capex -- "Annual Maintenance Capex (% of Gross PP&E), TOTAL" --> sect_Calc_Capex_2
+    ext_in_Assum_Capex -- "Fermentation Capacity (HL/year)" --> sect_Calc_Capex_4
+    ext_in_Calc_Volume(["Calc_Volume"])
+    ext_in_Calc_Volume -- "Date, Period" --> sect_Calc_Capex_0
+    ext_in_Calc_Volume -- "Total" --> sect_Calc_Capex_4
+    sect_Calc_Capex_1 -- "Gross PP&E - Opening" --> sect_Calc_Capex_2
+    sect_Calc_Capex_1 -- "Accumulated Depreciation - Opening, Gross PP&E - Opening" --> sect_Calc_Capex_3
+    sect_Calc_Capex_2 -- "Depreciation, Total Capex" --> sect_Calc_Capex_3
+    sect_Calc_Capex_3 -- "Accumulated Depreciation - Closing, Gross PP&E - Closing" --> sect_Calc_Capex_1
+    ext_out_Annual_Summary(["Annual_Summary"])
+    sect_Calc_Capex_2 -- "Total Capex" --> ext_out_Annual_Summary
+    ext_out_BS(["BS"])
+    sect_Calc_Capex_3 -- "Net PP&E - Closing" --> ext_out_BS
+    ext_out_CF(["CF"])
+    sect_Calc_Capex_2 -- "Depreciation, Total Capex" --> ext_out_CF
+    ext_out_IS(["IS"])
+    sect_Calc_Capex_2 -- "Depreciation" --> ext_out_IS
+    ext_out_KPIs(["KPIs"])
+    sect_Calc_Capex_4 -- "Utilization %" --> ext_out_KPIs

@@ -1,0 +1,102 @@
+flowchart LR
+
+    classDef input fill:#E8F5E9,stroke:#2E7D32
+    classDef shared fill:#FFD700,stroke:#333
+    classDef output fill:#E3F2FD,stroke:#1565C0
+
+    Assum_Finance_C11["Facility Limit"]:::input
+    Assum_Finance_C13["Interest Rate"]:::input
+    Assum_Finance_C14["Commitment Fee (on undrawn)"]:::input
+    Assum_Finance_C5["Term Loan - Interest Rate"]:::input
+    CF_C23["Net Cash Flow"]
+    CF_C24["Opening Cash"]
+    CF_C25["Closing Cash"]
+    CF_D10["Cash from Operations"]
+    CF_D13["Capital Expenditure"]
+    CF_D14["Cash from Investing"]
+    CF_D17["Term Loan Principal Payments"]
+    CF_D19["Dividends Paid"]
+    CF_D20["Cash from Financing"]
+    CF_D23["Net Cash Flow"]
+    CF_D24["Opening Cash"]
+    CF_D25["Closing Cash"]
+    CF_D7["Net Income"]
+    CF_D9["Change in Working Capital"]
+    Calc_COGS_D28["Total COGS"]
+    Calc_Debt_C15["Closing Balance"]
+    Calc_Debt_C9["Closing Balance"]
+    Calc_Debt_D10["Interest Expense"]
+    Calc_Debt_D13["Opening Balance"]
+    Calc_Debt_D16["Interest Expense"]
+    Calc_Debt_D17["Commitment Fee"]
+    Calc_Debt_D21["Total Interest Expense"]
+    Calc_Debt_D7["Opening Balance"]
+    Calc_Opex_D11["Total Logistics"]
+    Calc_Opex_D18["Total SG&A"]
+    Calc_Opex_D21["Total Operating Expenses"]
+    Calc_Revenue_D25["Net Revenue"]
+    Control_D16["Corporate Tax Rate"]:::input
+    IS_D10["Net Revenue"]
+    IS_D16["Total COGS"]
+    IS_D19["Gross Profit"]
+    IS_D26["Total Opex"]
+    IS_D29["EBITDA"]
+    IS_D30["EBITDA Margin %"]
+    IS_D33["EBIT"]
+    IS_D36["Interest Expense"]
+    IS_D37["EBT"]
+    IS_D39["Income Tax"]
+    IS_D40["NET INCOME"]
+    KPIs_D19["EBITDA ($000s)"]:::output
+    KPIs_D20["EBITDA Margin %"]:::output
+    KPIs_D22["Net Income ($000s)"]:::output
+    KPIs_D26["Cash Balance ($000s)"]:::output
+    KPIs_D30["Interest Coverage (EBITDA/Interest)"]:::output
+    Assum_Finance_C11 --> Calc_Debt_D17
+    Assum_Finance_C13 --> Calc_Debt_D16
+    Assum_Finance_C14 --> Calc_Debt_D17
+    Assum_Finance_C5 --> Calc_Debt_D10
+    CF_C23 --> CF_C25
+    CF_C24 --> CF_C25
+    CF_C25 --> CF_D24
+    CF_D10 --> CF_D23
+    CF_D13 --> CF_D14
+    CF_D14 --> CF_D23
+    CF_D17 --> CF_D20
+    CF_D19 --> CF_D20
+    CF_D20 --> CF_D23
+    CF_D23 --> CF_D25
+    CF_D24 --> CF_D25
+    CF_D25 --> KPIs_D26
+    CF_D7 --> CF_D10
+    CF_D9 --> CF_D10
+    Calc_COGS_D28 --> IS_D16
+    Calc_Debt_C15 --> Calc_Debt_D13
+    Calc_Debt_C9 --> Calc_Debt_D7
+    Calc_Debt_D10 --> Calc_Debt_D21
+    Calc_Debt_D13 --> Calc_Debt_D16
+    Calc_Debt_D13 --> Calc_Debt_D17
+    Calc_Debt_D16 --> Calc_Debt_D21
+    Calc_Debt_D17 --> Calc_Debt_D21
+    Calc_Debt_D21 --> KPIs_D30
+    Calc_Debt_D7 --> Calc_Debt_D10
+    Calc_Opex_D11 --> Calc_Opex_D21
+    Calc_Opex_D18 --> Calc_Opex_D21
+    Calc_Opex_D21 --> IS_D26
+    Calc_Revenue_D25 --> IS_D10
+    Control_D16 --> IS_D39
+    IS_D10 --> IS_D19
+    IS_D10 --> IS_D30
+    IS_D16 --> IS_D19
+    IS_D19 --> IS_D29
+    IS_D26 --> IS_D29
+    IS_D29 --> IS_D30
+    IS_D29 --> KPIs_D19
+    IS_D29 --> KPIs_D30
+    IS_D30 --> KPIs_D20
+    IS_D33 --> IS_D37
+    IS_D36 --> IS_D37
+    IS_D37 --> IS_D39
+    IS_D37 --> IS_D40
+    IS_D39 --> IS_D40
+    IS_D40 --> KPIs_D22
