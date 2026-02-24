@@ -16,16 +16,6 @@ The audit is orchestrated by the **Manager** agent, which coordinates specialize
 - **VBA 📦**: Audits VBA code for security, performance, error handling, and coding standards.
 - **Power Query ⚡**: Audits Power Query M code for data quality, performance, and structural integrity.
 
-## 📏 Standards & Conventions
-
-Financial models in this repository are expected to follow the **Corality-style** conventions:
-
-- **Inputs**: Dark Red (#800000) font, no fill.
-- **Off-sheet Links**: Green (Indexed 16) font.
-- **Formulas**: Black font.
-- **Timeline**: 5-year forecast with monthly granularity for the first year and annual summaries thereafter.
-- **Named Styles**: Use of named cell styles (e.g., 'Table Heading', 'Standard Assumption') is encouraged for scalability.
-
 ## 🏗️ 8-Step Financial Modeling Methodology
 
 All modeling tasks should follow this structured approach:
