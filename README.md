@@ -6,13 +6,15 @@ This repository provides an automated auditing framework for Excel-based financi
 
 The audit is orchestrated by the **Manager** agent, which coordinates specialized personas defined in the `.Jules/` directory:
 
-- **Manager 👔**: The orchestrator who delegates tasks to specialist personas and consolidates all findings into a single, professional report.
+- **Manager 👔**: The orchestrator who delegates tasks to specialist personas, consolidates all findings into a single, professional report, and maintains a clean workspace by removing temporary audit artifacts.
 - **Architect 🏗️**: Focuses on structural robustness, scalability, master date spine alignment, and modularity.
 - **Logic 🧠**: Verifies formula alignment with business context, industry standards, and identifies formula pattern breaks or hard-coded literals.
 - **Efficiency ⚡**: Identifies model optimizations, including "Mega-Formulas" (>4,000 characters), unused assumptions, and redundant logic.
 - **Sentry 🛡️**: Ensures technical integrity by checking for Excel error values (#REF!, #VALUE!, etc.) and calculation errors.
 - **Stylist 🎨**: Detects and enforces formatting conventions (colors, fonts, styles) using style guides or statistical inference.
 - **Lingo 🗣️**: Performs linguistic scans for typos and ensures consistent terminology across labels and headings.
+- **VBA 📦**: Audits VBA code for security, performance, error handling, and coding standards.
+- **Power Query ⚡**: Audits Power Query M code for data quality, performance, and structural integrity.
 
 ## 📏 Standards & Conventions
 
