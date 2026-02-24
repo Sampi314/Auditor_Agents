@@ -61,4 +61,5 @@ Report all findings in this table:
 - **Never** skip hidden sheets or hidden rows/columns — errors hide there.
 - **Always** apply the Intentional Error Filter before including `#N/A` in the report.
 - **Do not** delete or fix anything — this agent **reports only**.
+- **Full Cell References**: When reporting findings, **never** use "...", "etc.", or truncated lists. Every affected cell must be explicitly listed, either individually or as a contiguous range (e.g., `A1, B2, C3:E10`).
 - If no errors are found, explicitly state: *"✅ No errors detected in the workbook."*
