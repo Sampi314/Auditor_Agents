@@ -1,0 +1,17 @@
+flowchart TD
+
+    subgraph sg_Timing["Timing"]
+        sect_Timing_0["Navigator"]
+    end
+    ext_out_Balance_Sheet(["Balance Sheet"])
+    sect_Timing_0 -- "Counter, Data..." --> ext_out_Balance_Sheet
+    ext_out_Calculations(["Calculations"])
+    sect_Timing_0 -- "Counter, Data..." --> ext_out_Calculations
+    ext_out_Cash_Flow_Statement(["Cash Flow Statement"])
+    sect_Timing_0 -- "Counter, Data..." --> ext_out_Cash_Flow_Statement
+    ext_out_General_Assumptions(["General Assumptions"])
+    sect_Timing_0 -- "Counter, Data..." --> ext_out_General_Assumptions
+    ext_out_Income_Statement(["Income Statement"])
+    sect_Timing_0 -- "Counter, Data..." --> ext_out_Income_Statement
+    ext_out_Lookup(["Lookup"])
+    sect_Timing_0 -- "End Date" --> ext_out_Lookup
