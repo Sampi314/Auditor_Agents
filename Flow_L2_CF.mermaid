@@ -1,0 +1,38 @@
+flowchart TD
+
+    subgraph sg_CF["CF"]
+        sect_CF_0["CASH FLOW STATEMENT"]
+        sect_CF_1["OPERATING ACTIVITIES ($000s)"]
+        sect_CF_2["INVESTING ACTIVITIES ($000s)"]
+        sect_CF_3["FINANCING ACTIVITIES ($000s)"]
+        sect_CF_4["CASH MOVEMENT ($000s)"]
+    end
+    ext_in_Assum_Finance(["Assum_Finance"])
+    ext_in_Assum_Finance -- "Target Payout Ratio (% of Net Income)" --> sect_CF_3
+    ext_in_Assum_Finance -- "Opening Cash Balance" --> sect_CF_4
+    ext_in_Calc_Capex(["Calc_Capex"])
+    ext_in_Calc_Capex -- "Depreciation" --> sect_CF_1
+    ext_in_Calc_Capex -- "Total Capex" --> sect_CF_2
+    ext_in_Calc_Debt(["Calc_Debt"])
+    ext_in_Calc_Debt -- "Draw / (Repay), Principal Payment" --> sect_CF_3
+    ext_in_Calc_Volume(["Calc_Volume"])
+    ext_in_Calc_Volume -- "Date, Period" --> sect_CF_0
+    ext_in_Calc_WC(["Calc_WC"])
+    ext_in_Calc_WC -- "Change in NWC" --> sect_CF_1
+    ext_in_IS(["IS"])
+    ext_in_IS -- "NET INCOME" --> sect_CF_1
+    ext_in_IS -- "NET INCOME" --> sect_CF_3
+    sect_CF_1 -- "Cash from Operations" --> sect_CF_4
+    sect_CF_2 -- "Cash from Investing" --> sect_CF_4
+    sect_CF_3 -- "Cash from Financing" --> sect_CF_4
+    ext_out_Annual_Summary(["Annual_Summary"])
+    sect_CF_1 -- "Cash from Operations" --> ext_out_Annual_Summary
+    sect_CF_4 -- "Closing Cash" --> ext_out_Annual_Summary
+    ext_out_BS(["BS"])
+    sect_CF_3 -- "Dividends Paid" --> ext_out_BS
+    sect_CF_4 -- "Closing Cash" --> ext_out_BS
+    ext_out_Checks(["Checks"])
+    sect_CF_3 -- "Dividends Paid" --> ext_out_Checks
+    sect_CF_4 -- "Closing Cash" --> ext_out_Checks
+    ext_out_KPIs(["KPIs"])
+    sect_CF_4 -- "Closing Cash" --> ext_out_KPIs

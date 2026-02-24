@@ -1,0 +1,15 @@
+flowchart TD
+
+    subgraph sg_Assum_Capex["Assum_Capex"]
+        sect_Assum_Capex_0["CAPEX & CAPACITY ASSUMPTIONS"]
+        sect_Assum_Capex_1["OPENING BALANCE SHEET (Year 0)"]
+        sect_Assum_Capex_2["Asset Class"]
+        sect_Assum_Capex_3["PRODUCTION CAPACITY"]
+        sect_Assum_Capex_4["EXPANSION CAPEX (per 20% capacity addition)"]
+        sect_Assum_Capex_5["MAINTENANCE CAPEX"]
+        sect_Assum_Capex_6["EXPANSION TRIGGER"]
+    end
+    ext_out_Calc_Capex(["Calc_Capex"])
+    sect_Assum_Capex_2 -- "TOTAL" --> ext_out_Calc_Capex
+    sect_Assum_Capex_3 -- "Fermentation Capacity (HL/year)" --> ext_out_Calc_Capex
+    sect_Assum_Capex_5 -- "Annual Maintenance Capex (% of Gross PP&E)" --> ext_out_Calc_Capex

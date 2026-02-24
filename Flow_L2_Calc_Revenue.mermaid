@@ -1,0 +1,50 @@
+flowchart TD
+
+    subgraph sg_Calc_Revenue["Calc_Revenue"]
+        sect_Calc_Revenue_0["REVENUE CALCULATIONS"]
+        sect_Calc_Revenue_1["GROSS REVENUE ($000s)"]
+        sect_Calc_Revenue_2["DISCOUNTS ($000s)"]
+        sect_Calc_Revenue_3["EXCISE DUTY ($000s)"]
+        sect_Calc_Revenue_4["NET REVENUE ($000s)"]
+        sect_Calc_Revenue_5["KEY METRICS"]
+    end
+    ext_in_Assum_Pricing(["Assum_Pricing"])
+    ext_in_Assum_Pricing -- "Base Scenario, Downside Scenario" --> sect_Calc_Revenue_0
+    ext_in_Assum_Pricing -- "AllDark, SkyBrew" --> sect_Calc_Revenue_1
+    ext_in_Assum_Pricing -- "Blended Off-Trade Discount, On-Trade Discount %" --> sect_Calc_Revenue_2
+    ext_in_Assum_Pricing -- "AU AllDark (6% ABV) - Keg, AU AllDark (6% ABV) - Standard..." --> sect_Calc_Revenue_3
+    ext_in_Assum_Volume(["Assum_Volume"])
+    ext_in_Assum_Volume -- "Bottles %, Cans %..." --> sect_Calc_Revenue_1
+    ext_in_Assum_Volume -- "AllDark %, Kegs %..." --> sect_Calc_Revenue_3
+    ext_in_Calc_Volume(["Calc_Volume"])
+    ext_in_Calc_Volume -- "Date, Period" --> sect_Calc_Revenue_0
+    ext_in_Calc_Volume -- "AllDark, SkyBrew" --> sect_Calc_Revenue_1
+    ext_in_Calc_Volume -- "Australia, New Zealand" --> sect_Calc_Revenue_3
+    ext_in_Calc_Volume -- "Total" --> sect_Calc_Revenue_5
+    ext_in_Control(["Control"])
+    ext_in_Control -- "Active Scenario (1=Base, 2=Upside, 3=Downside)" --> sect_Calc_Revenue_0
+    sect_Calc_Revenue_0 -- "Price Index (cumulative)" --> sect_Calc_Revenue_1
+    sect_Calc_Revenue_1 -- "AllDark Off-Trade, SkyBrew Off-Trade..." --> sect_Calc_Revenue_2
+    sect_Calc_Revenue_1 -- "Total Gross Revenue" --> sect_Calc_Revenue_4
+    sect_Calc_Revenue_1 -- "Total Gross Revenue" --> sect_Calc_Revenue_5
+    sect_Calc_Revenue_2 -- "Total Discounts" --> sect_Calc_Revenue_4
+    sect_Calc_Revenue_3 -- "Total Excise" --> sect_Calc_Revenue_4
+    sect_Calc_Revenue_3 -- "Total Excise" --> sect_Calc_Revenue_5
+    sect_Calc_Revenue_4 -- "Net Revenue" --> sect_Calc_Revenue_5
+    ext_out_Annual_Summary(["Annual_Summary"])
+    sect_Calc_Revenue_1 -- "Total Gross Revenue" --> ext_out_Annual_Summary
+    sect_Calc_Revenue_4 -- "Net Revenue" --> ext_out_Annual_Summary
+    ext_out_Calc_COGS(["Calc_COGS"])
+    sect_Calc_Revenue_4 -- "Net Revenue" --> ext_out_Calc_COGS
+    ext_out_Calc_Opex(["Calc_Opex"])
+    sect_Calc_Revenue_1 -- "Total Gross Revenue" --> ext_out_Calc_Opex
+    ext_out_Calc_WC(["Calc_WC"])
+    sect_Calc_Revenue_4 -- "Net Revenue" --> ext_out_Calc_WC
+    ext_out_IS(["IS"])
+    sect_Calc_Revenue_1 -- "Total Gross Revenue" --> ext_out_IS
+    sect_Calc_Revenue_2 -- "Total Discounts" --> ext_out_IS
+    sect_Calc_Revenue_3 -- "Total Excise" --> ext_out_IS
+    sect_Calc_Revenue_4 -- "Net Revenue" --> ext_out_IS
+    ext_out_KPIs(["KPIs"])
+    sect_Calc_Revenue_1 -- "Total Gross Revenue" --> ext_out_KPIs
+    sect_Calc_Revenue_4 -- "Net Revenue" --> ext_out_KPIs

@@ -1,0 +1,39 @@
+flowchart TD
+
+    subgraph sg_Calc_WC["Calc_WC"]
+        sect_Calc_WC_0["WORKING CAPITAL"]
+        sect_Calc_WC_1["INVENTORY ($000s)"]
+        sect_Calc_WC_2["RECEIVABLES ($000s)"]
+        sect_Calc_WC_3["PAYABLES ($000s)"]
+        sect_Calc_WC_4["OTHER ($000s)"]
+        sect_Calc_WC_5["NET WORKING CAPITAL ($000s)"]
+    end
+    ext_in_Assum_WC(["Assum_WC"])
+    ext_in_Assum_WC -- "Finished Goods (days of COGS), Raw Materials (days of COGS)..." --> sect_Calc_WC_1
+    ext_in_Assum_WC -- "Blended Average" --> sect_Calc_WC_2
+    ext_in_Assum_WC -- "Trade Payables (days of COGS + Opex)" --> sect_Calc_WC_3
+    ext_in_Assum_WC -- "Accruals (days of Opex), Prepayments (days of Opex)" --> sect_Calc_WC_4
+    ext_in_Assum_WC -- "Opening Net Working Capital" --> sect_Calc_WC_5
+    ext_in_Calc_COGS(["Calc_COGS"])
+    ext_in_Calc_COGS -- "Total COGS" --> sect_Calc_WC_1
+    ext_in_Calc_COGS -- "Total COGS" --> sect_Calc_WC_3
+    ext_in_Calc_Opex(["Calc_Opex"])
+    ext_in_Calc_Opex -- "Total Operating Expenses" --> sect_Calc_WC_3
+    ext_in_Calc_Opex -- "Total Operating Expenses" --> sect_Calc_WC_4
+    ext_in_Calc_Revenue(["Calc_Revenue"])
+    ext_in_Calc_Revenue -- "Net Revenue" --> sect_Calc_WC_2
+    ext_in_Calc_Volume(["Calc_Volume"])
+    ext_in_Calc_Volume -- "Date, Period" --> sect_Calc_WC_0
+    sect_Calc_WC_1 -- "Total Inventory" --> sect_Calc_WC_5
+    sect_Calc_WC_2 -- "Trade Receivables" --> sect_Calc_WC_5
+    sect_Calc_WC_3 -- "Trade Payables" --> sect_Calc_WC_5
+    sect_Calc_WC_4 -- "Accruals, Prepayments" --> sect_Calc_WC_5
+    ext_out_BS(["BS"])
+    sect_Calc_WC_1 -- "Total Inventory" --> ext_out_BS
+    sect_Calc_WC_2 -- "Trade Receivables" --> ext_out_BS
+    sect_Calc_WC_3 -- "Trade Payables" --> ext_out_BS
+    sect_Calc_WC_4 -- "Accruals, Prepayments" --> ext_out_BS
+    ext_out_CF(["CF"])
+    sect_Calc_WC_5 -- "Change in NWC" --> ext_out_CF
+    ext_out_KPIs(["KPIs"])
+    sect_Calc_WC_5 -- "Net Working Capital" --> ext_out_KPIs
