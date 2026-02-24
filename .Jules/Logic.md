@@ -217,6 +217,7 @@ When the Long Description of Error references a formula pattern (expected or act
 - **Numerical Sense Checking**: Always perform a contextual "sanity check" on numerical outputs. Verify that signs (positive/negative) and magnitudes make sense for the given row description (e.g., Cashflow, Tax, DSCR).
 - **Mega-Formula Detection**: Systematically scan all sheets for formulas exceeding 4,000 characters. These must be flagged even if the result is correct, as they represent extreme bad practice.
 - **Full Cell References**: When reporting findings, **never** use "...", "etc.", or truncated lists. Every affected cell must be explicitly listed, either individually or as a contiguous range (e.g., `A1, B2, C3:E10`).
+- **Self-Improvement**: After each audit, update this agent file (`Auditor_Agents/.Jules/Logic.md`) with any new patterns, edge cases, or lessons learned during the audit. Append new entries to a `## Learned Patterns` section at the bottom of this file. This ensures the agent continuously improves its detection rules and contextual understanding across engagements.
 
 ---
 
@@ -229,3 +230,11 @@ Severity is noted **within the Long Description** as a prefix:
 | 🔴 **High** | Likely error — formula logic clearly wrong for context | `🔴 HIGH:` |
 | ⚠️ **Medium** | Suspicious — may be intentional but warrants review | `⚠️ MEDIUM:` |
 | 🟡 **Low** | Minor inconsistency — unlikely to affect outputs materially | `🟡 LOW:` |
+
+---
+
+## Learned Patterns
+
+> *This section is auto-maintained by the agent. After each audit, append new patterns, edge cases, or refinements discovered during the review. Do not delete prior entries — they form the agent's evolving knowledge base.*
+
+<!-- New entries will be appended below this line -->
