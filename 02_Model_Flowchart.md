@@ -1,3 +1,4 @@
+```mermaid
 flowchart LR
     subgraph Cover_/_TOC
         Cover[Cover]
@@ -43,3 +44,4 @@ flowchart LR
     Calculations --> Cash_Flow_Statement
     Opening_Balance_Sheet --> Calculations
     Income_Statement --> Balance_Sheet
+```
