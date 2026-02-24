@@ -1,17 +1,14 @@
-# 02 Model Flowchart
-
-```mermaid
 flowchart LR
-    subgraph Cover_/_TOC
+    subgraph sg_Cover["Cover / TOC"]
         Cover[Cover]
     end
-    subgraph Control_/_Scenario
+    subgraph sg_Control["Control / Scenario"]
         Control[Control]
     end
-    subgraph Timing
+    subgraph sg_Timing["Timing"]
         Timeline[Timeline]
     end
-    subgraph Other
+    subgraph sg_Other["Other"]
         SKU_Matrix[SKU_Matrix]
         Assum_Volume[Assum_Volume]
         Assum_Pricing[Assum_Pricing]
@@ -20,7 +17,7 @@ flowchart LR
         Assum_Finance[Assum_Finance]
         CF[CF]
     end
-    subgraph Calculations
+    subgraph sg_Calcs["Calculations"]
         Assum_Capex[Assum_Capex]
         Calc_Volume[Calc_Volume]
         Calc_Revenue[Calc_Revenue]
@@ -30,15 +27,15 @@ flowchart LR
         Calc_WC[Calc_WC]
         Calc_Debt[Calc_Debt]
     end
-    subgraph Financial_Statements
+    subgraph sg_FS["Financial Statements"]
         IS[IS]
         BS[BS]
         KPIs[KPIs]
     end
-    subgraph Checks
+    subgraph sg_Checks["Checks"]
         Checks[Checks]
     end
-    subgraph Outputs_/_Dashboard
+    subgraph sg_Outputs["Outputs / Dashboard"]
         Annual_Summary[Annual_Summary]
     end
     CF --> Annual_Summary
@@ -81,7 +78,6 @@ flowchart LR
     Assum_Finance --> BS
     Assum_Finance --> CF
     Calc_Volume --> Calc_Revenue
-    Calc_Volume --> Checks
     BS --> KPIs
     Calc_Volume --> Calc_Opex
     Calc_Volume --> KPIs
@@ -109,4 +105,3 @@ flowchart LR
     Assum_Costs --> Calc_Opex
     Calc_Revenue --> Calc_WC
     Calc_Volume --> Calc_WC
-```
