@@ -2,6 +2,17 @@ import openpyxl
 import json
 import re
 
+def add_finding(findings, sheetname, ref, desc, cat, long_desc, priority, agent):
+    findings.append({
+        "Sheet Name": sheetname,
+        "Cell Reference": ref,
+        "Description": desc,
+        "Category": cat,
+        "Long Description": long_desc,
+        "Priority": priority,
+        "Agent": agent
+    })
+
 def audit_hyperlinks(filename):
     wb = openpyxl.load_workbook(filename, data_only=True)
     findings = []
@@ -30,22 +41,14 @@ def audit_hyperlinks(filename):
                                 t_sn, t_cr = location.split('!')
                                 t_sn = t_sn.strip("'")
                                 if t_sn not in wb.sheetnames:
-                                    findings.append({
-                                        "Sheet Name": sheetname, "Cell Reference": ref,
-                                        "Description": f"HYPERLINK formula to {link_target}",
-                                        "Category": "Broken Link - Missing Sheet",
-                                        "Long Description": f"🔴 HIGH: HYPERLINK formula references sheet '{t_sn}' which does not exist."
-                                    })
+                                    add_finding(findings, sheetname, ref, f"HYPERLINK formula to {link_target}", "Broken Link - Missing Sheet",
+                                                f"HYPERLINK formula references sheet '{t_sn}' which does not exist. Update the formula to reference a valid sheet.", "High", "Hyperlinks")
                         else:
                             # External link in formula
                             ref = cell.coordinate
                             if "example.com" in link_target:
-                                findings.append({
-                                    "Sheet Name": sheetname, "Cell Reference": ref,
-                                    "Description": f"HYPERLINK formula to {link_target}",
-                                    "Category": "Placeholder URL",
-                                    "Long Description": f"🟡 LOW: External URL in formula contains obvious placeholder text."
-                                })
+                                add_finding(findings, sheetname, ref, f"HYPERLINK formula to {link_target}", "Placeholder URL",
+                                            "External URL in formula contains obvious placeholder text. Update with the correct destination URL.", "Low", "Hyperlinks")
 
         # openpyxl stores hyperlinks in ws._hyperlinks
         for rel in ws._hyperlinks:
@@ -60,35 +63,20 @@ def audit_hyperlinks(filename):
                     target_sheetname, target_cell_ref = location.split('!')
                     target_sheetname = target_sheetname.strip("'")
                     if target_sheetname not in wb.sheetnames:
-                        findings.append({
-                            "Sheet Name": sheetname,
-                            "Cell Reference": ref,
-                            "Description": f"Hyperlink to {location}",
-                            "Category": "Broken Link - Missing Sheet",
-                            "Long Description": f"🔴 HIGH: Hyperlink references sheet '{target_sheetname}' which does not exist."
-                        })
+                        add_finding(findings, sheetname, ref, f"Hyperlink to {location}", "Broken Link - Missing Sheet",
+                                    f"Hyperlink references sheet '{target_sheetname}' which does not exist. Check for renamed or deleted sheets.", "High", "Hyperlinks")
                     else:
                         # Check if target cell is blank
                         target_ws = wb[target_sheetname]
                         try:
                             target_val = target_ws[target_cell_ref].value
                             if target_val is None or str(target_val).strip() == "":
-                                findings.append({
-                                    "Sheet Name": sheetname,
-                                    "Cell Reference": ref,
-                                    "Description": f"Hyperlink to {location}",
-                                    "Category": "Link to Blank Cell",
-                                    "Long Description": f"⚠️ MEDIUM: Hyperlink navigates to a valid cell, but the destination cell is blank."
-                                })
+                                add_finding(findings, sheetname, ref, f"Hyperlink to {location}", "Link to Blank Cell",
+                                            "Hyperlink navigates to a valid cell, but the destination cell is blank. Ensure the target contains relevant content or update the link.", "Medium", "Hyperlinks")
                         except:
                             # Might be out of bounds or invalid ref
-                            findings.append({
-                                "Sheet Name": sheetname,
-                                "Cell Reference": ref,
-                                "Description": f"Hyperlink to {location}",
-                                "Category": "Broken Link - Out of Bounds",
-                                "Long Description": f"🔴 HIGH: Hyperlink targets a cell reference beyond the sheet's bounds or is invalid."
-                            })
+                            add_finding(findings, sheetname, ref, f"Hyperlink to {location}", "Broken Link - Out of Bounds",
+                                        "Hyperlink targets a cell reference beyond the sheet's bounds or is invalid. Correct the target reference.", "High", "Hyperlinks")
                 else:
                     # Likely a named range or local cell
                     if location not in wb.defined_names:
@@ -96,40 +84,20 @@ def audit_hyperlinks(filename):
                         try:
                             target_val = ws[location].value
                             if target_val is None or str(target_val).strip() == "":
-                                findings.append({
-                                    "Sheet Name": sheetname,
-                                    "Cell Reference": ref,
-                                    "Description": f"Hyperlink to {location}",
-                                    "Category": "Link to Blank Cell",
-                                    "Long Description": f"⚠️ MEDIUM: Hyperlink navigates to a valid cell, but the destination cell is blank."
-                                })
+                                add_finding(findings, sheetname, ref, f"Hyperlink to {location}", "Link to Blank Cell",
+                                            "Hyperlink navigates to a valid cell, but the destination cell is blank. Ensure the target contains relevant content or update the link.", "Medium", "Hyperlinks")
                         except:
-                             findings.append({
-                                "Sheet Name": sheetname,
-                                "Cell Reference": ref,
-                                "Description": f"Hyperlink to {location}",
-                                "Category": "Broken Link - Missing Name",
-                                "Long Description": f"🔴 HIGH: Hyperlink targets a named range or cell '{location}' which does not exist."
-                            })
+                             add_finding(findings, sheetname, ref, f"Hyperlink to {location}", "Broken Link - Missing Name",
+                                         f"Hyperlink targets a named range or cell '{location}' which does not exist. Verify the target name or reference.", "High", "Hyperlinks")
 
             # External link
             if target and not location:
                 if "example.com" in target or "xxx" in target:
-                    findings.append({
-                        "Sheet Name": sheetname,
-                        "Cell Reference": ref,
-                        "Description": f"Hyperlink to {target}",
-                        "Category": "Placeholder URL",
-                        "Long Description": f"🟡 LOW: External URL contains obvious placeholder text."
-                    })
+                    add_finding(findings, sheetname, ref, f"Hyperlink to {target}", "Placeholder URL",
+                                "External URL contains obvious placeholder text. Update with the correct destination URL.", "Low", "Hyperlinks")
                 if target.startswith("C:\\Users\\"):
-                    findings.append({
-                        "Sheet Name": sheetname,
-                        "Cell Reference": ref,
-                        "Description": f"Hyperlink to {target}",
-                        "Category": "Non-Portable File Path",
-                        "Long Description": f"⚠️ MEDIUM: File path is user-specific and will break for other users."
-                    })
+                    add_finding(findings, sheetname, ref, f"Hyperlink to {target}", "Non-Portable File Path",
+                                "File path is user-specific and will break for other users. Use relative paths or a shared network location.", "Medium", "Hyperlinks")
 
     return findings
 
