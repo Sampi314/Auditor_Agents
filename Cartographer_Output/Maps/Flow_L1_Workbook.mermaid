@@ -1,0 +1,49 @@
+flowchart LR
+
+    subgraph sg_Cover___TOC["Cover / TOC"]
+        Cover["Cover"]
+    end
+    subgraph sg_Other["Other"]
+        Navigator["Navigator"]
+        Style_Guide["Style Guide"]
+        Model_Parameters["Model Parameters"]
+        Change_Log["Change Log"]
+    end
+    subgraph sg_Inputs___Assumptions["Inputs / Assumptions"]
+        General_Assumptions["General Assumptions"]
+    end
+    subgraph sg_Calculations["Calculations"]
+        Calculations["Calculations"]
+    end
+    subgraph sg_Checks["Checks"]
+        Opening_Balance_Sheet["Opening Balance Sheet"]
+        Balance_Sheet["Balance Sheet"]
+        Error_Checks["Error Checks"]
+    end
+    subgraph sg_Financial_Statements["Financial Statements"]
+        Income_Statement["Income Statement"]
+        Cash_Flow_Statement["Cash Flow Statement"]
+    end
+    subgraph sg_Data___Lookup["Data / Lookup"]
+        Lookup["Lookup"]
+    end
+    subgraph sg_Timing["Timing"]
+        Timing["Timing"]
+    end
+    Calculations -- "Closing DTAs, Closing DTLs, Closing debt (+10 more)" --> Balance_Sheet
+    Calculations -- "Capital expenditure, Cash payments, Cash receipts (+8 more)" --> Cash_Flow_Statement
+    Calculations -- "COGS, Depreciation, Interest Income (+4 more)" --> Income_Statement
+    Cash_Flow_Statement -- "Net increase / (decrease) in cash held" --> Balance_Sheet
+    Cash_Flow_Statement -- "Net Financing cash flows, Net Operating cash flow, Purchases of Non-Current Assets" --> Calculations
+    General_Assumptions -- "Accounting depreciation - straight line, All expenses are assumed to be paid as they are incurred, Amount used per sale (+36 more)" --> Calculations
+    Income_Statement -- "NPAT" --> Balance_Sheet
+    Income_Statement -- "NPBT" --> Calculations
+    Opening_Balance_Sheet -- "Accounts payable, Accounts receivable, Cash (+28 more)" --> Balance_Sheet
+    Opening_Balance_Sheet -- "Accounts payable, Accounts receivable, Cash (+4 more)" --> Calculations
+    Opening_Balance_Sheet -- "Deferred tax assets, Deferred tax liabilities" --> General_Assumptions
+    Timing -- "Counter, End Date, Number of Days (+1 more)" --> Balance_Sheet
+    Timing -- "Counter, End Date, Number of Days (+1 more)" --> Calculations
+    Timing -- "Counter, End Date, Number of Days (+1 more)" --> Cash_Flow_Statement
+    Timing -- "Counter, End Date, Number of Days (+1 more)" --> General_Assumptions
+    Timing -- "Counter, End Date, Number of Days (+1 more)" --> Income_Statement
+    Timing -- "End Date" --> Lookup

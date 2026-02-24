@@ -1,0 +1,13 @@
+flowchart TD
+
+    subgraph sg_General_Assumptions["General Assumptions"]
+        sect_General_Assumptions_0["Navigator"]
+        sect_General_Assumptions_1["COGS"]
+    end
+    ext_in_Opening_Balance_Sheet(["Opening Balance Sheet"])
+    ext_in_Opening_Balance_Sheet -- "Deferred tax assets, Deferred tax liabilities" --> sect_General_Assumptions_1
+    ext_in_Timing(["Timing"])
+    ext_in_Timing -- "Counter, Data..." --> sect_General_Assumptions_0
+    ext_out_Calculations(["Calculations"])
+    sect_General_Assumptions_0 -- "Days receivable, Inflation..." --> ext_out_Calculations
+    sect_General_Assumptions_1 -- "Accounting depreciation - straight line, All expenses are assumed to be paid as they are incurred..." --> ext_out_Calculations

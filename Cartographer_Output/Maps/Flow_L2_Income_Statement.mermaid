@@ -1,0 +1,13 @@
+flowchart TD
+
+    subgraph sg_Income_Statement["Income Statement"]
+        sect_Income_Statement_0["Navigator"]
+    end
+    ext_in_Calculations(["Calculations"])
+    ext_in_Calculations -- "COGS, Data..." --> sect_Income_Statement_0
+    ext_in_Timing(["Timing"])
+    ext_in_Timing -- "Counter, Data..." --> sect_Income_Statement_0
+    ext_out_Balance_Sheet(["Balance Sheet"])
+    sect_Income_Statement_0 -- "NPAT" --> ext_out_Balance_Sheet
+    ext_out_Calculations(["Calculations"])
+    sect_Income_Statement_0 -- "NPBT" --> ext_out_Calculations

@@ -1,0 +1,11 @@
+flowchart TD
+
+    subgraph sg_Opening_Balance_Sheet["Opening Balance Sheet"]
+        sect_Opening_Balance_Sheet_0["Navigator"]
+    end
+    ext_out_Balance_Sheet(["Balance Sheet"])
+    sect_Opening_Balance_Sheet_0 -- "Accounts payable, Accounts receivable..." --> ext_out_Balance_Sheet
+    ext_out_Calculations(["Calculations"])
+    sect_Opening_Balance_Sheet_0 -- "Accounts payable, Accounts receivable..." --> ext_out_Calculations
+    ext_out_General_Assumptions(["General Assumptions"])
+    sect_Opening_Balance_Sheet_0 -- "Deferred tax assets, Deferred tax liabilities" --> ext_out_General_Assumptions

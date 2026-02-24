@@ -1,0 +1,17 @@
+flowchart TD
+
+    subgraph sg_Balance_Sheet["Balance Sheet"]
+        sect_Balance_Sheet_0["Navigator"]
+    end
+    ext_in_Calculations(["Calculations"])
+    ext_in_Calculations -- "Closing DTAs, Closing DTLs..." --> sect_Balance_Sheet_0
+    ext_in_Cash_Flow_Statement(["Cash Flow Statement"])
+    ext_in_Cash_Flow_Statement -- "Net increase / (decrease) in cash held" --> sect_Balance_Sheet_0
+    ext_in_Income_Statement(["Income Statement"])
+    ext_in_Income_Statement -- "NPAT" --> sect_Balance_Sheet_0
+    ext_in_Opening_Balance_Sheet(["Opening Balance Sheet"])
+    ext_in_Opening_Balance_Sheet -- "Accounts payable, Accounts receivable..." --> sect_Balance_Sheet_0
+    ext_in_Timing(["Timing"])
+    ext_in_Timing -- "Counter, Data..." --> sect_Balance_Sheet_0
+    ext_out_Calculations(["Calculations"])
+    sect_Balance_Sheet_0 -- "Data" --> ext_out_Calculations

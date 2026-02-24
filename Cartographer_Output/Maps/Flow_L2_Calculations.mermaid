@@ -1,0 +1,30 @@
+flowchart TD
+
+    subgraph sg_Calculations["Calculations"]
+        sect_Calculations_0["Navigator"]
+        sect_Calculations_1["COGS"]
+    end
+    ext_in_Balance_Sheet(["Balance Sheet"])
+    ext_in_Balance_Sheet -- "Data" --> sect_Calculations_1
+    ext_in_Cash_Flow_Statement(["Cash Flow Statement"])
+    ext_in_Cash_Flow_Statement -- "Net Financing cash flows, Net Operating cash flow..." --> sect_Calculations_1
+    ext_in_General_Assumptions(["General Assumptions"])
+    ext_in_General_Assumptions -- "Days receivable, Inflation..." --> sect_Calculations_0
+    ext_in_General_Assumptions -- "Accounting depreciation - straight line, All expenses are assumed to be paid as they are incurred..." --> sect_Calculations_1
+    ext_in_Income_Statement(["Income Statement"])
+    ext_in_Income_Statement -- "NPBT" --> sect_Calculations_1
+    ext_in_Opening_Balance_Sheet(["Opening Balance Sheet"])
+    ext_in_Opening_Balance_Sheet -- "Accounts receivable" --> sect_Calculations_0
+    ext_in_Opening_Balance_Sheet -- "Accounts payable, Cash..." --> sect_Calculations_1
+    ext_in_Timing(["Timing"])
+    ext_in_Timing -- "Counter, Data..." --> sect_Calculations_0
+    sect_Calculations_0 -- "End Date, Number of Days..." --> sect_Calculations_1
+    ext_out_Balance_Sheet(["Balance Sheet"])
+    sect_Calculations_0 -- "Closing receivables" --> ext_out_Balance_Sheet
+    sect_Calculations_1 -- "Closing DTAs, Closing DTLs..." --> ext_out_Balance_Sheet
+    ext_out_Cash_Flow_Statement(["Cash Flow Statement"])
+    sect_Calculations_0 -- "Cash receipts" --> ext_out_Cash_Flow_Statement
+    sect_Calculations_1 -- "Capital expenditure, Cash payments..." --> ext_out_Cash_Flow_Statement
+    ext_out_Income_Statement(["Income Statement"])
+    sect_Calculations_0 -- "Revenue" --> ext_out_Income_Statement
+    sect_Calculations_1 -- "COGS, Data..." --> ext_out_Income_Statement

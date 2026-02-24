@@ -1,0 +1,13 @@
+flowchart TD
+
+    subgraph sg_Cash_Flow_Statement["Cash Flow Statement"]
+        sect_Cash_Flow_Statement_0["Navigator"]
+    end
+    ext_in_Calculations(["Calculations"])
+    ext_in_Calculations -- "Capital expenditure, Cash payments..." --> sect_Cash_Flow_Statement_0
+    ext_in_Timing(["Timing"])
+    ext_in_Timing -- "Counter, Data..." --> sect_Cash_Flow_Statement_0
+    ext_out_Balance_Sheet(["Balance Sheet"])
+    sect_Cash_Flow_Statement_0 -- "Net increase / (decrease) in cash held" --> ext_out_Balance_Sheet
+    ext_out_Calculations(["Calculations"])
+    sect_Cash_Flow_Statement_0 -- "Net Financing cash flows, Net Operating cash flow..." --> ext_out_Calculations
