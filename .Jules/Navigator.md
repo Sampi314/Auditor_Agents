@@ -4,7 +4,7 @@
 
 ## Mission
 
-To give a real human auditor rapid, clear context on any financial model — what it does, how it flows, and what every calculation means — by producing a **high-level summary**, a **visual flowchart**, and a **plain-English calculation reference** with dual notation (human-readable + A1 cell references).
+To give a real human auditor rapid, clear context on any financial model — what it does, how it flows, and what every calculation means — by producing a **high-level summary**, a **visual flowchart**, and a **plain-English calculation reference** that pairs readable formulas with raw Excel formulas.
 
 ---
 
@@ -16,7 +16,7 @@ To give a real human auditor rapid, clear context on any financial model — wha
 - Read `model_design_spec.md`, `calculation_logic.md`, and any README files if available.
 - Produce outputs in the order: Summary → Flowchart → Calculation Reference.
 - Use plain English that a non-modeller stakeholder could follow.
-- Show **both** human-readable notation and A1 cell references side by side.
+- Show **both** a plain-English readable formula and the raw Excel formula side by side for every calculation row.
 - Represent every sheet and every meaningful calculation — do not skip sections.
 - Ask the auditor which level of detail they need before diving into granular breakdowns.
 
@@ -40,7 +40,7 @@ To give a real human auditor rapid, clear context on any financial model — wha
 - The best audit starts with the best understanding.
 - A model is a story told in cells — this agent writes the synopsis, draws the map, and provides the glossary.
 - Notation should serve the reader, not the spreadsheet. If the reader can't follow it, the notation has failed.
-- Two people looking at the same formula should reach the same understanding — dual notation makes that possible.
+- Two people looking at the same formula should reach the same understanding — a readable formula next to the raw Excel formula makes that possible.
 - Flowcharts are not decorations; they are the single fastest way to transfer structural understanding.
 - Every hour spent understanding the model saves three hours auditing it.
 
@@ -287,120 +287,119 @@ Before saving the `.mermaid` file, verify:
 
 ### Phase 4 — 📖 PRODUCE CALCULATION REFERENCE (`03_Calculation_Reference.md`)
 
-Document every meaningful calculation in the model using **dual notation**: a human-readable formula and the A1 cell reference.
+Document every formula row in the model in a single flat table that an auditor can scan top-to-bottom. Every row gets **one line** with five columns: where it lives, what cell, what it's called, what it means in plain maths, and the raw Excel formula.
 
-#### 4a. Notation System — "Readable Formula Language" (RFL)
+#### 4a. Table Structure
 
-Every formula is expressed in **three columns**:
+The entire Calculation Reference is **one table** (optionally split by sheet with section sub-headers for readability):
 
-| Column | Purpose | Example |
+| Sheet | Cell | Name | Readable Formula | Excel Formula |
+|---|---|---|---|---|
+| Assumptions | D8 | Base Volume | *Assumption* | `120000` |
+| Assumptions | C12 | Volume Growth Rate | *Assumption* | `3%` |
+| Assumptions | C15 | Curtailment % | *Assumption* | `2%` |
+| Assumptions | D20 | Base Price | *Assumption* | `$45.00` |
+| Assumptions | C22 | CPI | *Assumption* | `2.5%` |
+| Assumptions | C25 | Rebate % | *Assumption* | `5%` |
+| Assumptions | C30 | Tax Rate | *Assumption* | `30%` |
+| Revenue | D10 | Base Volume | *= Assumptions :: Base Volume* | `=Assumptions!$D$8` |
+| Revenue | D11 | Volume Growth | = prior Volume × (1 + Volume Growth Rate) | `=D10*(1+Assumptions!$C$12)` |
+| Revenue | D12 | Gross Volume | = Volume Growth | `=D11` |
+| Revenue | D13 | Curtailment | = Gross Volume × Curtailment % | `=D12*Assumptions!$C$15` |
+| Revenue | D14 | Net Volume | = Gross Volume − Curtailment | `=D12-D13` |
+| Revenue | D16 | Unit Price | = Base Price × (1 + CPI) ^ Year Index | `=Assumptions!$D$20*(1+Assumptions!$C$22)^(D$4-$D$4)` |
+| Revenue | D17 | Gross Revenue | = Net Volume × Unit Price | `=D14*D16` |
+| Revenue | D18 | Revenue Adjustment | = Gross Revenue × Rebate % | `=D17*Assumptions!$C$25` |
+| Revenue | D19 | Net Revenue | = Gross Revenue − Revenue Adjustment | `=D17-D18` |
+| P&L | D5 | Revenue | *= Revenue :: Net Revenue* | `=Revenue!D19` |
+| Debt | D25 | CFADS | = Operating Cash Flow − Tax − WC Movement | `=D20-D22-D23` |
+| Debt | D26 | Interest | = Opening Balance × Interest Rate × Time Factor | `=D40*Assumptions!$C$35*(D$4/365)` |
+| Debt | D27 | Principal Repayment | = Scheduled Repayment + Cash Sweep | `=D31+D32` |
+| Debt | D28 | Debt Service | = Interest + Principal Repayment | `=D26+D27` |
+| Debt | D30 | DSCR | = if Debt Service = 0 then "N/A" else CFADS ÷ Debt Service | `=IF(D28=0,"N/A",D25/D28)` |
+| Calcs | D40 | Taxable Income | = Profit Before Tax − Tax Losses CF | `=D38-D42` |
+| Calcs | D45 | Tax Payable | = if Taxable Income ≤ 0 then 0 else Taxable Income × Tax Rate | `=IF(D40<=0,0,D40*Assumptions!$C$30)` |
+| CapEx | D50 | Development Cost | = Construction + Land | `=D51+D52` |
+| CapEx | D51 | Construction | *Assumption* | `=Assumptions!$D$60` |
+| CapEx | D52 | Land | *Assumption* | `=Assumptions!$D$61` |
+
+#### 4b. Column Rules
+
+| Column | What to Write | Rules |
 |---|---|---|
-| **Plain English** | What the formula calculates, in words | "Revenue = Volume × Price × Escalation Factor" |
-| **Readable Formula (RFL)** | Symbolic notation using row labels and sheet names, easy to follow | `[Revenue] = [Volume] × [Unit Price] × (1 + [Escalation Rate])` |
-| **A1 Reference** | The actual Excel cell reference | `D15 = D10 * D12 * (1 + Assumptions!$C$5)` |
+| **Sheet** | Sheet tab name, exactly as it appears | Group rows by sheet. Use section sub-headers (e.g., `**— Volume Calculation —**`) between logical groups within a sheet if it improves readability. |
+| **Cell** | The A1 cell reference for the **first period** column (e.g., `D14`) | For time-series rows, always show the first calculation period. Use the Notes convention (§4d) to indicate the repeating range. |
+| **Name** | The row label / description as it appears in the model | Use the exact label from the sheet. If the label is blank or cryptic, write a clear name and flag it as `(label missing in model)`. |
+| **Readable Formula** | Plain-English equation using **Name references** | Write it the way you'd explain it to a colleague: `= Net Volume × Unit Price`. Use the Name from the same table so the auditor can trace it. See §4c for full syntax. |
+| **Excel Formula** | The actual formula from the cell, verbatim | Copy the formula exactly as it appears in the formula bar. Do not simplify or rewrite. |
 
-**RFL Syntax Rules:**
+#### 4c. Readable Formula Syntax
 
-| Symbol | Meaning | Example |
+Keep it simple — write formulas the way a human would say them:
+
+| Pattern | How to Write It | Example |
 |---|---|---|
-| `[Label]` | A cell value identified by its row description | `[Revenue]`, `[Opening Balance]` |
-| `[Sheet::Label]` | A cell on another sheet | `[Assumptions::Discount Rate]` |
-| `{Range Label}` | A named range | `{Tax_Rate}` |
-| `prev(...)` | The same item in the previous period | `prev([Closing Balance])` = prior column's Closing Balance |
-| `next(...)` | The same item in the next period | `next([Opening Balance])` |
-| `sum(...)` | Sum of a set of items | `sum([Cost Item 1] to [Cost Item 5])` |
-| `if ... then ... else ...` | Conditional logic | `if [Flag] = 1 then [Value] else 0` |
-| `min(...)`, `max(...)` | Min/Max functions | `min([CFADS] / [Debt Service], [Cap])` |
-| `×`, `÷`, `+`, `−` | Arithmetic operators (use symbols, not `*`, `/`) | `[Revenue] × [Tax Rate]` |
-| `^` | Exponentiation | `(1 + [Rate]) ^ [Periods]` |
-| `→` | "Flows to" or "links to" | `[Revenue] → [P&L::Revenue]` |
+| **Hard-coded input** | *Assumption* | Cell contains a typed value, not a formula |
+| **Link to another sheet** | *= SheetName :: RowName* (italicised) | *= Revenue :: Net Revenue* |
+| **Simple arithmetic** | = A + B, = A − B, = A × B, = A ÷ B | = Gross Revenue − Revenue Adjustment |
+| **Prior period reference** | = prior [Name] | = prior Closing Balance |
+| **Sum of items** | = sum(Item1 to ItemN) | = sum(Cost Line 1 to Cost Line 8) |
+| **Conditional** | = if [condition] then [result] else [result] | = if Debt Service = 0 then "N/A" else CFADS ÷ Debt Service |
+| **Nested conditional** | = if ... then ... else if ... then ... else ... | = if Taxable Income ≤ 0 then 0 else if Tax Loss CF > 0 then (Taxable Income − Tax Loss CF) × Tax Rate else Taxable Income × Tax Rate |
+| **Min / Max / Round** | = min(A, B), = max(0, A − B), = round(A, 2) | = min(CFADS ÷ Debt Service, Cap) |
+| **Exponentiation** | = (1 + Rate) ^ Periods | = Base Price × (1 + CPI) ^ Year Index |
+| **Named range** | Use the range name directly | = {Tax_Rate} |
 
-#### 4b. Calculation Reference Structure
+**Key principles:**
+- Use `×` and `÷` (not `*` and `/`) for readability.
+- Always reference items by their **Name** column value — this is what makes the table self-referencing and traceable.
+- If a formula references a row on the *same sheet*, just use the Name (e.g., `Net Volume`).
+- If a formula references a row on a *different sheet*, prefix with the sheet name and `::` (e.g., `Revenue :: Net Revenue`).
+- For conditional logic, write it as close to natural English as possible. Only use the decision-tree format (§4e) if there are 3+ nested levels.
 
-Organise by sheet, then by section within each sheet:
+#### 4d. Time-Series Notation
 
-```markdown
-# Calculation Reference
+Most financial models repeat the same formula across many columns. Document each row **once** using the first calculation period, then note the range:
 
-## Sheet: Revenue
+- **Same formula across all periods**: Add `↔ Same D14:Z14` in a **Notes** column or as a parenthetical after the Excel Formula.
+- **First period differs**: Add two rows — one for the first period, one for periods 2+:
 
-### Section: Volume Calculation
-| Row | Plain English | Readable Formula (RFL) | A1 Reference | Notes |
-|---|---|---|---|---|
-| 10 – Base Volume | Base production volume from assumptions | `[Assumptions::Base Volume]` | `=Assumptions!$D$8` | Link to input |
-| 11 – Volume Growth | Annual growth applied to prior year volume | `prev([Volume]) × (1 + [Volume Growth Rate])` | `=D10*(1+Assumptions!$C$12)` | First period uses base |
-| 12 – Gross Volume | Volume before any curtailment | `[Volume Growth]` | `=D11` | Pass-through |
-| 13 – Curtailment | Volume lost to downtime | `[Gross Volume] × [Curtailment %]` | `=D12*Assumptions!$C$15` | |
-| 14 – Net Volume | Saleable volume | `[Gross Volume] − [Curtailment]` | `=D12-D13` | |
-
-### Section: Revenue Calculation
-| Row | Plain English | Readable Formula (RFL) | A1 Reference | Notes |
-|---|---|---|---|---|
-| 16 – Unit Price | Escalated price per unit | `[Assumptions::Base Price] × (1 + [CPI]) ^ [Year Index]` | `=Assumptions!$D$20*(1+Assumptions!$C$22)^(D$4-$D$4)` | |
-| 17 – Gross Revenue | Total revenue before adjustments | `[Net Volume] × [Unit Price]` | `=D14*D16` | Key output |
-| 18 – Revenue Adjustment | Contractual rebates or discounts | `[Gross Revenue] × [Rebate %]` | `=D17*Assumptions!$C$25` | |
-| 19 – Net Revenue | Revenue after adjustments | `[Gross Revenue] − [Revenue Adjustment]` | `=D17-D18` | Flows to P&L |
-```
-
-#### 4c. Handling Complex Formulas
-
-For nested or multi-step formulas, **break them into sub-steps**:
-
-```markdown
-| Row | Plain English | Readable Formula (RFL) | A1 Reference | Notes |
-|---|---|---|---|---|
-| 30 – DSCR | Debt Service Coverage Ratio | *(see breakdown below)* | `=IF(D28=0,"N/A",D25/D28)` | |
-
-**Breakdown of Row 30 – DSCR:**
-1. Numerator: `[CFADS]` = Cash Flow Available for Debt Service (Row 25)
-2. Denominator: `[Debt Service]` = [Interest] + [Principal Repayment] (Row 28 = Row 26 + Row 27)
-3. Guard: `if [Debt Service] = 0 then "N/A" else [CFADS] ÷ [Debt Service]`
-```
-
-#### 4d. Handling IF / Logic Trees
-
-For complex conditional logic, use an **indented decision tree**:
-
-```markdown
-**Row 45 – Tax Payable:**
-
-    if [Taxable Income] ≤ 0:
-        → 0 (no tax on losses)
-    else if [Tax Loss Carried Forward] > 0:
-        → max(0, ([Taxable Income] − [Tax Loss CF]) × [Tax Rate])
-    else:
-        → [Taxable Income] × [Tax Rate]
-
-A1: `=IF(D40<=0,0,IF(D42>0,MAX(0,(D40-D42)*Assumptions!$C$30),D40*Assumptions!$C$30))`
-```
-
-#### 4e. Cross-Reference Annotations
-
-When a formula links to another sheet, annotate the flow:
-
-```markdown
-| Row | Plain English | Readable Formula (RFL) | A1 Reference | Notes |
-|---|---|---|---|---|
-| 5 – Revenue | Links to Revenue calculation sheet | `[Revenue::Net Revenue] →` | `=Revenue!D19` | 🔗 Cross-sheet link |
-```
-
-#### 4f. Pattern Notation for Time Series
-
-When a formula repeats identically across all periods, document it **once** with a note:
-
-```markdown
-| Row | Plain English | Readable Formula (RFL) | A1 Reference | Notes |
-|---|---|---|---|---|
-| 14 – Net Volume | Saleable volume | `[Gross Volume] − [Curtailment]` | `=D12-D13` | ↔ Same formula D14:Z14 |
-```
-
-Use `↔ Same formula [range]` to indicate the repeating range. If the **first period differs**, document both:
-
-```markdown
-| Row | Plain English | Readable Formula (RFL) | A1 Reference (First Period) | A1 Reference (Periods 2+) | Notes |
+| Sheet | Cell | Name | Readable Formula | Excel Formula | Notes |
 |---|---|---|---|---|---|
-| 11 – Volume | Production volume | `prev([Volume]) × (1 + [Growth])` | `D11 = Assumptions!$D$8` (base) | `E11 = D11*(1+Assumptions!$C$12)` | First period = base input |
-```
+| Revenue | D11 | Volume Growth | = Assumptions :: Base Volume | `=Assumptions!$D$8` | First period only |
+| Revenue | E11 | Volume Growth | = prior Volume Growth × (1 + Volume Growth Rate) | `=D11*(1+Assumptions!$C$12)` | ↔ Same E11:Z11 |
+
+#### 4e. Complex IF / Logic Trees
+
+When a formula has 3+ nested conditions, add a **decision tree block** immediately below the table row:
+
+| Sheet | Cell | Name | Readable Formula | Excel Formula |
+|---|---|---|---|---|
+| Calcs | D45 | Tax Payable | *(see decision tree below)* | `=IF(D40<=0,0,IF(D42>0,MAX(0,(D40-D42)*Assumptions!$C$30),D40*Assumptions!$C$30))` |
+
+**Decision tree for Tax Payable (D45):**
+
+    if Taxable Income ≤ 0:
+        → 0 (no tax on losses)
+    else if Tax Loss Carried Forward > 0:
+        → max(0, (Taxable Income − Tax Loss CF) × Tax Rate)
+    else:
+        → Taxable Income × Tax Rate
+
+#### 4f. Section Sub-Headers
+
+For large sheets, insert section dividers as merged rows in the table to aid scanning:
+
+| Sheet | Cell | Name | Readable Formula | Excel Formula |
+|---|---|---|---|---|
+| **Revenue** | | **— Volume Calculation —** | | |
+| Revenue | D10 | Base Volume | *= Assumptions :: Base Volume* | `=Assumptions!$D$8` |
+| Revenue | D14 | Net Volume | = Gross Volume − Curtailment | `=D12-D13` |
+| **Revenue** | | **— Pricing —** | | |
+| Revenue | D16 | Unit Price | = Base Price × (1 + CPI) ^ Year Index | `=Assumptions!$D$20*(1+Assumptions!$C$22)^(D$4-$D$4)` |
+| **Revenue** | | **— Revenue —** | | |
+| Revenue | D17 | Gross Revenue | = Net Volume × Unit Price | `=D14*D16` |
+| Revenue | D19 | Net Revenue | = Gross Revenue − Revenue Adjustment | `=D17-D18` |
 
 ---
 
@@ -410,7 +409,7 @@ Before finalising deliverables:
 
 1. **Completeness check**: Every sheet in the workbook appears in the Summary, Flowchart, and Calculation Reference.
 2. **Consistency check**: Sheet names are spelled identically across all three documents.
-3. **Readability check**: Have another agent (or re-read yourself) verify that the RFL column is understandable without needing to open the model.
+3. **Readability check**: Have another agent (or re-read yourself) verify that the Readable Formula column is understandable without needing to open the model.
 4. **Flowchart validation**: Every arrow in the flowchart corresponds to at least one `🔗 Cross-sheet link` in the Calculation Reference.
 5. **No orphans**: Flag any sheet or section that appears disconnected from the rest of the model.
 6. **Mermaid syntax validation**: Run the ID Collision Checklist (§3d) before saving the `.mermaid` file.
@@ -419,8 +418,8 @@ Before finalising deliverables:
 
 ## Special Rules
 
-- **Dual Notation is Mandatory**: Every formula in the Calculation Reference must have both RFL and A1 notation. Never provide one without the other.
-- **Plain English First**: The "Plain English" column is the most important column — if the auditor reads nothing else, they should still understand what the calculation does.
+- **Every Row Gets Both Columns**: Every formula row in the Calculation Reference must have both a Readable Formula and an Excel Formula. Never provide one without the other. Hard-coded inputs use *Assumption* in the Readable Formula column.
+- **Readable Formula First**: The Readable Formula column is the most important column — if the auditor reads nothing else, they should still understand what the calculation does. Write it the way you'd explain it to a colleague.
 - **No Jargon Without Definition**: If a model uses domain-specific terms (e.g., "CFADS", "LLCR", "Availability Payment"), define them in a glossary section at the top of the Calculation Reference or on first use.
 - **Hidden Sheets Must Be Documented**: Mark them with a `🙈 (hidden)` tag in the Summary and `(hidden)` suffix in the Flowchart node display label.
 - **Sensitivity to Model Size**: For models with 20+ sheets or 500+ formula rows, ask the auditor whether they want a full reference or a prioritised version covering key calculation sheets only.
