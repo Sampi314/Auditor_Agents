@@ -23,7 +23,7 @@
 | Sheet Name | Cell Reference | Description of the Location | Short Error Category | Long Description of Error |
 |:---|:---|:---|:---|:---|
 | **Dynamic Array** | J55 | Calculation Area | **Calculation Error** | 🔴 **HIGH:** Cell contains a `#VALUE!` error, indicating a breakdown in the calculation chain. |
-| **One Line** | AD11 | Equity Cashflow Calculation | **Mega-Formula (Bad Practice)** | 🔴 **HIGH:** This cell contains a massive 4,957-character formula that calculates periodic cashflow in a single step. While the result ($3.82m) appears consistent with neighboring periods, this "Mega-Formula" approach is extremely high-risk as it is virtually impossible to audit or maintain. Standard practice is to break complex logic into transparent, sequential calculation steps. |
+| **One Line** | J11:BI11 | Equity Cashflow Calculation | **Mega-Formula (Bad Practice)** | 🔴 **HIGH:** This entire row contains massive 4,000+ character formulas that calculate periodic cashflow in a single step. This systemic "Mega-Formula" approach is extremely high-risk as it is virtually impossible to audit or maintain across the 52-period time series. Standard practice is to break complex logic into transparent, sequential calculation steps across multiple rows. |
 | **Dynamic Array** | I29 | Line Total / Summary | **Colour Coding Error** | 🔴 **HIGH:** Hard-coded value (15) found in a cell with `Line_Summary` style. Summary rows should only contain formulas to maintain model integrity. |
 | **Inputs** | G21:S21, G73 | Table Headings | **Correct Classification** | ✅ **VERIFIED:** These cells are correctly classified as **Headings** based on their formatting match with the Style Legend. They are excluded from input/formula checks. |
 | **Dynamic Array** | K11, K13, K19 | Year/Period Headers | **Colour Coding Error** | ⚠️ **MEDIUM:** Hard-coded year/period values use `Normal` or `Comma` styles instead of the model's Heading styles. |
@@ -37,7 +37,7 @@
 
 1.  **Robust Style Detection:** The Stylist Agent now utilizes **Content-Based Scanning** to identify the Style Legend, ensuring accurate classification even if sheets are renamed. Sheet **'L'** was positively identified via style keywords.
 2.  **Heading Verification:** High-priority verification confirms that cells previously flagged for red fill are valid **Table Headings** as defined by the model's own legend.
-3.  **Integrity & Auditability:** The 5,000-character "Mega-Formula" in `One Line!AD11` is a significant audit risk. Although it generates a plausible result, it bypasses the transparency required for professional financial modeling. Such formulas should be decomposed into a series of simple, checkable rows.
+3.  **Integrity & Auditability:** The systemic use of 4,000+ character "Mega-Formulas" across row 11 in the `One Line` sheet is a critical audit risk. Although the results appear plausible, this approach bypasses the transparency required for professional financial modeling. These calculations must be decomposed into a series of simple, checkable rows.
 4.  **Action Plan:** Fix the `#VALUE!` error in `Dynamic Array`, decompose Mega-Formulas into transparent steps, and convert hard-coded summaries to dynamic formulas.
 
 ---
