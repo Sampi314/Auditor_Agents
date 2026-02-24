@@ -41,8 +41,13 @@ def full_audit(filename):
     wb_data = openpyxl.load_workbook(filename, data_only=True)
     findings = []
 
-    # 1. Sentry & Efficiency (Mega-Formula)
+    # 1. Sentry & Efficiency & Architect
     error_values = ["#REF!", "#VALUE!", "#DIV/0!", "#N/A", "#NAME?", "#NULL!", "#NUM!", "#SPILL!", "#CALC!"]
+    volatile_functions = ["OFFSET(", "INDIRECT(", "TODAY()", "NOW(", "RAND(", "RANDBETWEEN("]
+
+    # Identify Timeline Sheet for Architect
+    timeline_sheet = next((s for s in wb.sheetnames if 'timeline' in s.lower() or 'timing' in s.lower()), None)
+
     for sheetname in wb.sheetnames:
         ws = wb[sheetname]
         ws_data = wb_data[sheetname]
@@ -51,23 +56,48 @@ def full_audit(filename):
                 val = ws_data[cell.coordinate].value
                 if str(val) in error_values:
                     findings.append({"Sheet Name": sheetname, "Cell Reference": cell.coordinate, "Description": "Calculation Error", "Category": "Calculation Error", "Long Description": f"🔴 HIGH: Cell contains error {val}"})
+
                 if cell.data_type == 'f':
-                    formula = str(cell.value)
+                    formula = str(cell.value).upper()
+
+                    # Efficiency: Volatile functions
+                    for vf in volatile_functions:
+                        if vf in formula:
+                            findings.append({
+                                "Sheet Name": sheetname, "Cell Reference": cell.coordinate,
+                                "Description": f"Volatile Function: {vf[:-1]}",
+                                "Category": "Volatile Complexity",
+                                "Long Description": f"⚠️ MEDIUM: Use of volatile function {vf[:-1]} detected. This can cause performance degradation in large models."
+                            })
+
+                    # Efficiency: Mega-Formula (>4000)
                     if len(formula) > 4000:
                         findings.append({
-                            "Sheet Name": sheetname,
-                            "Cell Reference": cell.coordinate,
+                            "Sheet Name": sheetname, "Cell Reference": cell.coordinate,
                             "Description": "Mega-Formula (Bad Practice)",
                             "Category": "Mega-Formula",
-                            "Long Description": f"🔴 HIGH: Extremely long formula detected. Flagged as CRITICAL BAD PRACTICE due to total lack of auditability. Formulas should be broken into modular steps."
+                            "Long Description": f"🔴 HIGH: Extremely long formula detected (>4000 chars). Flagged as CRITICAL BAD PRACTICE due to total lack of auditability."
                         })
+                    # Efficiency: Long Formula (>500)
+                    elif len(formula) > 500:
                         findings.append({
-                            "Sheet Name": sheetname,
-                            "Cell Reference": cell.coordinate,
-                            "Description": "Modularity Failure",
-                            "Category": "Modularity Failure",
-                            "Long Description": f"⚠️ MEDIUM: Calculation is condensed into a 'black box' Mega-Formula. Structural integrity is compromised as modifications risk breaking complex nested logic."
+                            "Sheet Name": sheetname, "Cell Reference": cell.coordinate,
+                            "Description": "Long Formula",
+                            "Category": "Auditability Risk",
+                            "Long Description": f"⚠️ MEDIUM: Formula exceeds 500 characters. While not a 'Mega-Formula', it still poses an auditability risk and should be broken down."
                         })
+
+                    # Architect: Master Date Spine alignment
+                    if timeline_sheet and sheetname != timeline_sheet:
+                        if '!' in formula and timeline_sheet not in formula:
+                            # If it links to other sheets but NOT the timeline sheet, it might be an architectural risk
+                            # but this is too noisy. Let's look for hardcoded dates or inconsistent period references.
+                            pass
+
+                    # Architect: Scalability (Check for hardcoded column limits in SUM/etc)
+                    if any(re.search(r'[A-Z]+\$[0-9]+:[A-Z]+\$[0-9]+', formula) for _ in [1]):
+                         # This is complex to automate perfectly, but we can flag some patterns
+                         pass
 
     # 2. Lingo
     spell = SpellChecker()
