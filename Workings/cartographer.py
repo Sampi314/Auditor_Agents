@@ -176,6 +176,10 @@ def generate_cartographer_reports(filename):
     with open('Flow_Dependency_Register.md', 'w') as f:
         f.write("\n".join(register_lines))
 
+    # Ensure Maps directory exists
+    if not os.path.exists('Maps'):
+        os.makedirs('Maps')
+
     # 2. Flow_L1_Workbook.mermaid
     print("Generating L1 Workbook Map...")
     l1_lines = ["flowchart LR", ""]
@@ -217,7 +221,7 @@ def generate_cartographer_reports(filename):
                 label_str = ", ".join(label_list)
             l1_lines.append(f"    {src_id} -- \"{label_str}\" --> {dst_id}")
 
-    with open('Flow_L1_Workbook.mermaid', 'w') as f:
+    with open('Maps/Flow_L1_Workbook.mermaid', 'w') as f:
         f.write("\n".join(l1_lines))
 
     # 3. Flow_L2_{SheetName}.mermaid
@@ -305,7 +309,7 @@ def generate_cartographer_reports(filename):
                 if len(set(labels)) > 2: label_str += "..."
                 l2_lines.append(f"    {sect_id} -- \"{label_str}\" --> {ext_id}")
 
-        filename_l2 = f'Flow_L2_{sheetname.replace(" ", "_")}.mermaid'
+        filename_l2 = f'Maps/Flow_L2_{sheetname.replace(" ", "_")}.mermaid'
         with open(filename_l2, 'w') as f:
             f.write("\n".join(l2_lines))
 
@@ -377,7 +381,7 @@ def generate_cartographer_reports(filename):
     for s_id, t_id in sorted(list(edges)):
         l3_lines.append(f"    {s_id} --> {t_id}")
 
-    with open('Flow_L3_Critical_Path.mermaid', 'w') as f:
+    with open('Maps/Flow_L3_Critical_Path.mermaid', 'w') as f:
         f.write("\n".join(l3_lines))
 
 if __name__ == "__main__":
