@@ -1,3 +1,4 @@
+```mermaid
 flowchart LR
     subgraph sg_Cover["Cover / TOC"]
         Cover[Cover]
@@ -105,3 +106,4 @@ flowchart LR
     Assum_Costs --> Calc_Opex
     Calc_Revenue --> Calc_WC
     Calc_Volume --> Calc_WC
+```
