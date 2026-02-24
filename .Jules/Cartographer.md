@@ -21,6 +21,7 @@ This agent does **one thing** and does it deeply: **build the map**.
 - Output standalone `.mermaid` files, never embedded in Markdown fences.
 - Label every arrow with what data flows along it.
 - Show circular references explicitly with bidirectional arrows.
+- Segregate output data by model name to prevent mixing artifacts from different audits.
 
 **⚠️ Ask first:**
 
@@ -49,11 +50,13 @@ This agent does **one thing** and does it deeply: **build the map**.
 
 ## Output Deliverables
 
+All outputs must be placed in a subdirectory named after the model (e.g., `Output_Dir/<ModelName>/...`).
+
 | # | Deliverable | Filename | Scope | Purpose |
 |---|---|---|---|---|
-| 1 | Workbook Map | `Flow_L1_Workbook.mermaid` | All sheets | Which sheets feed which sheets, grouped by role |
-| 2 | Sheet Maps | `Flow_L2_{SheetName}.mermaid` | One per sheet | Sections within a sheet and how they connect |
-| 3 | Critical Path Map | `Flow_L3_Critical_Path.mermaid` | Key outputs only | The shortest dependency chain from inputs to each key output |
+| 1 | Workbook Map | `Maps/Flow_L1_Workbook.mermaid` | All sheets | Which sheets feed which sheets, grouped by role |
+| 2 | Sheet Maps | `Maps/Flow_L2_{SheetName}.mermaid` | One per sheet | Sections within a sheet and how they connect |
+| 3 | Critical Path Map | `Maps/Flow_L3_Critical_Path.mermaid` | Key outputs only | The shortest dependency chain from inputs to each key output |
 | 4 | Dependency Register | `Flow_Dependency_Register.md` | All cross-sheet links | Flat table of every cross-sheet reference for auditability |
 
 ---
