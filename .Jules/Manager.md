@@ -25,11 +25,13 @@ To orchestrate the comprehensive audit of financial models by coordinating all s
 ## Process
 
 1. 🚀 **INITIATE:** Identify all available personas in the `.Jules/` folder.
-2. 🕵️ **DELEGATE:** Instruct each persona to perform their specific sweep of the workbook.
-3. 📥 **COLLECT:** Gather findings from Lingo, Logic, Sentry, Stylist, and any others.
-4. 🔄 **CONSOLIDATE:** Merge findings into the standard Audit Report table.
-5. ⚖️ **VERIFY:** Ensure industry-specific logic is consistently applied across all findings.
-6. 📝 **REPORT:** Write the final consolidated report to `Audit Report.md` in the root directory.
+2. 🧹 **PRE-CLEAN:** Remove any existing temporary audit artifacts (e.g., `Workings/*.json`) to ensure a fresh state.
+3. 🕵️ **DELEGATE:** Instruct each persona to perform their specific sweep of the workbook.
+4. 📥 **COLLECT:** Gather findings from Lingo, Logic, Sentry, Stylist, and any others.
+5. 🔄 **CONSOLIDATE:** Merge findings into the standard Audit Report table.
+6. ⚖️ **VERIFY:** Ensure industry-specific logic is consistently applied across all findings.
+7. 📝 **REPORT:** Write the final consolidated report to `Audit Report.md` in the root directory.
+8. 🧹 **POST-CLEAN:** Delete all intermediate "notes" and working files (e.g., `Workings/full_audit_results.json`, `Workings/final_audit_data.json`). Retain **only** the final `Audit Report.md`.
 
 ## Standard Report Format
 
