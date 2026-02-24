@@ -1,107 +1,45 @@
 flowchart LR
-    subgraph sg_Cover["Cover / TOC"]
+    subgraph Cover_/_TOC
         Cover[Cover]
     end
-    subgraph sg_Control["Control / Scenario"]
-        Control[Control]
+    subgraph Other
+        Navigator[Navigator]
+        Style_Guide[Style Guide]
+        Model_Parameters[Model Parameters]
+        Change_Log[Change Log]
     end
-    subgraph sg_Timing["Timing"]
-        Timeline[Timeline]
+    subgraph Inputs_/_Assumptions
+        General_Assumptions[General Assumptions]
     end
-    subgraph sg_Other["Other"]
-        SKU_Matrix[SKU_Matrix]
-        Assum_Volume[Assum_Volume]
-        Assum_Pricing[Assum_Pricing]
-        Assum_Costs[Assum_Costs]
-        Assum_WC[Assum_WC]
-        Assum_Finance[Assum_Finance]
-        CF[CF]
+    subgraph Calculations
+        Calculations[Calculations]
     end
-    subgraph sg_Calcs["Calculations"]
-        Assum_Capex[Assum_Capex]
-        Calc_Volume[Calc_Volume]
-        Calc_Revenue[Calc_Revenue]
-        Calc_COGS[Calc_COGS]
-        Calc_Opex[Calc_Opex]
-        Calc_Capex[Calc_Capex]
-        Calc_WC[Calc_WC]
-        Calc_Debt[Calc_Debt]
+    subgraph Checks
+        Opening_Balance_Sheet[Opening Balance Sheet]
+        Balance_Sheet[Balance Sheet]
+        Error_Checks[Error Checks]
     end
-    subgraph sg_FS["Financial Statements"]
-        IS[IS]
-        BS[BS]
-        KPIs[KPIs]
+    subgraph Financial_Statements
+        Income_Statement[Income Statement]
+        Cash_Flow_Statement[Cash Flow Statement]
     end
-    subgraph sg_Checks["Checks"]
-        Checks[Checks]
+    subgraph Data_/_Lookup
+        Lookup[Lookup]
     end
-    subgraph sg_Outputs["Outputs / Dashboard"]
-        Annual_Summary[Annual_Summary]
+    subgraph Timing
+        Timing[Timing]
     end
-    CF --> Annual_Summary
-    CF --> Checks
-    Calc_Volume --> BS
-    Calc_Volume --> CF
-    Calc_Opex --> Calc_WC
-    CF --> KPIs
-    Assum_WC --> KPIs
-    Assum_Finance --> Checks
-    Assum_Capex --> Calc_Capex
-    Assum_Costs --> Calc_COGS
-    Calc_WC --> BS
-    Calc_WC --> CF
-    Calc_COGS --> Calc_WC
-    IS --> BS
-    IS --> CF
-    Control --> Calc_Revenue
-    Calc_Capex --> CF
-    Calc_Capex --> BS
-    Assum_Volume --> Calc_Revenue
-    Assum_Volume --> Checks
-    Calc_Debt --> Annual_Summary
-    Calc_Volume --> Calc_Capex
-    Assum_Finance --> Calc_Debt
-    Calc_Debt --> Checks
-    Control --> IS
-    Calc_Debt --> KPIs
-    Calc_Revenue --> Annual_Summary
-    Assum_WC --> Calc_WC
-    Calc_Debt --> IS
-    CF --> BS
-    BS --> Annual_Summary
-    Control --> Calc_COGS
-    Calc_Revenue --> Calc_Opex
-    Calc_Revenue --> KPIs
-    BS --> Checks
-    Calc_Revenue --> IS
-    Calc_Volume --> Annual_Summary
-    Assum_Finance --> BS
-    Assum_Finance --> CF
-    Calc_Volume --> Calc_Revenue
-    BS --> KPIs
-    Calc_Volume --> Calc_Opex
-    Calc_Volume --> KPIs
-    Calc_Volume --> IS
-    Calc_Opex --> IS
-    Calc_Revenue --> Calc_COGS
-    IS --> Annual_Summary
-    Calc_COGS --> Annual_Summary
-    Assum_Pricing --> Calc_Revenue
-    IS --> Checks
-    Control --> Calc_Volume
-    Calc_WC --> KPIs
-    Calc_Capex --> Annual_Summary
-    Assum_Volume --> Calc_Volume
-    Calc_Volume --> Calc_COGS
-    Calc_Volume --> Calc_Debt
-    Calc_Debt --> CF
-    Assum_Volume --> Assum_WC
-    Calc_Debt --> BS
-    Calc_COGS --> Calc_Opex
-    IS --> KPIs
-    Calc_COGS --> IS
-    Calc_Capex --> KPIs
-    Calc_Capex --> IS
-    Assum_Costs --> Calc_Opex
-    Calc_Revenue --> Calc_WC
-    Calc_Volume --> Calc_WC
+    Calculations --> Income_Statement
+    Opening_Balance_Sheet --> Balance_Sheet
+    Cash_Flow_Statement --> Balance_Sheet
+    Timing --> Cash_Flow_Statement
+    General_Assumptions --> Calculations
+    Timing --> Lookup
+    Timing --> Income_Statement
+    Timing --> General_Assumptions
+    Timing --> Calculations
+    Calculations --> Balance_Sheet
+    Timing --> Balance_Sheet
+    Calculations --> Cash_Flow_Statement
+    Opening_Balance_Sheet --> Calculations
+    Income_Statement --> Balance_Sheet
