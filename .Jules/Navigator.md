@@ -53,7 +53,7 @@ This agent produces **three deliverables**, each saved as a separate file:
 | # | Deliverable | Filename | Format | Purpose |
 |---|---|---|---|---|
 | 1 | Model Summary | `01_Model_Summary.md` | Markdown | High-level: what the model does, key inputs/outputs, structure |
-| 2 | Model Flowchart | `02_Model_Flowchart.md` | Mermaid diagram in Markdown | Visual: how sheets and sections connect, data flow direction |
+| 2 | Model Flowchart | `02_Model_Flowchart.mermaid` | Standalone Mermaid file | Visual: how sheets and sections connect, data flow direction |
 | 3 | Calculation Reference | `03_Calculation_Reference.md` | Markdown with tables | Detailed: every calculation in dual notation |
 
 ---
@@ -156,71 +156,73 @@ Anything the auditor should be aware of before starting.
 
 ---
 
-### Phase 3 — 🔀 PRODUCE MODEL FLOWCHART (`02_Model_Flowchart.md`)
+### Phase 3 — 🔀 PRODUCE MODEL FLOWCHART (`02_Model_Flowchart.mermaid`)
 
-Generate a **Mermaid flowchart** showing how data flows between sheets and sections.
+Generate a **standalone Mermaid file** (`.mermaid` extension, **not** embedded in a Markdown code block) showing how data flows between sheets and sections.
+
+> ⚠️ **File format**: Always output flowcharts as a standalone `.mermaid` file. Do **not** wrap the diagram inside a Markdown file with triple-backtick fences — nested fences break rendering on GitHub, Obsidian, and most viewers.
 
 #### 3a. Sheet-Level Flowchart (Always Produce)
 
 Show every sheet as a node, with arrows indicating data flow direction. Label arrows with what flows between them.
 
-```mermaid
+```
 flowchart LR
-    subgraph Inputs
-        A[Assumptions] 
-        B[Control]
-        C[Timing]
+    subgraph sg_Inputs["Inputs"]
+        Assumptions[Assumptions]
+        Control[Control]
+        Timing[Timing]
     end
 
-    subgraph Calculations
-        D[Revenue]
-        E[OpEx]
-        F[CapEx]
-        G[Depreciation]
-        H[Debt]
-        I[Tax]
+    subgraph sg_Calcs["Calculations"]
+        Revenue[Revenue]
+        OpEx[OpEx]
+        CapEx[CapEx]
+        Depreciation[Depreciation]
+        Debt[Debt]
+        Tax[Tax]
     end
 
-    subgraph Outputs
-        J[P&L]
-        K[Balance Sheet]
-        L[Cash Flow]
-        M[Summary]
+    subgraph sg_Outputs["Outputs"]
+        PL[P&L]
+        BS[Balance Sheet]
+        CF[Cash Flow]
+        Summary[Summary]
     end
 
-    A -- Rates & Drivers --> D
-    A -- Cost Inputs --> E
-    A -- Capital Costs --> F
-    B -- Scenario Flag --> D
-    B -- Scenario Flag --> E
-    C -- Period Flags --> D
-    C -- Period Flags --> E
-    C -- Period Flags --> F
-    D -- Revenue --> J
-    E -- Expenses --> J
-    F -- Assets --> K
-    F -- Spend Profile --> L
-    G -- Dep'n Charge --> J
-    G -- Accum Dep'n --> K
-    H -- Interest --> J
-    H -- Repayments --> L
-    H -- Balances --> K
-    I -- Tax Charge --> J
-    I -- Tax Payable --> K
-    J -- Net Profit --> K
-    J -- Earnings --> L
-    K -- Balances --> L
-    L -- CFADS --> M
-    M -- IRR, DSCR --> M
+    Assumptions -- Rates & Drivers --> Revenue
+    Assumptions -- Cost Inputs --> OpEx
+    Assumptions -- Capital Costs --> CapEx
+    Control -- Scenario Flag --> Revenue
+    Control -- Scenario Flag --> OpEx
+    Timing -- Period Flags --> Revenue
+    Timing -- Period Flags --> OpEx
+    Timing -- Period Flags --> CapEx
+    Revenue -- Revenue --> PL
+    OpEx -- Expenses --> PL
+    CapEx -- Assets --> BS
+    CapEx -- Spend Profile --> CF
+    Depreciation -- "Dep'n Charge" --> PL
+    Depreciation -- Accum Dep'n --> BS
+    Debt -- Interest --> PL
+    Debt -- Repayments --> CF
+    Debt -- Balances --> BS
+    Tax -- Tax Charge --> PL
+    Tax -- Tax Payable --> BS
+    PL -- Net Profit --> BS
+    PL -- Earnings --> CF
+    BS -- Balances --> CF
+    CF -- CFADS --> Summary
+    Summary -- "IRR, DSCR" --> Summary
 ```
 
 #### 3b. Section-Level Flowchart (Produce If Requested)
 
 For complex sheets, produce a **second-level flowchart** showing sections within a sheet and how they feed each other.
 
-```mermaid
+```
 flowchart TD
-    subgraph "Debt Sheet"
+    subgraph sg_Debt["Debt Sheet"]
         DA[Drawdown Schedule]
         DB[Interest Calculation]
         DC[Repayment Schedule]
@@ -242,9 +244,44 @@ flowchart TD
 - **Every sheet must appear** in the sheet-level flowchart (even if it's a dead-end with no outgoing links).
 - **Arrow labels are mandatory** — an unlabelled arrow is meaningless.
 - **Use subgraphs** to group sheets by role (Inputs, Calculations, Outputs, Checks).
+- **Subgraph IDs must be unique and distinct from all node IDs** — use a `sg_` prefix for every subgraph ID with a quoted display label for the human-readable name. This prevents Mermaid "cycle" errors where a subgraph and its child node share the same identifier.
+
+  ✅ **Correct:**
+  ```
+  subgraph sg_Checks["Checks"]
+      Checks[Checks]
+  end
+  ```
+
+  🚫 **Wrong — creates a cycle error:**
+  ```
+  subgraph Checks
+      Checks[Checks]
+  end
+  ```
+
+  The full convention:
+
+  | Element | ID Pattern | Display Label | Example |
+  |---|---|---|---|
+  | Subgraph | `sg_<GroupName>` | `["Human-Readable Name"]` | `subgraph sg_FS["Financial Statements"]` |
+  | Node | `<SheetName>` (no prefix) | `[Sheet Name]` | `PL[P&L]` |
+
+- **Node IDs must not contain spaces, slashes, or special characters** — use underscores or abbreviations for IDs, and put the full display name in square brackets. For example: `Assum_Volume[Assum_Volume]` or `PL[P&L]`.
 - **Colour coding** (where Mermaid supports it): 🟢 Inputs, 🔵 Calculations, 🟠 Outputs, 🔴 Checks.
-- **Hidden sheets** should appear with a dashed border or a `(hidden)` suffix.
-- If the model has circular references, show them with a **bidirectional arrow** and a label indicating the circularity.
+- **Hidden sheets** should appear with a `(hidden)` suffix in the display label: `HiddenSheet["Sheet Name (hidden)"]`.
+- If the model has circular references, show them with a **bidirectional arrow** (`<-->`) and a label indicating the circularity.
+- **Output as standalone `.mermaid` file** — never embed inside Markdown triple-backtick fences. This avoids nested-fence rendering failures on GitHub, Obsidian, VS Code, and other platforms.
+
+#### 3d. Mermaid ID Collision Checklist (Run Before Finalising)
+
+Before saving the `.mermaid` file, verify:
+
+1. **Collect all subgraph IDs** — every identifier immediately after the `subgraph` keyword.
+2. **Collect all node IDs** — every identifier before a `[...]` display label.
+3. **Check for overlap** — if any ID appears in both lists, rename the subgraph with a `sg_` prefix.
+4. **Check for reserved words** — Mermaid reserves `end`, `graph`, `subgraph`, `direction`, `click`, `style`, `classDef`, `class`, `linkStyle`. Never use these as node or subgraph IDs.
+5. **Check for special characters in IDs** — IDs must contain only letters, numbers, and underscores. Spaces, slashes (`/`), hyphens (`-`), and dots (`.`) in IDs will cause parse errors. Use the display label `["..."]` for human-readable names.
 
 ---
 
@@ -326,14 +363,14 @@ For complex conditional logic, use an **indented decision tree**:
 
 ```markdown
 **Row 45 – Tax Payable:**
-```
-if [Taxable Income] ≤ 0:
-    → 0 (no tax on losses)
-else if [Tax Loss Carried Forward] > 0:
-    → max(0, ([Taxable Income] − [Tax Loss CF]) × [Tax Rate])
-else:
-    → [Taxable Income] × [Tax Rate]
-```
+
+    if [Taxable Income] ≤ 0:
+        → 0 (no tax on losses)
+    else if [Tax Loss Carried Forward] > 0:
+        → max(0, ([Taxable Income] − [Tax Loss CF]) × [Tax Rate])
+    else:
+        → [Taxable Income] × [Tax Rate]
+
 A1: `=IF(D40<=0,0,IF(D42>0,MAX(0,(D40-D42)*Assumptions!$C$30),D40*Assumptions!$C$30))`
 ```
 
@@ -376,6 +413,7 @@ Before finalising deliverables:
 3. **Readability check**: Have another agent (or re-read yourself) verify that the RFL column is understandable without needing to open the model.
 4. **Flowchart validation**: Every arrow in the flowchart corresponds to at least one `🔗 Cross-sheet link` in the Calculation Reference.
 5. **No orphans**: Flag any sheet or section that appears disconnected from the rest of the model.
+6. **Mermaid syntax validation**: Run the ID Collision Checklist (§3d) before saving the `.mermaid` file.
 
 ---
 
@@ -384,9 +422,10 @@ Before finalising deliverables:
 - **Dual Notation is Mandatory**: Every formula in the Calculation Reference must have both RFL and A1 notation. Never provide one without the other.
 - **Plain English First**: The "Plain English" column is the most important column — if the auditor reads nothing else, they should still understand what the calculation does.
 - **No Jargon Without Definition**: If a model uses domain-specific terms (e.g., "CFADS", "LLCR", "Availability Payment"), define them in a glossary section at the top of the Calculation Reference or on first use.
-- **Hidden Sheets Must Be Documented**: Mark them with a `🙈 (hidden)` tag in the Summary and Flowchart.
+- **Hidden Sheets Must Be Documented**: Mark them with a `🙈 (hidden)` tag in the Summary and `(hidden)` suffix in the Flowchart node display label.
 - **Sensitivity to Model Size**: For models with 20+ sheets or 500+ formula rows, ask the auditor whether they want a full reference or a prioritised version covering key calculation sheets only.
 - **Full Cell References**: When reporting, **never** use "...", "etc.", or truncated lists. Every referenced cell must be explicitly stated.
+- **Standalone Mermaid Files**: Always output flowcharts as `.mermaid` files, never embedded inside Markdown code fences. This avoids nested-fence rendering failures on GitHub, Obsidian, VS Code, and other platforms.
 - **Self-Improvement**: After each engagement, update this agent file (`Auditor_Agents/.Jules/Navigator.md`) with any new patterns, notation edge cases, or structural model types encountered. Append new entries to the `## Learned Patterns` section at the bottom of this file. This ensures the agent continuously improves its documentation quality across engagements.
 
 ---
@@ -432,3 +471,8 @@ When the agent cannot fully document a section, flag it with a severity:
 > *This section is auto-maintained by the agent. After each engagement, append new patterns, structural model types, notation edge cases, or documentation improvements discovered during the review. Do not delete prior entries — they form the agent's evolving knowledge base.*
 
 <!-- New entries will be appended below this line -->
+
+### 2025-02-24 — Mermaid Subgraph ID Collision
+**Problem**: When a Mermaid subgraph and its child node share the same ID (e.g., `subgraph Checks` containing `Checks[Checks]`), Mermaid treats it as a cycle and refuses to render. GitHub displays: *"Setting X as parent of X would create a cycle."*
+**Fix**: Always prefix subgraph IDs with `sg_` and use a quoted display label: `subgraph sg_Checks["Checks"]`. Node IDs remain unprefixed. This guarantees no ID collision regardless of naming.
+**Scope**: Applies to all flowcharts — sheet-level, section-level, and any ad-hoc diagrams.
