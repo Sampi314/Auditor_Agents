@@ -167,5 +167,19 @@ def full_audit(filename):
     return findings
 
 if __name__ == "__main__":
-    results = full_audit('../20130401 Efficient Modelling (Tutorial).xlsx')
+    import sys
+    import os
+    if len(sys.argv) > 1:
+        target_file = sys.argv[1]
+    else:
+        # Try to find any xlsx file in the parent directory if no argument is provided
+        xlsx_files = [f for f in os.listdir('..') if f.endswith('.xlsx')]
+        if xlsx_files:
+            target_file = os.path.join('..', xlsx_files[0])
+        else:
+            print("No .xlsx file found to audit.")
+            sys.exit(1)
+
+    print(f"Auditing: {target_file}")
+    results = full_audit(target_file)
     with open('full_audit_results.json', 'w') as f: json.dump(results, f)

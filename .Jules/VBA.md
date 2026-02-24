@@ -560,13 +560,13 @@ def audit_vba_module(module_name: str, code: str) -> list[Finding]:
 
 ### Findings Table
 
-| Module | Line(s) | Procedure | Short Error Category | Long Description | Code Snippet |
-|---|---|---|---|---|---|
-| Module1 | 15-42 | `ProcessData` | Missing Error Handler | 🔴 HIGH: Public Sub has no `On Error GoTo`. Runtime errors will crash without cleanup. | `Public Sub ProcessData()` |
-| Module1 | 23 | `ProcessData` | Select/Activate | ⚠️ MEDIUM: Uses `.Select`. Replace with direct range reference. | `Range("A1").Select` |
-| ThisWorkbook | 5-30 | `Workbook_Open` | Auto-execution Risk | ⚠️ MEDIUM: Runs code on file open. Verify intentional. | `Private Sub Workbook_Open()` |
-| Module2 | — | (entire module) | Missing Option Explicit | 🔴 HIGH: No `Option Explicit`. Variables may be implicitly Variant. | (top of module) |
-| Module1 | 28-35 | `ProcessData` | Cell-by-Cell Loop | 🔴 HIGH: Reading cells one at a time. Use array for ~100x speed. | `For i = 1 To 10000` ... `Cells(i,1).Value` |
+| Sheet Name | Cell Reference | Description of the Location | Short Error Category | Long Description of Error |
+|---|---|---|---|---|
+| Module1 | 15-42 | VBA Module: ProcessData | Missing Error Handler | 🔴 HIGH: Public Sub has no `On Error GoTo`. Runtime errors will crash without cleanup. |
+| Module1 | 23 | VBA Module: ProcessData | Select/Activate | ⚠️ MEDIUM: Uses `.Select`. Replace with direct range reference. |
+| ThisWorkbook | 5-30 | VBA Module: Workbook_Open | Auto-execution Risk | ⚠️ MEDIUM: Runs code on file open. Verify intentional. |
+| Module2 | — | VBA Module: (entire module) | Missing Option Explicit | 🔴 HIGH: No `Option Explicit`. Variables may be implicitly Variant. |
+| Module1 | 28-35 | VBA Module: ProcessData | Cell-by-Cell Loop | 🔴 HIGH: Reading cells one at a time. Use array for ~100x speed. |
 
 ---
 

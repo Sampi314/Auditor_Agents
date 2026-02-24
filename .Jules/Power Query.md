@@ -536,13 +536,13 @@ def audit_pq_query(query_name: str, m_code: str) -> list[Finding]:
 
 ### Findings Table
 
-| Query Name | Step(s) | Short Error Category | Long Description | M Code Snippet |
+| Sheet Name | Cell Reference | Description of the Location | Short Error Category | Long Description of Error |
 |---|---|---|---|---|
-| Sales_Raw | Source | Hardcoded File Path | 🔴 HIGH: Hardcoded local path. Use a parameter query. | `File.Contents("C:\Users\John\Sales.xlsx")` |
-| Sales_Raw | #"Changed Type", #"Changed Type1" | Redundant Type Conversion | 🟡 LOW: Two type steps — consolidate into one. | Merge into single `Table.TransformColumnTypes` |
-| Sales_Clean | #"Removed Columns1" | Auto-generated Step Names | ⚠️ MEDIUM: Default names. Rename to describe business logic. | `#"Removed Columns1"` → `Remove_Metadata` |
-| Sales_Report, Inventory_Report | Source | Duplicate Data Source | 🔴 HIGH: Both connect to same source. Create shared base query. | `Sql.Database("server", "db")` |
-| All queries | (output) | Missing Type Enforcement | 🔴 HIGH: No `Table.TransformColumnTypes` at output. | Add type step as final step |
+| Sales_Raw | Source | Power Query | Hardcoded File Path | 🔴 HIGH: Hardcoded local path. Use a parameter query. |
+| Sales_Raw | #"Changed Type", #"Changed Type1" | Power Query | Redundant Type Conversion | 🟡 LOW: Two type steps — consolidate into one. |
+| Sales_Clean | #"Removed Columns1" | Power Query | Auto-generated Step Names | ⚠️ MEDIUM: Default names. Rename to describe business logic. |
+| Sales_Report, Inventory_Report | Source | Power Query | Duplicate Data Source | 🔴 HIGH: Both connect to same source. Create shared base query. |
+| All queries | (output) | Power Query | Missing Type Enforcement | 🔴 HIGH: No `Table.TransformColumnTypes` at output. |
 
 ---
 
