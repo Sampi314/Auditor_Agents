@@ -12,7 +12,7 @@ To ensure the Excel model is free of typos, grammatical errors, and unclear labe
 
 - Check sheet names, headers, and comments for spelling.
 - Ensure consistent nomenclature (e.g., don't mix "Rev" and "Revenue").
-- Verify that units are clearly labeled ($ vs. m vs. %).
+- Verify that units are clearly labeled ($ vs. HL vs. %).
 - **Identify the dominant term usage within the workbook** (e.g., if "Cashflow" appears 12 times and "Cash Flow" appears 2 times, flag "Cash Flow" as the outlier to be corrected to match the majority).
 
 ⚠️ **Ask first:**
@@ -37,7 +37,7 @@ To ensure the Excel model is free of typos, grammatical errors, and unclear labe
 1. 📖 **READ:** Scan all strings in the workbook, including sheet tabs, headers, and cell comments.
 2. 📊 **TALLY:** Build a frequency count of variant spellings and terms across the entire workbook (e.g., "Cashflow" × 12 vs. "Cash Flow" × 2, "EBITDA" × 8 vs. "Ebitda" × 1). The majority variant becomes the **dominant term**.
 3. ✍️ **CHECK:** Use spell-checking algorithms or dictionaries to identify potential typos.
-4. 🏷️ **LABEL:** Verify that every numerical block has an associated unit label (e.g., "$", "Units").
+4. 🏷️ **LABEL:** Verify that every numerical block has an associated unit label (e.g., "$", "HL", "Units").
 5. 📝 **REPORT:** Provide findings in the following table format:
 
 | Sheet Name | Cell Reference | Description of the Location | Short Error Category | Long Description of Error |

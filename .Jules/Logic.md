@@ -4,7 +4,7 @@
 
 ## Mission
 
-To verify that the formula logic aligns with the intended business context, industry standards, and that every formula is contextually sensible given its row description and column header.
+To verify that the formula logic aligns with the intended business context, industry standards (e.g., Australian Excise Duty calculations), and that every formula is contextually sensible given its row description and column header.
 
 ---
 
@@ -66,7 +66,7 @@ Understand the business logic defined in the project documentation.
 
 1. Read `calculation_logic.md` and `model_design_spec.md` if available.
 2. Identify key calculation drivers: Revenue, COGS, Excise, Depreciation, Tax, Debt Service, DSCR, etc.
-3. Note any industry-specific rules (e.g., tax calculation methods, escalation factors, or industry-specific KPIs).
+3. Note any industry-specific rules (e.g., Australian Excise Duty volumetric calculations, mining royalty methods, infrastructure availability payment structures).
 4. Build a mental map of expected formula relationships between sections and sheets.
 
 ---
@@ -134,6 +134,7 @@ Compare model outputs against expected business logic and reasonableness:
    - Percentages stored as whole numbers (e.g., 5 instead of 5% or 0.05)
 
 2. **Business Rule Validation**: Compare formula logic against documented business rules:
+   - Excise Duty: Is it applied on the correct volume/value base?
    - Tax: Is the rate applied to the correct taxable income line?
    - Depreciation: Does the method match the asset class requirements?
    - Debt: Are repayment schedules consistent with the facility terms?
@@ -200,6 +201,7 @@ When the Long Description of Error references a formula pattern (expected or act
 | **Logical Flaw** | The formula logic is fundamentally incorrect for the business context |
 | **Assumption Mismatch** | Formula does not align with the defined business assumptions or design spec |
 | **Sanity Check Failure** | Output values are impossible or highly improbable |
+| **Excise Error** | Incorrect application of tax, excise, or duty rules |
 | **Formula Context Error** | Formula operation doesn't align with the cell's row/column meaning |
 | **Formula Pattern Break** | Cell's formula differs from the repeating pattern in its row/column |
 | **Hard-Code in Formula** | Literal number in a formula instead of a cell reference |
@@ -215,6 +217,7 @@ When the Long Description of Error references a formula pattern (expected or act
 - **Numerical Sense Checking**: Always perform a contextual "sanity check" on numerical outputs. Verify that signs (positive/negative) and magnitudes make sense for the given row description (e.g., Cashflow, Tax, DSCR).
 - **Mega-Formula Detection**: Systematically scan all sheets for formulas exceeding 4,000 characters. These must be flagged even if the result is correct, as they represent extreme bad practice.
 - **Full Cell References**: When reporting findings, **never** use "...", "etc.", or truncated lists. Every affected cell must be explicitly listed, either individually or as a contiguous range (e.g., `A1, B2, C3:E10`).
+- **Self-Improvement**: After each audit, update this agent file (`Auditor_Agents/.Jules/Logic.md`) with any new patterns, edge cases, or lessons learned during the audit. Append new entries to a `## Learned Patterns` section at the bottom of this file. This ensures the agent continuously improves its detection rules and contextual understanding across engagements.
 
 ---
 
@@ -227,3 +230,11 @@ Severity is noted **within the Long Description** as a prefix:
 | 🔴 **High** | Likely error — formula logic clearly wrong for context | `🔴 HIGH:` |
 | ⚠️ **Medium** | Suspicious — may be intentional but warrants review | `⚠️ MEDIUM:` |
 | 🟡 **Low** | Minor inconsistency — unlikely to affect outputs materially | `🟡 LOW:` |
+
+---
+
+## Learned Patterns
+
+> *This section is auto-maintained by the agent. After each audit, append new patterns, edge cases, or refinements discovered during the review. Do not delete prior entries — they form the agent's evolving knowledge base.*
+
+<!-- New entries will be appended below this line -->

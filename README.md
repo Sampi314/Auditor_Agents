@@ -1,42 +1,36 @@
 # Financial Model Auditor 📊
 
-This repository provides an automated auditing framework for Excel-based financial models. It utilizes a multi-agent persona architecture to perform comprehensive checks on structural integrity, logical consistency, formatting standards, and technical robustness across formulas, VBA macros, and Power Query transformations.
+This repository provides an automated auditing framework for Excel-based financial models, specifically tailored for the Australian Brewery industry. It utilizes a multi-agent persona architecture to perform comprehensive checks on structural integrity, logical consistency, formatting standards, and industry-specific business rules.
 
 ## 🤖 Multi-Agent Audit Framework
 
-The audit is orchestrated by the **Manager** agent, which coordinates specialized personas defined in the `.Jules/` directory. All agents output findings in a standardized format to ensure consistency and readability.
+The audit is orchestrated by the **Manager** agent, which coordinates specialized personas defined in the `.Jules/` directory:
 
 - **Manager 👔**: The orchestrator who delegates tasks to specialist personas and consolidates all findings into a single, professional report.
 - **Architect 🏗️**: Focuses on structural robustness, scalability, master date spine alignment, and modularity.
-- **Logic 🧠**: Verifies formula alignment with business context and identifies formula pattern breaks or hard-coded literals.
+- **Logic 🧠**: Verifies formula alignment with business context, industry standards, and identifies formula pattern breaks or hard-coded literals.
 - **Efficiency ⚡**: Identifies model optimizations, including "Mega-Formulas" (>4,000 characters), unused assumptions, and redundant logic.
 - **Sentry 🛡️**: Ensures technical integrity by checking for Excel error values (#REF!, #VALUE!, etc.) and calculation errors.
 - **Stylist 🎨**: Detects and enforces formatting conventions (colors, fonts, styles) using style guides or statistical inference.
 - **Lingo 🗣️**: Performs linguistic scans for typos and ensures consistent terminology across labels and headings.
-- **VBA Agent 💻**: Inspects VBA modules for security risks, deprecated functions, and code efficiency.
-- **Power Query Agent 🔍**: Audits M-code for performance bottlenecks, hard-coded file paths, and transformation logic.
 
-## 📋 Standard Audit Output
+## 🍺 Industry Business Logic: Australian Brewery
 
-Every agent in the framework adheres to the following standardized Markdown table format for reporting findings:
+The auditor is pre-configured to validate specific financial logic for Australian breweries:
 
-| Column | Description | VBA / Power Query Mapping |
-|---|---|---|
-| **Sheet Name** | The name of the worksheet where the issue was found. | Module Name (VBA) or Query Name (PQ) |
-| **Cell Reference** | The specific cell(s) affected (e.g., A1, B5:M10). | Line Number or Procedure/Step Name |
-| **Description of the Location** | Contextual description (e.g., "Revenue row", "Tax calc"). | Variable name or specific code block |
-| **Short Error Category** | A brief classification (e.g., "Typo", "Logic Error"). | e.g., "Security", "Performance", "Hard-coded Path" |
-| **Long Description of Error** | Detailed explanation of the finding and its impact. | Full technical details of the code issue |
+- **Excise Duty**: Volumetric calculation based on alcohol content per litre minus a 1.15% threshold.
+- **GST**: 10% applied to relevant revenue and cost lines.
+- **Corporate Tax**: 30% applied to taxable income.
 
 ## 📏 Standards & Conventions
 
-Financial models in this repository are expected to follow best-practice conventions:
+Financial models in this repository are expected to follow the **Corality-style** conventions:
 
-- **Inputs**: Consistent font color (e.g., Dark Red #800000) and no fill to distinguish from calculations.
-- **Off-sheet Links**: Distinctive formatting to identify external dependencies.
-- **Formulas**: Standard black font for transparency.
-- **Timeline**: Consistent granularity (e.g., monthly or annual) aligned with the master date spine.
-- **Named Styles**: Use of named cell styles is encouraged to enhance auditability and scalability.
+- **Inputs**: Dark Red (#800000) font, no fill.
+- **Off-sheet Links**: Green (Indexed 16) font.
+- **Formulas**: Black font.
+- **Timeline**: 5-year forecast with monthly granularity for the first year and annual summaries thereafter.
+- **Named Styles**: Use of named cell styles (e.g., 'Table Heading', 'Standard Assumption') is encouraged for scalability.
 
 ## 🏗️ 8-Step Financial Modeling Methodology
 
