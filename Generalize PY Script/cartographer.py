@@ -2,6 +2,7 @@ import openpyxl
 import re
 import os
 import sys
+import shutil
 import argparse
 from collections import defaultdict, Counter
 
@@ -180,6 +181,11 @@ def generate_cartographer_reports(filename, output_dir=None):
         base_output = os.path.join(output_dir, model_name)
     else:
         base_output = model_name
+
+    # Clear historical data to ensure no artifacts from previous runs
+    if os.path.exists(base_output):
+        print(f"Cleaning previous output directory: {base_output}")
+        shutil.rmtree(base_output)
 
     if not os.path.exists(base_output):
         os.makedirs(base_output)

@@ -22,6 +22,7 @@ This agent does **one thing** and does it deeply: **build the map**.
 - Label every arrow with what data flows along it.
 - Show circular references explicitly with bidirectional arrows.
 - Segregate output data by model name to prevent mixing artifacts from different audits.
+- Always clear the target model's output directory before generating new reports to ensure no historical artifacts remain.
 
 **⚠️ Ask first:**
 
