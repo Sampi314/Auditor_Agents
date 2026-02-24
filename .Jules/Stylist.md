@@ -52,18 +52,24 @@ Before any audit begins, determine **what formatting rules this model uses**. Fo
 
 #### Step 1: Look for a Style Guide Sheet
 
-Search for any sheet whose name contains keywords like: `Style Guide`, `Formatting`, `Legend`, `Key`, `Standards`, `Convention`, `How to Use`, `Instructions`, `Cover`, `README`.
+Before checking names, perform a **Content-Based Scan** if necessary. Search for any sheet whose name contains keywords like: `Style Guide`, `Formatting`, `Legend`, `Key`, `Standards`, `Convention`, `How to Use`, `Instructions`, `Cover`, `README`, or is named exactly `L`.
 
-If found, extract:
+**If no sheet name matches:**
+- Scan the first 50 rows of every sheet for a high density of style-related keywords: `Table Heading`, `Standard Assumption`, `Offsheet Reference`, `Formatting of Headers`, `Style Legend`.
+- A sheet containing 3 or more of these keywords is your **Style Guide Sheet**, regardless of its name.
+
+Once found, perform a deep scan of the sheet to map labels to their respective formatting. **Note:** Some models use a "Table Heading" style which may be applied to cells containing hardcoded numbers or formulas that function as headers (e.g., "1" formatted to display as "Op Yr 1").
+
+Extract and map:
 
 | Element | What to Capture |
 |---|---|
-| Input cells | Font colour, fill colour, font style (bold/italic) |
+| Input / Assumption cells | Font colour, fill colour, font style |
 | Formula / Calculation cells | Font colour, fill colour |
 | Link cells (cross-sheet) | Font colour, fill colour |
+| Table / Section Headings | Font colour, fill colour, bold status, custom number format |
 | Hard-coded / Override cells | Font colour, fill colour, any special marker |
 | Check / Validation cells | Font colour, fill colour |
-| Section headers | Font style, fill colour, border style |
 | Timing / Date rows | Font colour, fill colour |
 | Output / Result cells | Font colour, fill colour |
 
@@ -71,26 +77,27 @@ Store this as the **Detected Style Map**.
 
 #### Step 2: Inspect Excel Named Cell Styles
 
-If no Style Guide sheet is found, inspect the workbook's **Cell Styles** (named styles defined in `workbook.named_styles` via openpyxl or equivalent). Look for custom-defined styles such as:
+Inspect the workbook's **Cell Styles** (named styles defined in `workbook.style_names` via openpyxl or equivalent). High-quality models use these to enforce standards.
 
-- `Input`, `Assumption`, `Hard Coded`
-- `Calculation`, `Formula`
-- `Link`, `External Link`, `Sheet Link`
-- `Output`, `Result`, `Check`
-- `Header`, `Section`, `Title`
+Look for:
+- **Input/Assumption:** `Input`, `Assumption`, `Technical_Input`, `Assumption_Flex`
+- **Formula/Calculation:** `Calculation`, `Line_Total`, `Line_Operation`, `Line_Summary`, `Line_Subtotal`
+- **Link/External:** `Link`, `OffSheet`, `Linked Cell`
+- **Header/Heading:** `Table_Heading`, `Header1`, `Header2`, `Header3`, `Sheet_Header`
+- **Integrity:** `Check`, `Check Cell`, `WIP`
 
-For each named style found, extract its font colour, fill colour, border, and number format. Store these as the **Detected Style Map**.
+For each named style found, extract its font colour, fill colour, border, and number format. These take precedence over statistical inference. Store these as the **Detected Style Map**.
 
 #### Step 3: Statistical Inference from Workbook Analysis
 
-If neither a Style Guide sheet nor meaningful named styles exist, **analyse the workbook statistically**:
+Even if a Style Guide is found, perform a statistical check to ensure the guide is actually being followed. **Analyse the workbook statistically**:
 
 1. **Sample cells across all sheets** (e.g., up to 500–1,000 cells, spread proportionally).
 2. **Classify each sampled cell** by type:
    - **Input**: Contains a constant (no formula), not in a header row/column.
    - **Formula**: Contains a formula referencing only the same sheet.
    - **Link**: Contains a formula referencing a different sheet or workbook.
-   - **Header**: In the first row(s) or column(s), or bold/merged.
+   - **Header / Heading**: In the first row(s)/column(s), bold/merged, OR matching the "Table Heading" style detected in Step 1/2 (even if it contains a value/formula).
 3. **For each cell type, tally the formatting attributes** (font colour, fill colour, font style, border style).
 4. **Identify the dominant style per cell type** using majority vote:
 
@@ -137,8 +144,12 @@ Build a **Context Map** for each sheet.
 
 Using the **Detected Style Map** from Phase 0:
 
-1. For each populated cell, determine its type (Input / Formula / Link / Header).
-2. Compare its actual formatting against the expected formatting.
+1. For each populated cell, determine its type (Input / Formula / Link / Header / Heading).
+   - **Precedence 1:** If the cell has a **Named Style** (e.g., `cell.style == 'Table_Heading'`), classify it based on that name.
+   - **Precedence 2:** If the cell matches the formatting of a **Style Guide Legend** entry (e.g., matches the fill/font of the "Table Heading" example), classify it as such.
+   - **Precedence 3:** Statistical inference based on content (formula vs. constant) and location.
+   - **Crucial:** If a cell is classified as a **Heading** (via named style or style guide match), do not flag it as a "Hard-coded Input" even if it contains a number.
+2. Compare its actual formatting against the expected formatting for that type.
 3. Flag deviations.
 
 ---
