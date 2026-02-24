@@ -36,7 +36,7 @@ def generate_navigator_reports(filename):
 
     # Timeline
     summary_lines.append("## 3. Timeline")
-    timeline_sheet = next((s for s in wb.sheetnames if 'time' in s.lower()), None)
+    timeline_sheet = next((s for s in wb.sheetnames if any(x in s.lower() for x in ['time', 'date', 'timing'])), None)
     if timeline_sheet:
         summary_lines.append(f"Timeline detected in sheet: {timeline_sheet}")
     else:
@@ -98,12 +98,16 @@ def generate_navigator_reports(filename):
         ws = wb[s]
         ws_data = wb_data[s]
         count = 0
-        for row in ws.iter_rows(min_row=5, max_row=50):
-            label_cell = row[0] # Assume col A has labels
-            label = str(label_cell.value) if label_cell.value else ""
-            if not label: continue
+        for row in ws.iter_rows(min_row=5, max_row=100):
+            # Find the first non-empty cell in the first few columns to use as label
+            label = ""
+            for i in range(5):
+                if row[i].value and row[i].data_type != 'f':
+                    label = str(row[i].value).strip()
+                    break
+            if not label or label == "": continue
 
-            for cell in row[1:10]: # Check first few cols
+            for cell in row[1:15]: # Check first few cols
                 if cell.data_type == 'f':
                     formula = str(cell.value)
                     calc_lines.append(f"| {s} | {cell.row} | {label} | `{formula}` | `{cell.coordinate}` |")
