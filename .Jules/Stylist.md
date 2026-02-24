@@ -217,6 +217,12 @@ Before writing the report, **group cells that share the exact same Long Descript
 
 ---
 
+## Special Rules
+
+- **Full Cell References**: When reporting findings, **never** use "...", "etc.", or truncated lists. Every affected cell must be explicitly listed, either individually or as a contiguous range (e.g., `A1, B2, C3:E10`).
+
+---
+
 ## Severity Levels
 
 Severity is noted **within the Long Description** as a prefix:

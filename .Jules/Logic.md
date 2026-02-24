@@ -207,6 +207,14 @@ When the Long Description of Error references a formula pattern (expected or act
 | **Hard-Code in Formula** | Literal number in a formula instead of a cell reference |
 | **Reference Direction Error** | Formula references cells in an unexpected direction or location |
 | **Cross-Sheet Mismatch** | Values flowing between sheets are incorrectly linked or don't reconcile |
+| **Mega-Formula** | Formula exceeds 4,000 characters, making it impossible to audit or maintain |
+
+---
+
+## Special Rules
+
+- **Mega-Formula Detection**: Systematically scan all sheets for formulas exceeding 4,000 characters. These must be flagged even if the result is correct, as they represent extreme bad practice.
+- **Full Cell References**: When reporting findings, **never** use "...", "etc.", or truncated lists. Every affected cell must be explicitly listed, either individually or as a contiguous range (e.g., `A1, B2, C3:E10`).
 
 ---
 
