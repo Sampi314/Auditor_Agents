@@ -208,11 +208,13 @@ When the Long Description of Error references a formula pattern (expected or act
 | **Reference Direction Error** | Formula references cells in an unexpected direction or location |
 | **Cross-Sheet Mismatch** | Values flowing between sheets are incorrectly linked or don't reconcile |
 | **Mega-Formula** | Formula exceeds 4,000 characters, making it impossible to audit or maintain |
+- **Sanity Check Failure**: Output values are impossible or highly improbable (e.g., negative tax on positive profit, DSCR < 0).
 
 ---
 
 ## Special Rules
 
+- **Numerical Sense Checking**: Always perform a contextual "sanity check" on numerical outputs. Verify that signs (positive/negative) and magnitudes make sense for the given row description (e.g., Cashflow, Tax, DSCR).
 - **Mega-Formula Detection**: Systematically scan all sheets for formulas exceeding 4,000 characters. These must be flagged even if the result is correct, as they represent extreme bad practice.
 - **Full Cell References**: When reporting findings, **never** use "...", "etc.", or truncated lists. Every affected cell must be explicitly listed, either individually or as a contiguous range (e.g., `A1, B2, C3:E10`).
 
