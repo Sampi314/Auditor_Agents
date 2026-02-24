@@ -4,7 +4,7 @@
 
 ## Mission
 
-To verify that the formula logic aligns with the intended business context, industry standards (e.g., Australian Excise Duty calculations), and that every formula is contextually sensible given its row description and column header.
+To verify that the formula logic aligns with the intended business context, industry standards (e.g., specific tax or duty calculations), and that every formula is contextually sensible given its row description and column header.
 
 ---
 
@@ -65,8 +65,8 @@ Build a **Context Map** for each sheet before any logic checking begins.
 Understand the business logic defined in the project documentation.
 
 1. Read `calculation_logic.md` and `model_design_spec.md` if available.
-2. Identify key calculation drivers: Revenue, COGS, Excise, Depreciation, Tax, Debt Service, DSCR, etc.
-3. Note any industry-specific rules (e.g., Australian Excise Duty volumetric calculations, mining royalty methods, infrastructure availability payment structures).
+2. Identify key calculation drivers: Revenue, COGS, Depreciation, Tax, Debt Service, DSCR, etc.
+3. Note any industry-specific rules (e.g., tax methods, infrastructure availability payment structures).
 4. Build a mental map of expected formula relationships between sections and sheets.
 
 ---
@@ -188,7 +188,7 @@ When the Long Description of Error references a formula pattern (expected or act
 | Calcs | H9:L9 | Growth Rate — FY2025 to FY2029 | Hard-Code in Formula | ⚠️ MEDIUM: Formulas contain a hard-coded literal instead of referencing the growth rate input cell (R1C1: `=RC[-1]*1.05` — the `1.05` should be a cell reference) |
 | Calcs | D20 | Tax Expense — FY2024 | Sanity Check Failure | 🔴 HIGH: Tax Expense is negative (−$2.3m) despite Profit Before Tax being positive ($15.1m) |
 | Calcs | D45:Z45 | Opening Balance — FY2024 to FY2040 | Reference Direction Error | 🔴 HIGH: Opening Balance references a cell in the Revenue section instead of the prior period's Closing Balance (R1C1: `=R[-30]C` — expected `=R[8]C[-1]` referencing Closing Balance in prior column) |
-| Excise | F10:Z10 | Excise Duty Payable — FY2024 to FY2040 | Logical Flaw | 🔴 HIGH: Excise is calculated on revenue ($) instead of production volume (litres). The formula multiplies revenue by the excise rate, but Australian Excise Duty is a volumetric tax applied per litre of alcohol (R1C1: `=R[-5]C*R3C2` where R[-5] is Revenue — should reference the Volume row) |
+| Tax | F10:Z10 | Tax Payable — FY2024 to FY2040 | Logical Flaw | 🔴 HIGH: Tax is calculated on revenue ($) instead of taxable income. The formula multiplies revenue by the tax rate, but tax should be applied to the taxable income line (R1C1: `=R[-5]C*R3C2` where R[-5] is Revenue — should reference the Taxable Income row) |
 | Debt | G30:Z30 | DSCR — FY2025 to FY2040 | Assumption Mismatch | ⚠️ MEDIUM: DSCR formula uses EBITDA as the numerator, but the model design spec defines DSCR as CFADS / Debt Service. EBITDA does not account for tax or working capital movements |
 | P&L | D50 | Net Profit — FY2024 | Formula Context Error | 🔴 HIGH: Net Profit formula sums Revenue + Expenses instead of Revenue − Expenses. The SUM includes cost rows that should be subtracted (R1C1: `=SUM(R[-45]C:R[-1]C)` — cost rows are positive values that need to be negated or subtracted) |
 

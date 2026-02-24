@@ -1,6 +1,6 @@
 # Financial Model Auditor 📊
 
-This repository provides an automated auditing framework for Excel-based financial models, specifically tailored for the Australian Brewery industry. It utilizes a multi-agent persona architecture to perform comprehensive checks on structural integrity, logical consistency, formatting standards, and industry-specific business rules.
+This repository provides an automated auditing framework for Excel-based financial models. It utilizes a multi-agent persona architecture to perform comprehensive checks on structural integrity, logical consistency, formatting standards, and industry-specific business rules.
 
 ## 🤖 Multi-Agent Audit Framework
 
@@ -13,14 +13,6 @@ The audit is orchestrated by the **Manager** agent, which coordinates specialize
 - **Sentry 🛡️**: Ensures technical integrity by checking for Excel error values (#REF!, #VALUE!, etc.) and calculation errors.
 - **Stylist 🎨**: Detects and enforces formatting conventions (colors, fonts, styles) using style guides or statistical inference.
 - **Lingo 🗣️**: Performs linguistic scans for typos and ensures consistent terminology across labels and headings.
-
-## 🍺 Industry Business Logic: Australian Brewery
-
-The auditor is pre-configured to validate specific financial logic for Australian breweries:
-
-- **Excise Duty**: Volumetric calculation based on alcohol content per litre minus a 1.15% threshold.
-- **GST**: 10% applied to relevant revenue and cost lines.
-- **Corporate Tax**: 30% applied to taxable income.
 
 ## 📏 Standards & Conventions
 
