@@ -13,6 +13,8 @@ The audit is orchestrated by the **Manager** agent, which coordinates specialize
 - **Sentry 🛡️**: Ensures technical integrity by checking for Excel error values (#REF!, #VALUE!, etc.) and calculation errors.
 - **Stylist 🎨**: Detects and enforces formatting conventions (colors, fonts, styles) using style guides or statistical inference.
 - **Lingo 🗣️**: Performs linguistic scans for typos and ensures consistent terminology across labels and headings.
+- **VBA 📦**: Audits VBA code for security, performance, error handling, and coding standards.
+- **Power Query ⚡**: Audits Power Query M code for data quality, performance, and structural integrity.
 
 ## 📏 Standards & Conventions
 
