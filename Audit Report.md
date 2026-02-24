@@ -1,7 +1,7 @@
 # Audit Report: 20130401 Efficient Modelling (Tutorial).xlsx
 
 **Orchestrated by:** Manager 👔
-**Domains Audited:** Lingo ✍️, Logic 🧠, Sentry 🛡️, Stylist 🎨
+**Domains Audited:** Lingo ✍️, Logic 🧠, Sentry 🛡️, Stylist 🎨, Architect 🏗️, Efficiency ⚡, Sage 🧙‍♂️
 
 ---
 
@@ -30,6 +30,7 @@
 | **Dynamic Array** | I74 | Calculation Row | **Colour Coding Error** | ⚠️ **MEDIUM:** Cell uses `Technical_Input` style (Grey fill) instead of the standard `Assumption` style for inputs in this section. |
 | **Dynamic Array** | C27, C67, C116 | Row Labels | **Dominant Term Mismatch** | 🟡 **LOW:** Inconsistent casing in row labels: "Development costs" vs "Development Costs". |
 | **L** | C18, G18 | Reference Labels | **Typo** | 🟡 **LOW:** Use of "Offsheet" instead of "Off-sheet". |
+
 
 ---
 
