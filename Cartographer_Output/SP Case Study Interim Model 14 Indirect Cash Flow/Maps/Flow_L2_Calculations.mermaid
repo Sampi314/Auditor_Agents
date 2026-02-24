@@ -18,7 +18,7 @@ flowchart TD
     ext_in_Opening_Balance_Sheet -- "Accounts payable, Cash..." --> sect_Calculations_1
     ext_in_Timing(["Timing"])
     ext_in_Timing -- "Counter, Data..." --> sect_Calculations_0
-    sect_Calculations_0 -- "End Date, Data..." --> sect_Calculations_1
+    sect_Calculations_0 -- "End Date, Counter..." --> sect_Calculations_1
     ext_out_Balance_Sheet(["Balance Sheet"])
     sect_Calculations_0 -- "Closing receivables" --> ext_out_Balance_Sheet
     sect_Calculations_1 -- "Closing DTAs, Closing DTLs..." --> ext_out_Balance_Sheet
