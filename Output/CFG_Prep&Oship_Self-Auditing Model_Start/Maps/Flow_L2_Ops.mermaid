@@ -1,0 +1,15 @@
+flowchart TD
+
+    subgraph sg_Ops["Ops"]
+        sect_Ops_0["Operations & Returns"]
+    end
+    ext_in_Cons(["Cons"])
+    ext_in_Cons -- "Equity" --> sect_Ops_0
+    ext_in_Inputs(["Inputs"])
+    ext_in_Inputs -- "Labour, Land & Leasing..." --> sect_Ops_0
+    ext_in_QCF(["QCF"])
+    ext_in_QCF -- "Cash Balance B/f, Cashflow Available for Equity" --> sect_Ops_0
+    ext_in_Timing(["Timing"])
+    ext_in_Timing -- "Calendar Year, Construction..." --> sect_Ops_0
+    ext_out_QCF(["QCF"])
+    sect_Ops_0 -- "Fixed Costs, Free Cash Flow to Equity..." --> ext_out_QCF

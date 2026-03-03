@@ -1,0 +1,17 @@
+flowchart TD
+
+    subgraph sg_QCF["QCF"]
+        sect_QCF_0["Quarterly Cashflow"]
+    end
+    ext_in_Cons(["Cons"])
+    ext_in_Cons -- "Construction Cost, Debt..." --> sect_QCF_0
+    ext_in_Debt(["Debt"])
+    ext_in_Debt -- "Interest During Operations, Principal Repayment" --> sect_QCF_0
+    ext_in_Ops(["Ops"])
+    ext_in_Ops -- "Fixed Costs, Free Cash Flow to Equity..." --> sect_QCF_0
+    ext_in_Timing(["Timing"])
+    ext_in_Timing -- "Construction, Operations..." --> sect_QCF_0
+    ext_out_Debt(["Debt"])
+    sect_QCF_0 -- "Cashflow Available for Debt Service (CFADS)" --> ext_out_Debt
+    ext_out_Ops(["Ops"])
+    sect_QCF_0 -- "Cash Balance B/f, Cashflow Available for Equity" --> ext_out_Ops
