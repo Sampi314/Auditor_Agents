@@ -1,0 +1,15 @@
+flowchart TD
+
+    subgraph sg_Cons["Cons"]
+        sect_Cons_0["Construction"]
+    end
+    ext_in_Inputs(["Inputs"])
+    ext_in_Inputs -- "All construction costs, Base Rate..." --> sect_Cons_0
+    ext_in_Timing(["Timing"])
+    ext_in_Timing -- "Calendar Year, Construction..." --> sect_Cons_0
+    ext_out_Debt(["Debt"])
+    sect_Cons_0 -- "Base Rate, Refinance" --> ext_out_Debt
+    ext_out_Ops(["Ops"])
+    sect_Cons_0 -- "Equity" --> ext_out_Ops
+    ext_out_QCF(["QCF"])
+    sect_Cons_0 -- "Construction Cost, Debt..." --> ext_out_QCF

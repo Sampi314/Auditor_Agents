@@ -1,0 +1,13 @@
+flowchart TD
+
+    subgraph sg_Inputs["Inputs"]
+        sect_Inputs_0["Assumptions"]
+    end
+    ext_out_Cons(["Cons"])
+    sect_Inputs_0 -- "All construction costs, Base Rate..." --> ext_out_Cons
+    ext_out_Debt(["Debt"])
+    sect_Inputs_0 -- "% of opening balance at operations, Margin..." --> ext_out_Debt
+    ext_out_Ops(["Ops"])
+    sect_Inputs_0 -- "Labour, Land & Leasing..." --> ext_out_Ops
+    ext_out_Timing(["Timing"])
+    sect_Inputs_0 -- "End, Start" --> ext_out_Timing

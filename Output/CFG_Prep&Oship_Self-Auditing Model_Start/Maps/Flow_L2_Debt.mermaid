@@ -1,0 +1,15 @@
+flowchart TD
+
+    subgraph sg_Debt["Debt"]
+        sect_Debt_0["Debt"]
+    end
+    ext_in_Cons(["Cons"])
+    ext_in_Cons -- "Base Rate, Refinance" --> sect_Debt_0
+    ext_in_Inputs(["Inputs"])
+    ext_in_Inputs -- "% of opening balance at operations, Margin..." --> sect_Debt_0
+    ext_in_QCF(["QCF"])
+    ext_in_QCF -- "Cashflow Available for Debt Service (CFADS)" --> sect_Debt_0
+    ext_in_Timing(["Timing"])
+    ext_in_Timing -- "Calendar Year, Construction..." --> sect_Debt_0
+    ext_out_QCF(["QCF"])
+    sect_Debt_0 -- "Interest During Operations, Principal Repayment" --> ext_out_QCF

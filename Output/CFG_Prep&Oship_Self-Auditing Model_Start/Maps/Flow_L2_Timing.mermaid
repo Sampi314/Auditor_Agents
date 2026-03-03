@@ -1,0 +1,15 @@
+flowchart TD
+
+    subgraph sg_Timing["Timing"]
+        sect_Timing_0["Timing"]
+    end
+    ext_in_Inputs(["Inputs"])
+    ext_in_Inputs -- "End, Start" --> sect_Timing_0
+    ext_out_Cons(["Cons"])
+    sect_Timing_0 -- "Calendar Year, Construction..." --> ext_out_Cons
+    ext_out_Debt(["Debt"])
+    sect_Timing_0 -- "Calendar Year, Construction..." --> ext_out_Debt
+    ext_out_Ops(["Ops"])
+    sect_Timing_0 -- "Calendar Year, Construction..." --> ext_out_Ops
+    ext_out_QCF(["QCF"])
+    sect_Timing_0 -- "Construction, Operations..." --> ext_out_QCF

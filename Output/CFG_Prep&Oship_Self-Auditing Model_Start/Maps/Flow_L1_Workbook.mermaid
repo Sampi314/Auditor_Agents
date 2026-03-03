@@ -1,0 +1,33 @@
+flowchart LR
+
+    subgraph sg_Other["Other"]
+        _[" "]
+        QCF["QCF"]
+        Cons["Cons"]
+        Ops["Ops"]
+        LandN["L&N"]
+    end
+    subgraph sg_Inputs___Assumptions["Inputs / Assumptions"]
+        Inputs["Inputs"]
+    end
+    subgraph sg_Calculations["Calculations"]
+        Debt["Debt"]
+    end
+    subgraph sg_Timing["Timing"]
+        Timing["Timing"]
+    end
+    Cons -- "Base Rate, Refinance" --> Debt
+    Cons -- "Equity" --> Ops
+    Cons -- "Construction Cost, Debt, Equity (+1 more)" --> QCF
+    Debt -- "Interest During Operations, Principal Repayment" --> QCF
+    Inputs -- "All construction costs, Base Rate, Calendar Year (+5 more)" --> Cons
+    Inputs -- "% of opening balance at operations, Margin, Period (+1 more)" --> Debt
+    Inputs -- "Labour, Land & Leasing, Net Generation (+5 more)" --> Ops
+    Inputs -- "End, Start" --> Timing
+    Ops -- "Fixed Costs, Free Cash Flow to Equity, Revenue (+1 more)" --> QCF
+    QCF -- "Cashflow Available for Debt Service (CFADS)" --> Debt
+    QCF -- "Cash Balance B/f, Cashflow Available for Equity" --> Ops
+    Timing -- "Calendar Year, Construction, Construction Quarters (+5 more)" --> Cons
+    Timing -- "Calendar Year, Construction, Counters (+5 more)" --> Debt
+    Timing -- "Calendar Year, Construction, Counters (+4 more)" --> Ops
+    Timing -- "Construction, Operations, Period End (+1 more)" --> QCF
