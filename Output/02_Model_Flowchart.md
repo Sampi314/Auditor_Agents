@@ -15,9 +15,6 @@ flowchart LR
     subgraph Calculations
         Debt[Debt]
     end
-    subgraph Timing
-        Timing[Timing]
-    end
     Timing --> Ops
     Timing --> Debt
     Inputs --> Cons
