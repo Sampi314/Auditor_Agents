@@ -1,0 +1,46 @@
+flowchart LR
+    subgraph sg_Cover["Cover"]
+        Cover[" (Cover)"]
+    end
+
+    subgraph sg_Inputs["Inputs & Constants"]
+        Inputs[Inputs]
+        LN["L&N"]
+    end
+
+    subgraph sg_Timing["Timing"]
+        Timing[Timing]
+    end
+
+    subgraph sg_Calcs["Calculations"]
+        Cons[Cons]
+        Ops[Ops]
+        Debt[Debt]
+    end
+
+    subgraph sg_CFS["Cash Flow Statement"]
+        QCF[QCF]
+    end
+
+    Inputs -- "Model Start, CapEx, Spend Profile" --> Cons
+    Inputs -- "Volume, Price, OpEx" --> Ops
+    Inputs -- "Debt Terms, Margins, Base Rates" --> Debt
+    Inputs -- "Start/End Dates" --> Timing
+    LN -- "Named Constants" --> Timing
+    LN -- "Named Constants" --> Cons
+    LN -- "Named Constants" --> Ops
+    LN -- "Named Constants" --> Debt
+    Timing -- "Period Dates, Flags, Counters" --> Cons
+    Timing -- "Period Dates, Flags, Counters" --> Ops
+    Timing -- "Period Dates, Flags, Counters" --> Debt
+    Timing -- "Period Dates, Flags, Counters" --> QCF
+    Cons -- "Construction Cost, IDC" --> QCF
+    Cons -- "Debt Drawdowns, Equity" --> QCF
+    Cons -- "Equity Investment" --> Ops
+    Cons -- "Refinance Balance, Base Rate" --> Debt
+    Ops -- "Revenue" --> QCF
+    Ops -- "Fixed & Variable OpEx" --> QCF
+    Ops -- "FCFE, Dividends" --> QCF
+    QCF -- "CFADS" --> Debt
+    QCF -- "CF for Equity, Cash Balance" --> Ops
+    Debt -- "Principal Repayment, Interest" --> QCF
