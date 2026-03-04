@@ -1,0 +1,1543 @@
+{
+  "structure": [
+    {
+      "name": " ",
+      "dimensions": "B7:X25",
+      "min_row": 7,
+      "max_row": 25,
+      "min_col": 2,
+      "max_col": 24,
+      "state": "visible",
+      "merged_count": 0,
+      "tab_color": "<openpyxl.styles.colors.Color object>\nParameters:\nrgb=None, indexed=None, auto=None, theme=1, tint=0.0, type='theme'"
+    },
+    {
+      "name": "QCF",
+      "dimensions": "A1:BI47",
+      "min_row": 1,
+      "max_row": 47,
+      "min_col": 1,
+      "max_col": 61,
+      "state": "visible",
+      "merged_count": 0,
+      "tab_color": "<openpyxl.styles.colors.Color object>\nParameters:\nrgb='FFE58832', indexed=None, auto=None, theme=None, tint=0.0, type='rgb'"
+    },
+    {
+      "name": "Inputs",
+      "dimensions": "A1:Q64",
+      "min_row": 1,
+      "max_row": 64,
+      "min_col": 1,
+      "max_col": 17,
+      "state": "visible",
+      "merged_count": 0,
+      "tab_color": "<openpyxl.styles.colors.Color object>\nParameters:\nrgb='FFFFFF96', indexed=None, auto=None, theme=None, tint=0.0, type='rgb'"
+    },
+    {
+      "name": "Cons",
+      "dimensions": "A1:BI48",
+      "min_row": 1,
+      "max_row": 48,
+      "min_col": 1,
+      "max_col": 61,
+      "state": "visible",
+      "merged_count": 0,
+      "tab_color": "<openpyxl.styles.colors.Color object>\nParameters:\nrgb='FF58595B', indexed=None, auto=None, theme=None, tint=0.0, type='rgb'"
+    },
+    {
+      "name": "Ops",
+      "dimensions": "A1:BI59",
+      "min_row": 1,
+      "max_row": 59,
+      "min_col": 1,
+      "max_col": 61,
+      "state": "visible",
+      "merged_count": 0,
+      "tab_color": "<openpyxl.styles.colors.Color object>\nParameters:\nrgb='FF58595B', indexed=None, auto=None, theme=None, tint=0.0, type='rgb'"
+    },
+    {
+      "name": "Debt",
+      "dimensions": "A1:BI45",
+      "min_row": 1,
+      "max_row": 45,
+      "min_col": 1,
+      "max_col": 61,
+      "state": "visible",
+      "merged_count": 0,
+      "tab_color": "<openpyxl.styles.colors.Color object>\nParameters:\nrgb='FF58595B', indexed=None, auto=None, theme=None, tint=0.0, type='rgb'"
+    },
+    {
+      "name": "Timing",
+      "dimensions": "A1:BI14",
+      "min_row": 1,
+      "max_row": 14,
+      "min_col": 1,
+      "max_col": 61,
+      "state": "visible",
+      "merged_count": 0,
+      "tab_color": "<openpyxl.styles.colors.Color object>\nParameters:\nrgb='FF58595B', indexed=None, auto=None, theme=None, tint=0.0, type='rgb'"
+    },
+    {
+      "name": "L&N",
+      "dimensions": "A1:J35",
+      "min_row": 1,
+      "max_row": 35,
+      "min_col": 1,
+      "max_col": 10,
+      "state": "visible",
+      "merged_count": 0,
+      "tab_color": "<openpyxl.styles.colors.Color object>\nParameters:\nrgb='FFBC2974', indexed=None, auto=None, theme=None, tint=0.0, type='rgb'"
+    }
+  ],
+  "defined_names": [],
+  "sheet_context": {
+    " ": {
+      "labels": {
+        "23": "www.corality.com ",
+        "24": "contact@corality.com",
+        "25": "\u00a9 Copyright 2012 Corality Financial Group"
+      }
+    },
+    "QCF": {
+      "labels": {
+        "1": "Quarterly Cashflow",
+        "9": "Counters",
+        "10": "Calendar Year",
+        "12": "Cashflow Statement (AUD M)",
+        "13": "Revenue",
+        "14": "Sales",
+        "16": "Operational Expense",
+        "17": "Fixed Costs",
+        "18": "Variable Costs",
+        "19": "Total",
+        "21": "Operating Cashflow",
+        "23": "Capital Expenditure",
+        "26": "Total",
+        "28": "Funding",
+        "29": "Debt",
+        "30": "Equity",
+        "31": "Total",
+        "33": "Cashflow Available for Debt Service (CFADS)",
+        "35": "Debt Repayment",
+        "36": "Principal",
+        "37": "Interest",
+        "38": "Total",
+        "40": "Cashflow Available for Equity",
+        "42": "Dividends",
+        "44": "Net Cashflow",
+        "46": "Cash Balance B/f",
+        "47": "Cash Balance C/f"
+      }
+    },
+    "Inputs": {
+      "labels": {
+        "1": "Assumptions",
+        "4": "Timing",
+        "5": "Start",
+        "6": "Model Start Date",
+        "8": "Construction",
+        "9": "Start",
+        "10": "Duration ",
+        "11": "End",
+        "13": "Operations",
+        "14": "Start",
+        "15": "Duration ",
+        "16": "End",
+        "18": "Construction",
+        "19": "CapEx ",
+        "20": "All construction costs",
+        "22": "Development Schedule",
+        "23": "Construction spend profile",
+        "25": "Volume & Price",
+        "26": "Net Generation",
+        "27": "Period",
+        "28": "Net Generation",
+        "30": "Price",
+        "31": "Period",
+        "32": "Price",
+        "34": "Operational Expenditure",
+        "35": "Fixed Costs",
+        "36": "Nominal",
+        "37": "Labour",
+        "38": "Land & Leasing",
+        "39": "Spare",
+        "41": "Variable Costs",
+        "42": "Nominal Cost Price",
+        "43": "Other ",
+        "44": "Spare",
+        "45": "Spare",
+        "47": "Funding",
+        "48": "Senior Debt",
+        "49": "Debt Limit",
+        "51": "Period",
+        "52": "Margin",
+        "54": "Repayment Terms",
+        "55": "Tenor",
+        "57": "Linear repayment ",
+        "58": "% of opening balance at operations",
+        "60": "Macroeconomics",
+        "61": "Interest Rate",
+        "62": "Calendar Year",
+        "63": "Base Rate"
+      }
+    },
+    "Cons": {
+      "labels": {
+        "1": "Construction",
+        "10": "Num#",
+        "11": "Year",
+        "12": "Days",
+        "14": "Construction Costs",
+        "15": "Spend Profile",
+        "16": "%",
+        "18": "Costs",
+        "19": "AUD M",
+        "21": "Funding",
+        "22": "Uses",
+        "23": "Construction Cost",
+        "24": "Interest During Construction",
+        "25": "Total",
+        "27": "Sources",
+        "28": "Debt",
+        "29": "Shortfall",
+        "31": "Equity",
+        "32": "Check",
+        "34": "Debt",
+        "35": "Balance B/f",
+        "36": "Drawdowns",
+        "37": "Refinance",
+        "38": "Balance C/f",
+        "40": "Undrawn Amount",
+        "42": "Interest",
+        "43": "Base Rate",
+        "44": "Margin",
+        "45": "All-in-rate",
+        "46": "All-in-rate",
+        "48": "Interest During Construction"
+      }
+    },
+    "Ops": {
+      "labels": {
+        "1": "Operations & Returns",
+        "10": "Num#",
+        "11": "Year",
+        "13": "Revenue",
+        "14": "Volume",
+        "15": "Net Generation",
+        "17": "Price",
+        "18": "Market Price",
+        "19": "Revenue",
+        "21": "Operational Expense",
+        "22": "Fixed Nominal Costs",
+        "23": "AUD M",
+        "24": "AUD M",
+        "25": "AUD M",
+        "26": "Total",
+        "28": "Variable Nominal Costs",
+        "29": "Nominal Cost Price",
+        "30": "AUD / MWh",
+        "31": "AUD / MWh",
+        "32": "AUD / MWh",
+        "34": "Variable Costs",
+        "35": "Net Generation",
+        "37": "AUD M",
+        "38": "AUD M",
+        "39": "AUD M",
+        "40": "Total",
+        "42": "Summary",
+        "43": "Fixed Costs",
+        "44": "Variable Costs",
+        "45": "Total Costs",
+        "47": "Free Cash Flow to Equity",
+        "48": "Cashflow available for Equity",
+        "49": "Cash Balance B/f",
+        "50": "Free Cash Flow to Equity",
+        "52": "Returns",
+        "53": "Equity",
+        "54": "Dividends",
+        "55": "Net Cashflow",
+        "57": "Evaluation Cashflow",
+        "59": "IRR"
+      }
+    },
+    "Debt": {
+      "labels": {
+        "1": "Debt",
+        "10": "Num#",
+        "11": "Year",
+        "12": "Days",
+        "14": "Debt Repayment",
+        "16": "Tenor Flag",
+        "18": "Account",
+        "19": "Balance B/f",
+        "20": "Refinance from Construction",
+        "21": "Principal Repayment",
+        "22": "Balance C/f",
+        "24": "Interest",
+        "25": "Base Rate",
+        "26": "Margin",
+        "27": "All-in-Rate",
+        "28": "All-in-Rate",
+        "30": "Interest During Operations",
+        "32": "Repayment",
+        "33": "Linear",
+        "34": "Principal repayment (annualised)",
+        "35": "Principal repayment",
+        "37": "Debt Ratios",
+        "38": "Debt Service Cover Ratio (DSCR)",
+        "39": "CFADS",
+        "41": "Interest",
+        "42": "Principal",
+        "43": "Total Debt Service",
+        "45": "DSCR"
+      }
+    },
+    "Timing": {
+      "labels": {
+        "1": "Timing",
+        "4": "Period Start",
+        "5": "Period End",
+        "6": "Construction",
+        "7": "Operations",
+        "9": "Counters",
+        "10": "Construction Quarters",
+        "11": "Operations Quarters",
+        "12": "Operations Year",
+        "13": "Calendar Year",
+        "14": "Days in Period"
+      }
+    },
+    "L&N": {
+      "labels": {
+        "1": "Formatting Legend, Names & Constants",
+        "4": "Formatting Styles",
+        "5": "Formatting of Headers / Dividers",
+        "6": "Header0",
+        "7": "Header1",
+        "8": "Header2",
+        "9": "Header3",
+        "11": "Table_Heading",
+        "13": "Individual Cell Assumptions",
+        "14": "Assumptions",
+        "16": "Offsheet",
+        "18": "Assumption_Flex",
+        "20": "Input",
+        "22": "Empty_Cell",
+        "24": "Technical Inputs",
+        "25": "Entity Names",
+        "26": "Name Course",
+        "27": "Model Name",
+        "29": "Constants",
+        "30": "Days in Year",
+        "31": "Months per Year",
+        "32": "Quarters per Year",
+        "33": "Months per Quarter",
+        "35": "Million"
+      }
+    }
+  },
+  "sheet_formulas": {
+    " ": {
+      "formula_count": 2,
+      "constant_count": 11,
+      "link_count": 0,
+      "errors": [],
+      "hardcodes": [],
+      "mega_formulas": [],
+      "pattern_breaks": [],
+      "hyperlinks": [
+        {
+          "cell": "I15",
+          "target": "mailto:kenny.chew@corality.com",
+          "display": "kenny.chew@corality.com"
+        },
+        {
+          "cell": "B23",
+          "target": "http://www.corality.com/",
+          "display": "www.corality.com "
+        },
+        {
+          "cell": "B24",
+          "target": "mailto:contact@corality.com",
+          "display": "contact@corality.com"
+        }
+      ]
+    },
+    "QCF": {
+      "formula_count": 1326,
+      "constant_count": 27,
+      "link_count": 735,
+      "errors": [],
+      "hardcodes": [],
+      "mega_formulas": [],
+      "pattern_breaks": [
+        {
+          "cell": "I14",
+          "row": 14,
+          "row_label": "Sales",
+          "expected_r1c1": "=Ops!R[5]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J14:BI14)"
+        },
+        {
+          "cell": "I17",
+          "row": 17,
+          "row_label": "Fixed Costs",
+          "expected_r1c1": "=-Ops!R[26]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J17:BI17)"
+        },
+        {
+          "cell": "I18",
+          "row": 18,
+          "row_label": "Variable Costs",
+          "expected_r1c1": "=-Ops!R[26]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J18:BI18)"
+        },
+        {
+          "cell": "I19",
+          "row": 19,
+          "row_label": "Total",
+          "expected_r1c1": "=SUM(R[-2]C:R[-1]C)",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J19:BI19)"
+        },
+        {
+          "cell": "I21",
+          "row": 21,
+          "row_label": "Operating Cashflow",
+          "expected_r1c1": "=R[-7]C+R[-2]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J21:BI21)"
+        },
+        {
+          "cell": "C24",
+          "row": 24,
+          "row_label": "",
+          "expected_r1c1": "=-Cons!R[-1]C",
+          "actual_r1c1": "=Cons!R[-1]C",
+          "formula": "=Cons!C23"
+        },
+        {
+          "cell": "I24",
+          "row": 24,
+          "row_label": "",
+          "expected_r1c1": "=-Cons!R[-1]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J24:BI24)"
+        },
+        {
+          "cell": "C25",
+          "row": 25,
+          "row_label": "",
+          "expected_r1c1": "=-Cons!R[-1]C",
+          "actual_r1c1": "=Cons!R[-1]C",
+          "formula": "=Cons!C24"
+        },
+        {
+          "cell": "I25",
+          "row": 25,
+          "row_label": "",
+          "expected_r1c1": "=-Cons!R[-1]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J25:BI25)"
+        },
+        {
+          "cell": "I26",
+          "row": 26,
+          "row_label": "Total",
+          "expected_r1c1": "=SUM(R[-2]C:R[-1]C)",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J26:BI26)"
+        },
+        {
+          "cell": "I29",
+          "row": 29,
+          "row_label": "Debt",
+          "expected_r1c1": "=Cons!R[-1]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J29:BI29)"
+        },
+        {
+          "cell": "I30",
+          "row": 30,
+          "row_label": "Equity",
+          "expected_r1c1": "=Cons!R[1]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J30:BI30)"
+        },
+        {
+          "cell": "I31",
+          "row": 31,
+          "row_label": "Total",
+          "expected_r1c1": "=SUM(R[-2]C:R[-1]C)",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J31:BI31)"
+        },
+        {
+          "cell": "I33",
+          "row": 33,
+          "row_label": "Cashflow Available for Debt Service (CFADS)",
+          "expected_r1c1": "=R[-12]C+R[-7]C+R[-2]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J33:BI33)"
+        },
+        {
+          "cell": "I36",
+          "row": 36,
+          "row_label": "Principal",
+          "expected_r1c1": "=Debt!R[-15]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J36:BI36)"
+        },
+        {
+          "cell": "I37",
+          "row": 37,
+          "row_label": "Interest",
+          "expected_r1c1": "=-Debt!R[-7]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J37:BI37)"
+        },
+        {
+          "cell": "I38",
+          "row": 38,
+          "row_label": "Total",
+          "expected_r1c1": "=SUM(R[-2]C:R[-1]C)",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J38:BI38)"
+        },
+        {
+          "cell": "I40",
+          "row": 40,
+          "row_label": "Cashflow Available for Equity",
+          "expected_r1c1": "=R[-7]C+R[-2]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J40:BI40)"
+        },
+        {
+          "cell": "I42",
+          "row": 42,
+          "row_label": "Dividends",
+          "expected_r1c1": "=-Ops!R[8]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J42:BI42)"
+        },
+        {
+          "cell": "I44",
+          "row": 44,
+          "row_label": "Net Cashflow",
+          "expected_r1c1": "=R[-4]C+R[-2]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J44:BI44)"
+        }
+      ],
+      "hyperlinks": []
+    },
+    "Inputs": {
+      "formula_count": 64,
+      "constant_count": 141,
+      "link_count": 0,
+      "errors": [],
+      "hardcodes": [],
+      "mega_formulas": [],
+      "pattern_breaks": [
+        {
+          "cell": "F31",
+          "row": 31,
+          "row_label": "Period",
+          "expected_r1c1": "=RC[-1]+1",
+          "actual_r1c1": "=YEAR(COD)",
+          "formula": "=YEAR(COD)"
+        },
+        {
+          "cell": "F62",
+          "row": 62,
+          "row_label": "Calendar Year",
+          "expected_r1c1": "=RC[-1]+1",
+          "actual_r1c1": "=YEAR(R[-53]C[-1])",
+          "formula": "=YEAR(E9)"
+        }
+      ],
+      "hyperlinks": []
+    },
+    "Cons": {
+      "formula_count": 1380,
+      "constant_count": 48,
+      "link_count": 482,
+      "errors": [],
+      "hardcodes": [],
+      "mega_formulas": [],
+      "pattern_breaks": [
+        {
+          "cell": "C16",
+          "row": 16,
+          "row_label": "%",
+          "expected_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R22C6:R22C17,Inputs!R[7]C6:R[7]C17))",
+          "actual_r1c1": "=Inputs!R[4]C",
+          "formula": "=Inputs!C20"
+        },
+        {
+          "cell": "I16",
+          "row": 16,
+          "row_label": "%",
+          "expected_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R22C6:R22C17,Inputs!R[7]C6:R[7]C17))",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J16:BI16)"
+        },
+        {
+          "cell": "C19",
+          "row": 19,
+          "row_label": "AUD M",
+          "expected_r1c1": "=RC5*R[-3]C*(1+R19C6)",
+          "actual_r1c1": "=R[-3]C",
+          "formula": "=C16"
+        },
+        {
+          "cell": "E19",
+          "row": 19,
+          "row_label": "AUD M",
+          "expected_r1c1": "=RC5*R[-3]C*(1+R19C6)",
+          "actual_r1c1": "=Inputs!R[1]C",
+          "formula": "=Inputs!E20"
+        },
+        {
+          "cell": "I19",
+          "row": 19,
+          "row_label": "AUD M",
+          "expected_r1c1": "=RC5*R[-3]C*(1+R19C6)",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J19:BI19)"
+        },
+        {
+          "cell": "I23",
+          "row": 23,
+          "row_label": "Construction Cost",
+          "expected_r1c1": "=R[-4]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J23:BI23)"
+        },
+        {
+          "cell": "I24",
+          "row": 24,
+          "row_label": "Interest During Construction",
+          "expected_r1c1": "=R[24]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J24:BI24)"
+        },
+        {
+          "cell": "I25",
+          "row": 25,
+          "row_label": "Total",
+          "expected_r1c1": "=SUM(R[-2]C:R[-1]C)",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J25:BI25)"
+        },
+        {
+          "cell": "I28",
+          "row": 28,
+          "row_label": "Debt",
+          "expected_r1c1": "=MIN(R[-3]C,R[12]C)",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J28:BI28)"
+        },
+        {
+          "cell": "I29",
+          "row": 29,
+          "row_label": "Shortfall",
+          "expected_r1c1": "=R[-4]C-R[-1]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J29:BI29)"
+        },
+        {
+          "cell": "I31",
+          "row": 31,
+          "row_label": "Equity",
+          "expected_r1c1": "=R[-2]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J31:BI31)"
+        },
+        {
+          "cell": "I32",
+          "row": 32,
+          "row_label": "Check",
+          "expected_r1c1": "=R[-3]C-R[-1]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J32:BI32)"
+        },
+        {
+          "cell": "I36",
+          "row": 36,
+          "row_label": "Drawdowns",
+          "expected_r1c1": "=R[-8]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J36:BI36)"
+        },
+        {
+          "cell": "E37",
+          "row": 37,
+          "row_label": "Refinance",
+          "expected_r1c1": "=-IF(R[-32]C=RC5,SUM(R[-2]C:R[-1]C),0)",
+          "actual_r1c1": "=Inputs!R[-26]C",
+          "formula": "=Inputs!E11"
+        },
+        {
+          "cell": "I37",
+          "row": 37,
+          "row_label": "Refinance",
+          "expected_r1c1": "=-IF(R[-32]C=RC5,SUM(R[-2]C:R[-1]C),0)",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J37:BI37)"
+        },
+        {
+          "cell": "E40",
+          "row": 40,
+          "row_label": "Undrawn Amount",
+          "expected_r1c1": "=(RC5-R[-5]C)*R6C",
+          "actual_r1c1": "=Inputs!R[9]C",
+          "formula": "=Inputs!E49"
+        },
+        {
+          "cell": "E44",
+          "row": 44,
+          "row_label": "Margin",
+          "expected_r1c1": "=RC5*R6C",
+          "actual_r1c1": "=Inputs!R[8]C",
+          "formula": "=Inputs!E52"
+        },
+        {
+          "cell": "I48",
+          "row": 48,
+          "row_label": "Interest During Construction",
+          "expected_r1c1": "=R[-13]C*R[-2]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J48:BI48)"
+        }
+      ],
+      "hyperlinks": []
+    },
+    "Ops": {
+      "formula_count": 1650,
+      "constant_count": 57,
+      "link_count": 870,
+      "errors": [],
+      "hardcodes": [
+        {
+          "cell": "AH15",
+          "values": [
+            "0.5"
+          ],
+          "formula": "=AG15*(1+0.5%)"
+        },
+        {
+          "cell": "AI15",
+          "values": [
+            "0.5"
+          ],
+          "formula": "=AH15*(1+0.5%)"
+        },
+        {
+          "cell": "AJ15",
+          "values": [
+            "0.5"
+          ],
+          "formula": "=AI15*(1+0.5%)"
+        },
+        {
+          "cell": "AK15",
+          "values": [
+            "0.5"
+          ],
+          "formula": "=AJ15*(1+0.5%)"
+        },
+        {
+          "cell": "AL15",
+          "values": [
+            "0.5"
+          ],
+          "formula": "=AK15*(1+0.5%)"
+        },
+        {
+          "cell": "AM15",
+          "values": [
+            "0.5"
+          ],
+          "formula": "=AL15*(1+0.5%)"
+        },
+        {
+          "cell": "AN15",
+          "values": [
+            "0.5"
+          ],
+          "formula": "=AM15*(1+0.5%)"
+        },
+        {
+          "cell": "AO15",
+          "values": [
+            "0.5"
+          ],
+          "formula": "=AN15*(1+0.5%)"
+        },
+        {
+          "cell": "AP15",
+          "values": [
+            "0.5"
+          ],
+          "formula": "=AO15*(1+0.5%)"
+        },
+        {
+          "cell": "AQ15",
+          "values": [
+            "0.5"
+          ],
+          "formula": "=AP15*(1+0.5%)"
+        },
+        {
+          "cell": "AR15",
+          "values": [
+            "0.5"
+          ],
+          "formula": "=AQ15*(1+0.5%)"
+        },
+        {
+          "cell": "AS15",
+          "values": [
+            "0.5"
+          ],
+          "formula": "=AR15*(1+0.5%)"
+        },
+        {
+          "cell": "AT15",
+          "values": [
+            "0.5"
+          ],
+          "formula": "=AS15*(1+0.5%)"
+        },
+        {
+          "cell": "AU15",
+          "values": [
+            "0.5"
+          ],
+          "formula": "=AT15*(1+0.5%)"
+        },
+        {
+          "cell": "AV15",
+          "values": [
+            "0.5"
+          ],
+          "formula": "=AU15*(1+0.5%)"
+        },
+        {
+          "cell": "AW15",
+          "values": [
+            "0.5"
+          ],
+          "formula": "=AV15*(1+0.5%)"
+        },
+        {
+          "cell": "AX15",
+          "values": [
+            "0.5"
+          ],
+          "formula": "=AW15*(1+0.5%)"
+        },
+        {
+          "cell": "AY15",
+          "values": [
+            "0.5"
+          ],
+          "formula": "=AX15*(1+0.5%)"
+        },
+        {
+          "cell": "AZ15",
+          "values": [
+            "0.5"
+          ],
+          "formula": "=AY15*(1+0.5%)"
+        },
+        {
+          "cell": "BA15",
+          "values": [
+            "0.5"
+          ],
+          "formula": "=AZ15*(1+0.5%)"
+        },
+        {
+          "cell": "BB15",
+          "values": [
+            "0.5"
+          ],
+          "formula": "=BA15*(1+0.5%)"
+        },
+        {
+          "cell": "BC15",
+          "values": [
+            "0.5"
+          ],
+          "formula": "=BB15*(1+0.5%)"
+        },
+        {
+          "cell": "BD15",
+          "values": [
+            "0.5"
+          ],
+          "formula": "=BC15*(1+0.5%)"
+        },
+        {
+          "cell": "BE15",
+          "values": [
+            "0.5"
+          ],
+          "formula": "=BD15*(1+0.5%)"
+        },
+        {
+          "cell": "BF15",
+          "values": [
+            "0.5"
+          ],
+          "formula": "=BE15*(1+0.5%)"
+        },
+        {
+          "cell": "BG15",
+          "values": [
+            "0.5"
+          ],
+          "formula": "=BF15*(1+0.5%)"
+        },
+        {
+          "cell": "BH15",
+          "values": [
+            "0.5"
+          ],
+          "formula": "=BG15*(1+0.5%)"
+        },
+        {
+          "cell": "BI15",
+          "values": [
+            "0.5"
+          ],
+          "formula": "=BH15*(1+0.5%)"
+        },
+        {
+          "cell": "I57",
+          "values": [
+            "0.00001"
+          ],
+          "formula": "=-0.00001"
+        }
+      ],
+      "mega_formulas": [],
+      "pattern_breaks": [
+        {
+          "cell": "I15",
+          "row": 15,
+          "row_label": "Net Generation",
+          "expected_r1c1": "=RC[-1]*(1+0.5%)",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J15:BI15)"
+        },
+        {
+          "cell": "J15",
+          "row": 15,
+          "row_label": "Net Generation",
+          "expected_r1c1": "=RC[-1]*(1+0.5%)",
+          "actual_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R27C5:R27C13,Inputs!R28C5:R28C13))/Qtrs_Yr",
+          "formula": "=IF(J$10=0,0,LOOKUP(J$10,Inputs!$E$27:$M$27,Inputs!$E$28:$M$28))/Qtrs_Yr"
+        },
+        {
+          "cell": "K15",
+          "row": 15,
+          "row_label": "Net Generation",
+          "expected_r1c1": "=RC[-1]*(1+0.5%)",
+          "actual_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R27C5:R27C13,Inputs!R28C5:R28C13))/Qtrs_Yr",
+          "formula": "=IF(K$10=0,0,LOOKUP(K$10,Inputs!$E$27:$M$27,Inputs!$E$28:$M$28))/Qtrs_Yr"
+        },
+        {
+          "cell": "L15",
+          "row": 15,
+          "row_label": "Net Generation",
+          "expected_r1c1": "=RC[-1]*(1+0.5%)",
+          "actual_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R27C5:R27C13,Inputs!R28C5:R28C13))/Qtrs_Yr",
+          "formula": "=IF(L$10=0,0,LOOKUP(L$10,Inputs!$E$27:$M$27,Inputs!$E$28:$M$28))/Qtrs_Yr"
+        },
+        {
+          "cell": "M15",
+          "row": 15,
+          "row_label": "Net Generation",
+          "expected_r1c1": "=RC[-1]*(1+0.5%)",
+          "actual_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R27C5:R27C13,Inputs!R28C5:R28C13))/Qtrs_Yr",
+          "formula": "=IF(M$10=0,0,LOOKUP(M$10,Inputs!$E$27:$M$27,Inputs!$E$28:$M$28))/Qtrs_Yr"
+        },
+        {
+          "cell": "N15",
+          "row": 15,
+          "row_label": "Net Generation",
+          "expected_r1c1": "=RC[-1]*(1+0.5%)",
+          "actual_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R27C5:R27C13,Inputs!R28C5:R28C13))/Qtrs_Yr",
+          "formula": "=IF(N$10=0,0,LOOKUP(N$10,Inputs!$E$27:$M$27,Inputs!$E$28:$M$28))/Qtrs_Yr"
+        },
+        {
+          "cell": "O15",
+          "row": 15,
+          "row_label": "Net Generation",
+          "expected_r1c1": "=RC[-1]*(1+0.5%)",
+          "actual_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R27C5:R27C13,Inputs!R28C5:R28C13))/Qtrs_Yr",
+          "formula": "=IF(O$10=0,0,LOOKUP(O$10,Inputs!$E$27:$M$27,Inputs!$E$28:$M$28))/Qtrs_Yr"
+        },
+        {
+          "cell": "P15",
+          "row": 15,
+          "row_label": "Net Generation",
+          "expected_r1c1": "=RC[-1]*(1+0.5%)",
+          "actual_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R27C5:R27C13,Inputs!R28C5:R28C13))/Qtrs_Yr",
+          "formula": "=IF(P$10=0,0,LOOKUP(P$10,Inputs!$E$27:$M$27,Inputs!$E$28:$M$28))/Qtrs_Yr"
+        },
+        {
+          "cell": "Q15",
+          "row": 15,
+          "row_label": "Net Generation",
+          "expected_r1c1": "=RC[-1]*(1+0.5%)",
+          "actual_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R27C5:R27C13,Inputs!R28C5:R28C13))/Qtrs_Yr",
+          "formula": "=IF(Q$10=0,0,LOOKUP(Q$10,Inputs!$E$27:$M$27,Inputs!$E$28:$M$28))/Qtrs_Yr"
+        },
+        {
+          "cell": "R15",
+          "row": 15,
+          "row_label": "Net Generation",
+          "expected_r1c1": "=RC[-1]*(1+0.5%)",
+          "actual_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R27C5:R27C13,Inputs!R28C5:R28C13))/Qtrs_Yr",
+          "formula": "=IF(R$10=0,0,LOOKUP(R$10,Inputs!$E$27:$M$27,Inputs!$E$28:$M$28))/Qtrs_Yr"
+        },
+        {
+          "cell": "S15",
+          "row": 15,
+          "row_label": "Net Generation",
+          "expected_r1c1": "=RC[-1]*(1+0.5%)",
+          "actual_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R27C5:R27C13,Inputs!R28C5:R28C13))/Qtrs_Yr",
+          "formula": "=IF(S$10=0,0,LOOKUP(S$10,Inputs!$E$27:$M$27,Inputs!$E$28:$M$28))/Qtrs_Yr"
+        },
+        {
+          "cell": "T15",
+          "row": 15,
+          "row_label": "Net Generation",
+          "expected_r1c1": "=RC[-1]*(1+0.5%)",
+          "actual_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R27C5:R27C13,Inputs!R28C5:R28C13))/Qtrs_Yr",
+          "formula": "=IF(T$10=0,0,LOOKUP(T$10,Inputs!$E$27:$M$27,Inputs!$E$28:$M$28))/Qtrs_Yr"
+        },
+        {
+          "cell": "U15",
+          "row": 15,
+          "row_label": "Net Generation",
+          "expected_r1c1": "=RC[-1]*(1+0.5%)",
+          "actual_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R27C5:R27C13,Inputs!R28C5:R28C13))/Qtrs_Yr",
+          "formula": "=IF(U$10=0,0,LOOKUP(U$10,Inputs!$E$27:$M$27,Inputs!$E$28:$M$28))/Qtrs_Yr"
+        },
+        {
+          "cell": "V15",
+          "row": 15,
+          "row_label": "Net Generation",
+          "expected_r1c1": "=RC[-1]*(1+0.5%)",
+          "actual_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R27C5:R27C13,Inputs!R28C5:R28C13))/Qtrs_Yr",
+          "formula": "=IF(V$10=0,0,LOOKUP(V$10,Inputs!$E$27:$M$27,Inputs!$E$28:$M$28))/Qtrs_Yr"
+        },
+        {
+          "cell": "W15",
+          "row": 15,
+          "row_label": "Net Generation",
+          "expected_r1c1": "=RC[-1]*(1+0.5%)",
+          "actual_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R27C5:R27C13,Inputs!R28C5:R28C13))/Qtrs_Yr",
+          "formula": "=IF(W$10=0,0,LOOKUP(W$10,Inputs!$E$27:$M$27,Inputs!$E$28:$M$28))/Qtrs_Yr"
+        },
+        {
+          "cell": "X15",
+          "row": 15,
+          "row_label": "Net Generation",
+          "expected_r1c1": "=RC[-1]*(1+0.5%)",
+          "actual_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R27C5:R27C13,Inputs!R28C5:R28C13))/Qtrs_Yr",
+          "formula": "=IF(X$10=0,0,LOOKUP(X$10,Inputs!$E$27:$M$27,Inputs!$E$28:$M$28))/Qtrs_Yr"
+        },
+        {
+          "cell": "Y15",
+          "row": 15,
+          "row_label": "Net Generation",
+          "expected_r1c1": "=RC[-1]*(1+0.5%)",
+          "actual_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R27C5:R27C13,Inputs!R28C5:R28C13))/Qtrs_Yr",
+          "formula": "=IF(Y$10=0,0,LOOKUP(Y$10,Inputs!$E$27:$M$27,Inputs!$E$28:$M$28))/Qtrs_Yr"
+        },
+        {
+          "cell": "Z15",
+          "row": 15,
+          "row_label": "Net Generation",
+          "expected_r1c1": "=RC[-1]*(1+0.5%)",
+          "actual_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R27C5:R27C13,Inputs!R28C5:R28C13))/Qtrs_Yr",
+          "formula": "=IF(Z$10=0,0,LOOKUP(Z$10,Inputs!$E$27:$M$27,Inputs!$E$28:$M$28))/Qtrs_Yr"
+        },
+        {
+          "cell": "AA15",
+          "row": 15,
+          "row_label": "Net Generation",
+          "expected_r1c1": "=RC[-1]*(1+0.5%)",
+          "actual_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R27C5:R27C13,Inputs!R28C5:R28C13))/Qtrs_Yr",
+          "formula": "=IF(AA$10=0,0,LOOKUP(AA$10,Inputs!$E$27:$M$27,Inputs!$E$28:$M$28))/Qtrs_Yr"
+        },
+        {
+          "cell": "AB15",
+          "row": 15,
+          "row_label": "Net Generation",
+          "expected_r1c1": "=RC[-1]*(1+0.5%)",
+          "actual_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R27C5:R27C13,Inputs!R28C5:R28C13))/Qtrs_Yr",
+          "formula": "=IF(AB$10=0,0,LOOKUP(AB$10,Inputs!$E$27:$M$27,Inputs!$E$28:$M$28))/Qtrs_Yr"
+        },
+        {
+          "cell": "AC15",
+          "row": 15,
+          "row_label": "Net Generation",
+          "expected_r1c1": "=RC[-1]*(1+0.5%)",
+          "actual_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R27C5:R27C13,Inputs!R28C5:R28C13))/Qtrs_Yr",
+          "formula": "=IF(AC$10=0,0,LOOKUP(AC$10,Inputs!$E$27:$M$27,Inputs!$E$28:$M$28))/Qtrs_Yr"
+        },
+        {
+          "cell": "AD15",
+          "row": 15,
+          "row_label": "Net Generation",
+          "expected_r1c1": "=RC[-1]*(1+0.5%)",
+          "actual_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R27C5:R27C13,Inputs!R28C5:R28C13))/Qtrs_Yr",
+          "formula": "=IF(AD$10=0,0,LOOKUP(AD$10,Inputs!$E$27:$M$27,Inputs!$E$28:$M$28))/Qtrs_Yr"
+        },
+        {
+          "cell": "AE15",
+          "row": 15,
+          "row_label": "Net Generation",
+          "expected_r1c1": "=RC[-1]*(1+0.5%)",
+          "actual_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R27C5:R27C13,Inputs!R28C5:R28C13))/Qtrs_Yr",
+          "formula": "=IF(AE$10=0,0,LOOKUP(AE$10,Inputs!$E$27:$M$27,Inputs!$E$28:$M$28))/Qtrs_Yr"
+        },
+        {
+          "cell": "AF15",
+          "row": 15,
+          "row_label": "Net Generation",
+          "expected_r1c1": "=RC[-1]*(1+0.5%)",
+          "actual_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R27C5:R27C13,Inputs!R28C5:R28C13))/Qtrs_Yr",
+          "formula": "=IF(AF$10=0,0,LOOKUP(AF$10,Inputs!$E$27:$M$27,Inputs!$E$28:$M$28))/Qtrs_Yr"
+        },
+        {
+          "cell": "AG15",
+          "row": 15,
+          "row_label": "Net Generation",
+          "expected_r1c1": "=RC[-1]*(1+0.5%)",
+          "actual_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R27C5:R27C13,Inputs!R28C5:R28C13))/Qtrs_Yr",
+          "formula": "=IF(AG$10=0,0,LOOKUP(AG$10,Inputs!$E$27:$M$27,Inputs!$E$28:$M$28))/Qtrs_Yr"
+        },
+        {
+          "cell": "I19",
+          "row": 19,
+          "row_label": "Revenue",
+          "expected_r1c1": "=R[-4]C*R[-1]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J19:BI19)"
+        },
+        {
+          "cell": "C23",
+          "row": 23,
+          "row_label": "AUD M",
+          "expected_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R36C5:R36C14,Inputs!R[14]C5:R[14]C14))",
+          "actual_r1c1": "=Inputs!R[14]C",
+          "formula": "=Inputs!C37"
+        },
+        {
+          "cell": "I23",
+          "row": 23,
+          "row_label": "AUD M",
+          "expected_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R36C5:R36C14,Inputs!R[14]C5:R[14]C14))",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J23:BI23)"
+        },
+        {
+          "cell": "C24",
+          "row": 24,
+          "row_label": "AUD M",
+          "expected_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R36C5:R36C14,Inputs!R[14]C5:R[14]C14))",
+          "actual_r1c1": "=Inputs!R[14]C",
+          "formula": "=Inputs!C38"
+        },
+        {
+          "cell": "I24",
+          "row": 24,
+          "row_label": "AUD M",
+          "expected_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R36C5:R36C14,Inputs!R[14]C5:R[14]C14))",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J24:BI24)"
+        },
+        {
+          "cell": "C25",
+          "row": 25,
+          "row_label": "AUD M",
+          "expected_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R36C5:R36C14,Inputs!R[14]C5:R[14]C14))",
+          "actual_r1c1": "=Inputs!R[14]C",
+          "formula": "=Inputs!C39"
+        },
+        {
+          "cell": "I25",
+          "row": 25,
+          "row_label": "AUD M",
+          "expected_r1c1": "=IF(R10C=0,0,LOOKUP(R10C,Inputs!R36C5:R36C14,Inputs!R[14]C5:R[14]C14))",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J25:BI25)"
+        },
+        {
+          "cell": "I26",
+          "row": 26,
+          "row_label": "Total",
+          "expected_r1c1": "=SUM(R[-3]C:R[-2]C)",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J26:BI26)"
+        },
+        {
+          "cell": "J26",
+          "row": 26,
+          "row_label": "Total",
+          "expected_r1c1": "=SUM(R[-3]C:R[-2]C)",
+          "actual_r1c1": "=SUM(R[-3]C:R[-1]C)",
+          "formula": "=SUM(J23:J25)"
+        },
+        {
+          "cell": "C30",
+          "row": 30,
+          "row_label": "AUD / MWh",
+          "expected_r1c1": "=Inputs!R[13]C[-5]*R[-23]C10",
+          "actual_r1c1": "=Inputs!R[13]C",
+          "formula": "=Inputs!C43"
+        },
+        {
+          "cell": "C31",
+          "row": 31,
+          "row_label": "AUD / MWh",
+          "expected_r1c1": "=Inputs!R[13]C[-5]*R[-23]C10",
+          "actual_r1c1": "=Inputs!R[13]C",
+          "formula": "=Inputs!C44"
+        },
+        {
+          "cell": "C32",
+          "row": 32,
+          "row_label": "AUD / MWh",
+          "expected_r1c1": "=Inputs!R[13]C[-5]*R[-23]C10",
+          "actual_r1c1": "=Inputs!R[13]C",
+          "formula": "=Inputs!C45"
+        },
+        {
+          "cell": "C37",
+          "row": 37,
+          "row_label": "AUD M",
+          "expected_r1c1": "=R[-7]C*R35C/Million",
+          "actual_r1c1": "=R[-7]C",
+          "formula": "=C30"
+        },
+        {
+          "cell": "I37",
+          "row": 37,
+          "row_label": "AUD M",
+          "expected_r1c1": "=R[-7]C*R35C/Million",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J37:BI37)"
+        },
+        {
+          "cell": "C38",
+          "row": 38,
+          "row_label": "AUD M",
+          "expected_r1c1": "=R[-7]C*R35C/Million",
+          "actual_r1c1": "=R[-7]C",
+          "formula": "=C31"
+        },
+        {
+          "cell": "I38",
+          "row": 38,
+          "row_label": "AUD M",
+          "expected_r1c1": "=R[-7]C*R35C/Million",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J38:BI38)"
+        },
+        {
+          "cell": "C39",
+          "row": 39,
+          "row_label": "AUD M",
+          "expected_r1c1": "=R[-7]C*R35C",
+          "actual_r1c1": "=R[-7]C",
+          "formula": "=C32"
+        },
+        {
+          "cell": "I39",
+          "row": 39,
+          "row_label": "AUD M",
+          "expected_r1c1": "=R[-7]C*R35C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J39:BI39)"
+        },
+        {
+          "cell": "I40",
+          "row": 40,
+          "row_label": "Total",
+          "expected_r1c1": "=SUM(R[-3]C:R[-1]C)",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J40:BI40)"
+        },
+        {
+          "cell": "J40",
+          "row": 40,
+          "row_label": "Total",
+          "expected_r1c1": "=SUM(R[-3]C:R[-1]C)",
+          "actual_r1c1": "=SUM(R[-3]C:R[-2]C)",
+          "formula": "=SUM(J37:J38)"
+        },
+        {
+          "cell": "I43",
+          "row": 43,
+          "row_label": "Fixed Costs",
+          "expected_r1c1": "=R[-17]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J43:BI43)"
+        },
+        {
+          "cell": "I44",
+          "row": 44,
+          "row_label": "Variable Costs",
+          "expected_r1c1": "=R[-4]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J44:BI44)"
+        },
+        {
+          "cell": "I45",
+          "row": 45,
+          "row_label": "Total Costs",
+          "expected_r1c1": "=SUM(R[-2]C:R[-1]C)",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J45:BI45)"
+        },
+        {
+          "cell": "I48",
+          "row": 48,
+          "row_label": "Cashflow available for Equity",
+          "expected_r1c1": "=QCF!R[-8]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J48:BI48)"
+        },
+        {
+          "cell": "I50",
+          "row": 50,
+          "row_label": "Free Cash Flow to Equity",
+          "expected_r1c1": "=MAX(R[-2]C+R[-1]C,0)",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J50:BI50)"
+        },
+        {
+          "cell": "I53",
+          "row": 53,
+          "row_label": "Equity",
+          "expected_r1c1": "=-Cons!R[-22]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J53:BI53)"
+        },
+        {
+          "cell": "I54",
+          "row": 54,
+          "row_label": "Dividends",
+          "expected_r1c1": "=R[-4]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J54:BI54)"
+        },
+        {
+          "cell": "I55",
+          "row": 55,
+          "row_label": "Net Cashflow",
+          "expected_r1c1": "=SUM(R[-2]C:R[-1]C)",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J55:BI55)"
+        },
+        {
+          "cell": "I57",
+          "row": 57,
+          "row_label": "Evaluation Cashflow",
+          "expected_r1c1": "=R[-2]C",
+          "actual_r1c1": "=-0.00001",
+          "formula": "=-0.00001"
+        }
+      ],
+      "hyperlinks": []
+    },
+    "Debt": {
+      "formula_count": 1271,
+      "constant_count": 50,
+      "link_count": 584,
+      "errors": [],
+      "hardcodes": [],
+      "mega_formulas": [],
+      "pattern_breaks": [
+        {
+          "cell": "E16",
+          "row": 16,
+          "row_label": "Tenor Flag",
+          "expected_r1c1": "=IF(AND(R4C>=RC5,R5C<=RC6),1,0)",
+          "actual_r1c1": "=Inputs!R[39]C[2]",
+          "formula": "=Inputs!G55"
+        },
+        {
+          "cell": "F16",
+          "row": 16,
+          "row_label": "Tenor Flag",
+          "expected_r1c1": "=IF(AND(R4C>=RC5,R5C<=RC6),1,0)",
+          "actual_r1c1": "=Inputs!R[39]C[2]",
+          "formula": "=Inputs!H55"
+        },
+        {
+          "cell": "I20",
+          "row": 20,
+          "row_label": "Refinance from Construction",
+          "expected_r1c1": "=-Cons!R[17]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J20:BI20)"
+        },
+        {
+          "cell": "I21",
+          "row": 21,
+          "row_label": "Principal Repayment",
+          "expected_r1c1": "=-R[14]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J21:BI21)"
+        },
+        {
+          "cell": "I30",
+          "row": 30,
+          "row_label": "Interest During Operations",
+          "expected_r1c1": "=R[-11]C*R[-2]C*R[-14]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J30:BI30)"
+        },
+        {
+          "cell": "E34",
+          "row": 34,
+          "row_label": "Principal repayment (annualised)",
+          "expected_r1c1": "=R20C9*RC5*R[-18]C",
+          "actual_r1c1": "=Inputs!R[24]C",
+          "formula": "=Inputs!E58"
+        },
+        {
+          "cell": "I34",
+          "row": 34,
+          "row_label": "Principal repayment (annualised)",
+          "expected_r1c1": "=R20C9*RC5*R[-18]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J34:BI34)"
+        },
+        {
+          "cell": "I35",
+          "row": 35,
+          "row_label": "Principal repayment",
+          "expected_r1c1": "=R[-1]C/Qtrs_Yr",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J35:BI35)"
+        },
+        {
+          "cell": "I39",
+          "row": 39,
+          "row_label": "CFADS",
+          "expected_r1c1": "=QCF!R[-6]C*R[-23]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J39:BI39)"
+        },
+        {
+          "cell": "I41",
+          "row": 41,
+          "row_label": "Interest",
+          "expected_r1c1": "=R[-11]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J41:BI41)"
+        },
+        {
+          "cell": "I42",
+          "row": 42,
+          "row_label": "Principal",
+          "expected_r1c1": "=R[-7]C",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J42:BI42)"
+        },
+        {
+          "cell": "I43",
+          "row": 43,
+          "row_label": "Total Debt Service",
+          "expected_r1c1": "=SUM(R[-2]C:R[-1]C)",
+          "actual_r1c1": "=SUM(RC[1]:RC[52])",
+          "formula": "=SUM(J43:BI43)"
+        },
+        {
+          "cell": "F45",
+          "row": 45,
+          "row_label": "DSCR",
+          "expected_r1c1": "=IF(R[-26]C>0,R[-6]C/R[-2]C,0)",
+          "actual_r1c1": "=IF(R[-2]C[3]=0,0,R[-6]C[3]/R[-2]C[3])",
+          "formula": "=IF(I43=0,0,I39/I43)"
+        }
+      ],
+      "hyperlinks": []
+    },
+    "Timing": {
+      "formula_count": 474,
+      "constant_count": 16,
+      "link_count": 4,
+      "errors": [],
+      "hardcodes": [],
+      "mega_formulas": [],
+      "pattern_breaks": [
+        {
+          "cell": "I5",
+          "row": 5,
+          "row_label": "Period End",
+          "expected_r1c1": "=EOMONTH(R[-1]C,Months_Qtr-1)",
+          "actual_r1c1": "=Model_Start",
+          "formula": "=Model_Start"
+        },
+        {
+          "cell": "E6",
+          "row": 6,
+          "row_label": "Construction",
+          "expected_r1c1": "=IF(AND(R4C>=RC5,R5C<=RC6),1,0)",
+          "actual_r1c1": "=Inputs!R[3]C",
+          "formula": "=Inputs!E9"
+        },
+        {
+          "cell": "F6",
+          "row": 6,
+          "row_label": "Construction",
+          "expected_r1c1": "=IF(AND(R4C>=RC5,R5C<=RC6),1,0)",
+          "actual_r1c1": "=Inputs!R[5]C[-1]",
+          "formula": "=Inputs!E11"
+        },
+        {
+          "cell": "E7",
+          "row": 7,
+          "row_label": "Operations",
+          "expected_r1c1": "=IF(AND(R4C>=RC5,R5C<=RC6),1,0)",
+          "actual_r1c1": "=Inputs!R[7]C",
+          "formula": "=Inputs!E14"
+        },
+        {
+          "cell": "F7",
+          "row": 7,
+          "row_label": "Operations",
+          "expected_r1c1": "=IF(AND(R4C>=RC5,R5C<=RC6),1,0)",
+          "actual_r1c1": "=Inputs!R[9]C[-1]",
+          "formula": "=Inputs!E16"
+        }
+      ],
+      "hyperlinks": []
+    },
+    "L&N": {
+      "formula_count": 1,
+      "constant_count": 53,
+      "link_count": 0,
+      "errors": [],
+      "hardcodes": [],
+      "mega_formulas": [],
+      "pattern_breaks": [],
+      "hyperlinks": []
+    }
+  }
+}
