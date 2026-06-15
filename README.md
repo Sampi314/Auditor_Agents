@@ -11,9 +11,9 @@
 <div align="center">
 
 ```
-+--[ Auditor_Agents ]----------------------------------------------+
-|  12 specialist agents that audit Excel financial models end-to-end
-+------------------------------------------------------------+
+┌─[ Auditor_Agents ]───────────────────────────────────────────────────┐
+│  12 specialist agents that audit Excel financial models end-to-end   │
+└──────────────────────────────────────────────────────────────────────┘
 ```
 
 </div>
@@ -116,9 +116,9 @@ Tracked in the [**Sampi314 Portfolio Roadmap**](https://github.com/users/Sampi31
 <div align="center">
 
 ```
-+--[ end of transmission ]------------------------------------+
-|  github.com/Sampi314/Auditor_Agents
-+------------------------------------------------------------+
+┌─[ end of transmission ]──────────────────────────────────────────────┐
+│  github.com/Sampi314/Auditor_Agents                                  │
+└──────────────────────────────────────────────────────────────────────┘
 ```
 
 </div>
